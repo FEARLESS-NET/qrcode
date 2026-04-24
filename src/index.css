@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/012/035/759/small/night-scene-of-rooftop-restaurant-free-photo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
