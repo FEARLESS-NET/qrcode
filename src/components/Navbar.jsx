@@ -54,9 +54,11 @@ export function NavbarDefault() {
 
         
         <div className="hidden lg:flex gap-3">
+          <Link to="/login" className="relative group">
           <button className="px-4 py-1 rounded-lg border border-white/30 hover:bg-white/20 transition">
             Log in
           </button>
+          </Link>
 
           <button className="px-4 py-1 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:scale-105 transition">
             Sign up
@@ -79,6 +81,7 @@ export function NavbarDefault() {
           <Link to="/" onClick={() => setOpenNav(false)}>Home</Link>
           <Link to="/menu" onClick={() => setOpenNav(false)}>Menu</Link>
           <Link to="/admin" onClick={() => setOpenNav(false)}>Admin</Link>
+          <Link to="/login" onclick={() => setOpenNav(false)}>login</Link>
         </div>
       </MobileNav>
     </Navbar>

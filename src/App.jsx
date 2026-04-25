@@ -5,6 +5,7 @@ import Menu from './pages/Menu'
 import Admin from './pages/Admin'
 import { NavbarDefault } from './components/Navbar'
 import { SimpleFooter } from './components/Footer'
+import Login from './pages/Login'
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/menu' element={<Menu />} />
           <Route path='/admin' element={<Admin />} />
+          <Route path='/login' element={<Login/>}/>
         </Routes>
       </div>
 
