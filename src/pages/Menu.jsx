@@ -84,7 +84,7 @@ const Menu = () => {
                       </h3>
 
                       <p className="text-sm opacity-80 mb-2">
-                        {menu.descr}
+                        {menu.price}
                       </p>
 
                       <p className="text-sm mb-3">

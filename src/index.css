@@ -4,9 +4,113 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
 
-  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/012/035/759/small/night-scene-of-rooftop-restaurant-free-photo.jpg");
+  background-image: url("https://img.freepik.com/free-photo/wooden-planks-with-blurred-restaurant-background_1253-56.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  outline: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+
+.input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.input:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.input:focus {
+  border: 1px solid orange;
+  background: rgba(255,255,255,0.2);
+  box-shadow:
+    0 0 5px orange,
+    0 0 15px orange,
+    0 0 30px rgba(255,165,0,0.5);
+  transform: scale(1.05);
+}
+.inputAdmin {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  transition: 0.3s;
+}
+
+.inputAdmin:focus {
+  border: 1px solid cyan;
+  box-shadow: 0 0 15px cyan;
+  background: rgba(255,255,255,0.1);
+}
+
+/* BUTTONS */
+.btnPrimary {
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: linear-gradient(to right, cyan, purple);
+  color: black;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btnPrimary:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px cyan;
+}
+
+.btnCancel {
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: gray;
+}
+
+.btnEdit {
+  background: blue;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btnEdit:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px blue;
+}
+
+.btnDelete {
+  background: red;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btnDelete:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px red;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.05);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  transition: 0.4s;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 0 25px rgba(0,255,255,0.3);
 }

@@ -60,9 +60,7 @@ export function NavbarDefault() {
           </button>
           </Link>
 
-          <button className="px-4 py-1 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold hover:scale-105 transition">
-            Sign up
-          </button>
+          
         </div>
 
      
