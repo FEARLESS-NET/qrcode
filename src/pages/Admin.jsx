@@ -9,7 +9,7 @@ const Admin = () => {
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth) {
-      navigate("/"); 
+      navigate("/login"); 
     }
   }, [navigate]);
 
