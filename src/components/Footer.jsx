@@ -51,7 +51,7 @@ export function SimpleFooter() {
             in
           </div>
 
-          <div className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-yellow-400 hover:text-black transition cursor-pointer">
+          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-yellow-400 hover:text-black transition cursor-pointer">
             ig
           </div>
 
