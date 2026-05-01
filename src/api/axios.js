@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
-    baseURL: 'https://backend-1-6vfo.onrender.com/api/v1/',
+    // localhost-ni o'chirib, Render linkini qo'ying
+    baseURL: 'https://backend-1-6vfo.onrender.com/api/v1/menus', 
     headers: { 'Content-Type': 'application/json' }
 })
