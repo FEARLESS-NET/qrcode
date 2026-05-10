@@ -64,7 +64,7 @@ export function NavbarDefault() {
           <IconButton
             variant="text"
             ripple={false}
-            className="lg:hidden text-white"
+            className="lg:hidden text-white pb-8"
             onClick={() => setOpenNav(!openNav)}
           >
             {openNav ? (
