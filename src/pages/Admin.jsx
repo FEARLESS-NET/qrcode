@@ -7,9 +7,7 @@ const Admin = () => {
 
   useEffect(() => {
     const auth = localStorage.getItem("auth");
-    if (!auth) {
-      navigate("/login"); 
-    }
+    if (!auth) navigate("/login");
   }, [navigate]);
 
   const [menus, setMenus] = useState([]);
@@ -26,9 +24,9 @@ const Admin = () => {
   const getMenus = async () => {
     try {
       const res = await axiosInstance.get("/menus");
-      setMenus(res.data.menus);
+      setMenus(res.data.menus || []);
     } catch (err) {
-      console.error("Xatolik yuz berdi:", err);
+      console.error(err);
     }
   };
 
@@ -43,18 +41,20 @@ const Admin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (editingId) {
       await axiosInstance.put(`/menus/${editingId}`, form);
       setEditingId(null);
     } else {
       await axiosInstance.post("/menus", form);
     }
+
     setForm({ name: "", price: "", retsept: "", image: "", category: "" });
     getMenus();
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Haqiqatdan ham o'chirmoqchimisiz?")) {
+    if (window.confirm("O‘chirishni tasdiqlaysizmi?")) {
       await axiosInstance.delete(`/menus/${id}`);
       getMenus();
     }
@@ -66,54 +66,73 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-4 sm:p-6 md:p-10">
-      
+    <div className="min-h-screen bg-[#050505] text-white px-4 sm:px-6 lg:px-10 py-10 relative overflow-hidden">
+
+      {/* 🔥 BACKGROUND ENERGY */}
+      <div className="absolute top-[-10%] left-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-cyan-500/20 blur-[160px] animate-pulse" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-purple-500/20 blur-[160px] animate-pulse" />
+
       {/* HEADER */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 border-b border-white/10 pb-6">
+
         <div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-4xl font-black bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500 bg-clip-text text-transparent animate-pulse">
             ⚡ Admin Dashboard
           </h2>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-gray-500 text-sm">
             Restoran menyusini boshqarish paneli
           </p>
         </div>
-        
+
         <button
           onClick={handleLogout}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500 border border-red-500/50 text-red-500 hover:text-white px-4 py-2 rounded-xl transition-all duration-300 shadow-lg shadow-red-500/20"
+          className="px-5 py-2 rounded-xl border border-red-500/40 text-red-400
+          hover:bg-red-500 hover:text-white transition-all duration-300
+          hover:shadow-[0_0_25px_rgba(239,68,68,0.6)] hover:scale-105 active:scale-95"
         >
-          <span>🚪</span>
-          <span className="hidden sm:inline font-medium">Chiqish</span>
+          🚪 Chiqish
         </button>
       </div>
 
       {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white/5 backdrop-blur-xl p-4 sm:p-6 md:p-8 rounded-2xl border border-white/10 mb-10 shadow-[0_0_40px_rgba(0,255,255,0.1)] hover:shadow-cyan-500/30 transition duration-500"
+        className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 p-5 sm:p-8 rounded-2xl mb-10
+        transition-all duration-500 hover:shadow-[0_0_60px_rgba(6,182,212,0.25)] hover:scale-[1.01]"
       >
-        <h3 className="text-lg font-semibold mb-6 text-cyan-400">
-          {editingId ? "📝 Taomni tahrirlash" : "➕ Yangi taom qo'shish"}
+        <h3 className="text-cyan-400 font-bold mb-6 animate-pulse">
+          {editingId ? "📝 Tahrirlash" : "➕ Yangi taom qo'shish"}
         </h3>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {Object.keys(form).map((key, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              <label className="text-xs text-gray-400 uppercase ml-1">{key}</label>
+
+          {Object.keys(form).map((key) => (
+            <div key={key}>
+              <label className="text-xs text-gray-400 uppercase">{key}</label>
+
               <input
-                placeholder={`${key} ni kiriting...`}
                 value={form[key]}
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                className="inputAdmin w-full text-sm"
+                placeholder={key}
+                className="w-full mt-1 bg-black/40 border border-white/10
+                focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.5)]
+                px-4 py-3 rounded-xl outline-none transition-all duration-300
+                hover:scale-[1.01]"
                 required
               />
             </div>
           ))}
+
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 mt-8">
-          <button className="btnPrimary w-full sm:w-auto flex-1 md:flex-none">
+        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+
+          <button className="flex-1 sm:flex-none px-6 py-3 bg-cyan-500 text-black font-bold rounded-xl
+          hover:bg-cyan-400 hover:shadow-[0_0_30px_rgba(6,182,212,0.7)]
+          transition-all duration-300 hover:scale-105 active:scale-95 relative overflow-hidden">
+
+            <span className="absolute inset-0 bg-white/20 animate-pulse opacity-0 hover:opacity-100"></span>
+
             {editingId ? "Yangilash" : "Saqlash"}
           </button>
 
@@ -124,64 +143,98 @@ const Admin = () => {
                 setEditingId(null);
                 setForm({ name: "", price: "", retsept: "", image: "", category: "" });
               }}
-              className="btnCancel w-full sm:w-auto"
+              className="px-6 py-3 border border-white/20 rounded-xl
+              hover:bg-white/10 hover:scale-105 transition-all duration-300"
             >
               Bekor qilish
             </button>
           )}
+
         </div>
       </form>
 
       {/* CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
         {menus.map((menu) => (
           <div
             key={menu.id}
-            className="card group bg-white/5 border border-white/10 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300"
+            className="group relative bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden
+            transition-all duration-500 hover:scale-[1.05] hover:-rotate-1
+            hover:border-cyan-400/70 hover:shadow-[0_0_50px_rgba(6,182,212,0.3)]"
           >
-            <div className="relative overflow-hidden rounded-lg mb-4">
+
+            {/* IMAGE */}
+            <div className="relative h-48 overflow-hidden">
+
               <img
-                src={menu.image || "https://via.placeholder.com/150"}
+                src={menu.image}
                 alt={menu.name}
-                className="h-40 sm:h-48 w-full object-cover group-hover:scale-110 transition duration-500"
+                className="w-full h-full object-cover
+                group-hover:scale-125 group-hover:rotate-2
+                transition-all duration-700"
               />
-              <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
-                <span className="text-cyan-400 text-xs font-bold uppercase">
-                  {menu.category}
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70
+              group-hover:opacity-40 transition" />
+
+              <div className="absolute top-2 right-2 bg-black/60 px-3 py-1 rounded-full text-cyan-400 text-xs
+              border border-white/20 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition">
+                {menu.category}
+              </div>
+
+            </div>
+
+            {/* CONTENT */}
+            <div className="p-4">
+
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-lg truncate group-hover:text-cyan-400 group-hover:translate-x-1 transition-all">
+                  {menu.name}
+                </h3>
+
+                <span className="text-green-400 font-bold group-hover:scale-125 transition">
+                  {menu.price}
                 </span>
               </div>
+
+              <p className="text-gray-400 text-sm mt-2 line-clamp-2 group-hover:text-gray-200 transition">
+                {menu.retsept}
+              </p>
+
+              {/* animated line */}
+              <div className="mt-4 h-1 w-12 bg-white/10 rounded-full overflow-hidden group-hover:w-full transition-all duration-500">
+                <div className="h-full w-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 animate-pulse"></div>
+              </div>
+
+              {/* BUTTONS */}
+              <div className="flex gap-2 mt-4">
+
+                <button
+                  onClick={() => handleEdit(menu)}
+                  className="flex-1 py-2 rounded-lg bg-yellow-500/20 text-yellow-400
+                  hover:bg-yellow-500 hover:text-black hover:shadow-[0_0_25px_rgba(234,179,8,0.6)]
+                  transition-all duration-300 hover:scale-105 active:scale-95"
+                >
+                  Tahrirlash
+                </button>
+
+                <button
+                  onClick={() => handleDelete(menu.id)}
+                  className="flex-1 py-2 rounded-lg bg-red-500/20 text-red-400
+                  hover:bg-red-500 hover:text-white hover:shadow-[0_0_25px_rgba(239,68,68,0.6)]
+                  transition-all duration-300 hover:scale-105 active:scale-95"
+                >
+                  O'chirish
+                </button>
+
+              </div>
+
             </div>
 
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-lg sm:text-xl font-bold truncate">
-                {menu.name}
-              </h3>
-              <span className="text-green-400 text-sm sm:text-base font-mono font-bold">
-                {menu.price}
-              </span>
-            </div>
-            
-            <p className="text-gray-400 text-xs sm:text-sm line-clamp-2 mb-4">
-              🍴 {menu.retsept}
-            </p>
-
-            <div className="flex gap-2 pt-4 border-t border-white/5">
-              <button
-                onClick={() => handleEdit(menu)}
-                className="btnEdit flex-1"
-              >
-                Tahrirlash
-              </button>
-
-              <button
-                onClick={() => handleDelete(menu.id)}
-                className="btnDelete flex-1"
-              >
-                O'chirish
-              </button>
-            </div>
           </div>
         ))}
+
       </div>
 
     </div>
