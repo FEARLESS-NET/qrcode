@@ -39,7 +39,7 @@ const Menu = () => {
   );
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 shadow-lg">
+    <div className=" w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 shadow-lg">
 
       {/* BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">

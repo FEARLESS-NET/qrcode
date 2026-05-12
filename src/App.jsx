@@ -12,7 +12,7 @@ const App = () => {
     <Router>
       <NavbarDefault />
       
-      <div className=' px-30 mt-10'>
+      <div className=' mt-10'>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/menu' element={<Menu />} />
