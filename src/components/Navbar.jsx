@@ -77,7 +77,7 @@ export function NavbarDefault() {
 
         {/* MOBILE MENU */}
         <Collapse open={openNav}>
-  <div className="lg:hidden flex flex-col gap-4 mt-4 bg-black/95 p-4 rounded-xl">
+  <div className="lg:hidden flex flex-col gap-3 mt-4 bg-black/95 p-4 rounded-xl">
     
     <Link to="/" onClick={() => setOpenNav(false)}>
       Home
