@@ -57,46 +57,11 @@ export function NavbarDefault() {
             </Link>
           </div>
 
-          {/* MOBILE BUTTON (Faqat telefonda ko'rinadi) */}
-          <IconButton
-            variant="text"
-            ripple={false}
-            className="lg:hidden text-white ml-auto"
-            onClick={() => setOpenNav(!openNav)}
-          >
-            {openNav ? (
-              <span className="text-2xl">✕</span>
-            ) : (
-              <span className="text-2xl">☰</span>
-            )}
-          </IconButton>
+         
         </div>
 
-        {/* MOBILE MENU (Collapse) */}
-        <Collapse open={openNav}>
-          <div className="lg:hidden flex flex-col gap-5 mt-4 bg-black/95 p-6 rounded-xl border border-white/10">
-            
-            {/* Mobil linklar uchun linkStyle ni saqlab qoldik, faqat blok ko'rinishida */}
-            <Link to="/" className={`w-fit ${linkStyle}`} onClick={() => setOpenNav(false)}>
-              Home
-            </Link>
-
-            <Link to="/menu" className={`w-fit ${linkStyle}`} onClick={() => setOpenNav(false)}>
-              Menu
-            </Link>
-
-            <Link to="/admin" className={`w-fit ${linkStyle}`} onClick={() => setOpenNav(false)}>
-              Admin
-            </Link>
-
-            <Link to="/login" onClick={() => setOpenNav(false)} className="mt-2">
-              <button className="w-full border border-yellow-400/50 py-3 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-black transition-all duration-300">
-                Login
-              </button>
-            </Link>
-
-          </div>
-        </Collapse>
+        
+        
 
       </div>
     </div>

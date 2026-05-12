@@ -5,16 +5,18 @@
   --premium-dark: #050505;
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.1);
-  /* Yangi yorqin ranglar */
   --neon-blue: #00f2ff;
   --neon-green: #39ff14;
 }
 
 body {
   margin: 0;
+  padding: 0; /* Padding nol bo'lishi shart */
   font-family: 'Poppins', sans-serif;
   color: white;
   min-height: 100vh; 
+  width: 100%; /* Butun kenglikni egallash uchun */
+  overflow-x: hidden; /* Gorizontal skrolni yo'qotadi */
   background: 
     radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
@@ -22,79 +24,44 @@ body {
   background-attachment: fixed;
 }
 
-/* INPUTS - Yorqin Focus effekti */
+/* INPUTS - Responsive padding */
 .input, .inputAdmin {
   width: 100%;
-  padding: 14px 18px;
+  box-sizing: border-box; /* Input chetdan chiqib ketmasligi uchun */
+  padding: 12px 15px; /* Mobil uchun biroz kichraytirildi */
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.04);
   color: white;
   outline: none;
   border: 1.5px solid var(--glass-border);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
 }
 
-.input:hover {
-  border-color: rgba(0, 242, 255, 0.4);
-  background: rgba(255, 255, 255, 0.07);
-}
-
-/* User Input Focus - Yorqin Ko'k (Neon Blue) */
-.input:focus {
-  border-color: var(--neon-blue);
-  background: rgba(0, 242, 255, 0.05);
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.3), 
-              inset 0 0 10px rgba(0, 242, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-/* Admin Input Focus - Yorqin Yashil (Neon Green) */
-.inputAdmin:focus {
-  border-color: var(--neon-green);
-  background: rgba(57, 255, 20, 0.05);
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.3),
-              inset 0 0 10px rgba(57, 255, 20, 0.1);
-  transform: translateY(-2px);
-}
-
-/* BUTTONS - Juda yorqin gradient */
-.btnPrimary {
-  padding: 14px 32px;
-  border-radius: 14px;
-  /* Ko'kdan yashilga o'tuvchi yorqin gradient */
-  background: linear-gradient(135deg, #00f2ff, #39ff14);
-  color: #000; /* Matn qora bo'lsa yaxshiroq o'qiladi */
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.btnPrimary:hover {
-  transform: translateY(-4px) scale(1.05);
-  /* Kuchli tashqi nur taratish */
-  box-shadow: 0 0 30px rgba(0, 242, 255, 0.6), 
-              0 0 15px rgba(57, 255, 20, 0.4);
-}
-
-/* CARD - Premium Glassmorphism */
+/* CARD - Mana shu yerda mobil uchun o'zgarishlar */
 .card {
   background: rgba(255, 255, 255, 0.03);
-  padding: 28px;
-  border-radius: 28px;
+  padding: 1px; /* Telefonda paddingni kamaytirdik (28px dan 16px ga) */
+  border-radius: 24px; /* Sal yumshoqroq */
   border: 1px solid rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(25px) saturate(200%);
   backdrop-filter: blur(25px) saturate(200%);
   transition: all 0.5s ease;
+  width: 100%; /* Karta kengligi o'rab turgan divga mos bo'lsin */
+  box-sizing: border-box;
 }
 
+/* Katta ekranlar uchun paddingni qaytaramiz */
+@media (min-width: 640px) {
+  .card {
+    padding: 28px;
+  }
+}
+
+@media (min-width: 430px) {
+  .card {
+    padding: 10px;
+  }
+}
 .card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--neon-blue); /* Hoverda card chegarasi ko'k bo'ladi */
-  transform: translateY(-10px);
-  box-shadow: 0 20px 50px rgba(0, 242, 255, 0.15);
+  transform: translateY(-5px); /* Mobil uchun kichikroq effekt */
+  box-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);
 }

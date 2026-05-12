@@ -16,13 +16,13 @@ export function SimpleFooter() {
         <ul className="flex flex-wrap items-center gap-6 text-sm">
 
           <li>
-            <a className="hover:text-yellow-400 transition" href="#">
+            <a className="hover:text-yellow-400 transition" href="/">
               About
             </a>
           </li>
 
           <li>
-            <a className="hover:text-yellow-400 transition" href="#">
+            <a className="hover:text-yellow-400 transition" href="/menu">
               Menu
             </a>
           </li>
