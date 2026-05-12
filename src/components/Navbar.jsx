@@ -23,7 +23,7 @@ export function NavbarDefault() {
     <div className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4">
 
-        <div className="flex items-center justify-between text-white">
+        <div className="flex items-center justify-between text-white text-center">
 
           {/* LOGO */}
           <Typography
@@ -64,7 +64,7 @@ export function NavbarDefault() {
           <IconButton
             variant="text"
             ripple={false}
-            className="lg:hidden text-white pb-7"
+            className="lg:hidden text-white "
             onClick={() => setOpenNav(!openNav)}
           >
             {openNav ? (
