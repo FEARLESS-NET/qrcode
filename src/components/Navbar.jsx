@@ -77,28 +77,28 @@ export function NavbarDefault() {
 
         {/* MOBILE MENU */}
         <Collapse open={openNav}>
-          <div className="flex flex-col gap-5 mt-5 pb-4 text-white lg:hidden">
+  <div className="lg:hidden flex flex-col gap-4 mt-4 bg-black/95 p-4 rounded-xl">
+    
+    <Link to="/" onClick={() => setOpenNav(false)}>
+      Home
+    </Link>
 
-            <Link className={linkStyle} to="/" onClick={() => setOpenNav(false)}>
-              Home
-            </Link>
+    <Link to="/menu" onClick={() => setOpenNav(false)}>
+      Menu
+    </Link>
 
-            <Link className={linkStyle} to="/menu" onClick={() => setOpenNav(false)}>
-              Menu
-            </Link>
+    <Link to="/admin" onClick={() => setOpenNav(false)}>
+      Admin
+    </Link>
 
-            <Link className={linkStyle} to="/admin" onClick={() => setOpenNav(false)}>
-              Admin
-            </Link>
+    <Link to="/login" onClick={() => setOpenNav(false)}>
+      <button className="w-full border border-white/20 py-2 rounded-lg">
+        Login
+      </button>
+    </Link>
 
-            <Link to="/login" onClick={() => setOpenNav(false)}>
-              <button className="w-full px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition">
-                Login
-              </button>
-            </Link>
-
-          </div>
-        </Collapse>
+  </div>
+</Collapse>
 
       </div>
     </div>
