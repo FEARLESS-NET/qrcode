@@ -81,7 +81,7 @@ export function NavbarDefault() {
     
     <Link to="/" onClick={() => setOpenNav(false)}>
       Home
-    </Link>q
+    </Link>
 
     <Link to="/menu" onClick={() => setOpenNav(false)}>
       Menu
