@@ -224,7 +224,7 @@ export function NavbarDefault() {
               text-yellow-400
               hover:bg-white/5
               transition-all duration-300
-            "
+            pb-6"
             onClick={() => setOpenNav(!openNav)}
           >
 
