@@ -17,25 +17,139 @@ export function NavbarDefault() {
   }, []);
 
   const linkStyle =
-    "relative text-white/80 hover:text-yellow-400 transition-all duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-yellow-400 hover:after:w-full after:transition-all after:duration-300";
+    `
+    relative
+    text-white/70
+    hover:text-yellow-400
+    uppercase
+    tracking-[0.2em]
+    text-sm
+    transition-all duration-300
+
+    after:absolute
+    after:left-0
+    after:-bottom-2
+    after:w-0
+    after:h-[2px]
+    after:bg-gradient-to-r
+    after:from-yellow-400
+    after:to-orange-500
+    after:transition-all
+    after:duration-300
+
+    hover:after:w-full
+  `;
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+    <div
+  className="
+    fixed top-0 left-0 w-full z-50
+    overflow-hidden
 
-        <div className="flex items-center justify-between text-white text-center">
+    border-b border-yellow-500/10
+
+    bg-gradient-to-r
+    from-black/40
+    via-black/20
+    to-black/40
+
+    backdrop-blur-[30px]
+    backdrop-saturate-200
+
+    shadow-[0_8px_40px_rgba(0,0,0,0.7)]
+  "
+>
+
+      {/* TOP GLOW */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+        <div className="absolute top-[-120px] left-[10%] w-[300px] h-[300px] bg-yellow-500/10 rounded-full blur-[120px]"></div>
+
+        <div className="absolute top-[-120px] right-[10%] w-[300px] h-[300px] bg-orange-500/10 rounded-full blur-[120px]"></div>
+
+        {/* GRID */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,215,0,0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,215,0,0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "55px 55px",
+          }}
+        ></div>
+
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 py-5">
+
+        <div className="flex items-center justify-between">
 
           {/* LOGO */}
           <Typography
             as={Link}
             to="/"
-            className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300"
+            className="
+              group
+              flex items-center gap-3
+              cursor-pointer
+              transition-all duration-300
+              hover:scale-105
+            "
           >
-            🍽️ Restaurant
+
+            <div
+              className="
+                w-12 h-12
+                rounded-2xl
+                bg-gradient-to-br
+                from-yellow-400
+                via-amber-500
+                to-orange-500
+                flex items-center justify-center
+                text-black text-xl
+                shadow-[0_0_30px_rgba(255,215,0,0.35)]
+              "
+            >
+              🍽️
+            </div>
+
+            <div className="flex flex-col">
+
+              <span
+                className="
+                  text-2xl
+                  font-black
+                  uppercase
+                  tracking-[0.18em]
+                  text-transparent
+                  bg-clip-text
+                  bg-gradient-to-r
+                  from-yellow-300
+                  via-amber-400
+                  to-orange-500
+                "
+              >
+                Restaurant
+              </span>
+
+              <span className="text-[9px] text-gray-500 uppercase tracking-[0.35em]">
+                Premium Experience
+              </span>
+
+            </div>
+
           </Typography>
 
           {/* CENTER LINKS */}
-          <div className="hidden lg:flex items-center gap-12 absolute left-1/2 transform -translate-x-1/2">
+          <div
+            className="
+              hidden lg:flex
+              items-center gap-14
+              absolute left-1/2
+              -translate-x-1/2
+            "
+          >
 
             <Link to="/" className={linkStyle}>
               Home
@@ -51,56 +165,169 @@ export function NavbarDefault() {
 
           </div>
 
-          {/* LOGIN BUTTON */}
+          {/* LOGIN */}
           <div className="hidden lg:flex">
+
             <Link to="/login">
-              <button className="px-5 py-2 rounded-xl border border-white/20 text-white/80 hover:text-white hover:bg-white/10 hover:border-yellow-400 transition-all duration-300 hover:shadow-[0_0_20px_rgba(250,204,21,0.2)]">
-                Login
+
+              <button
+                className="
+                  group
+                  relative
+                  overflow-hidden
+                  px-6 py-3
+                  rounded-2xl
+                  border border-yellow-500/20
+                  bg-white/[0.03]
+                  backdrop-blur-xl
+                  text-white
+                  uppercase
+                  tracking-[0.2em]
+                  text-sm
+                  transition-all duration-300
+
+                  hover:border-yellow-500/50
+                  hover:scale-105
+                  hover:shadow-[0_0_35px_rgba(255,215,0,0.35)]
+                "
+              >
+
+                <div
+                  className="
+                    absolute inset-0
+                    bg-gradient-to-r
+                    from-yellow-400
+                    via-amber-500
+                    to-orange-500
+                    opacity-0
+                    group-hover:opacity-100
+                    transition-all duration-300
+                  "
+                ></div>
+
+                <span className="relative z-10 group-hover:text-black font-bold transition">
+                  Login
+                </span>
+
               </button>
+
             </Link>
+
           </div>
 
           {/* MOBILE BUTTON */}
           <IconButton
             variant="text"
             ripple={false}
-            className="lg:hidden text-white pb-6 "
+            className="
+              lg:hidden
+              text-yellow-400
+              hover:bg-white/5
+              transition-all duration-300
+            "
             onClick={() => setOpenNav(!openNav)}
           >
+
             {openNav ? (
-              <span className="text-2xl">✖</span>
+              <span className="text-3xl">✕</span>
             ) : (
-              <span className="text-2xl">☰</span>
+              <span className="text-3xl">☰</span>
             )}
+
           </IconButton>
+
         </div>
 
         {/* MOBILE MENU */}
         <Collapse open={openNav}>
-  <div className="lg:hidden flex flex-col gap-3 mt-4 bg-black/95 p-4 rounded-xl">
-    
-    <Link to="/" onClick={() => setOpenNav(false)}>
-      Home
-    </Link>
 
-    <Link to="/menu" onClick={() => setOpenNav(false)}>
-      Menu
-    </Link>
+          <div
+            className="
+              lg:hidden
+              mt-6
+              rounded-3xl
+              border border-yellow-500/10
+              bg-black/90
+              backdrop-blur-3xl
+              overflow-hidden
+              shadow-[0_0_50px_rgba(255,215,0,0.08)]
+            "
+          >
 
-    <Link to="/admin" onClick={() => setOpenNav(false)}>
-      Admin
-    </Link>
+            <div className="flex flex-col p-4">
 
-    <Link to="/login" onClick={() => setOpenNav(false)}>
-      <button className="w-full border border-white/20 py-2 rounded-lg">
-        Login
-      </button>
-    </Link>
+              {[
+                { name: "Home", link: "/" },
+                { name: "Menu", link: "/menu" },
+                { name: "Admin", link: "/admin" },
+              ].map((item, i) => (
+                <Link
+                  key={i}
+                  to={item.link}
+                  onClick={() => setOpenNav(false)}
+                  className="
+                    group
+                    relative
+                    px-5 py-4
+                    rounded-2xl
+                    text-white/80
+                    uppercase
+                    tracking-[0.2em]
+                    text-sm
+                    transition-all duration-300
+                    hover:bg-yellow-500/10
+                    hover:text-yellow-400
+                    overflow-hidden
+                  "
+                >
 
-  </div>
-</Collapse>
+                  <div className="absolute left-0 top-0 h-full w-0 bg-gradient-to-r from-yellow-500/10 to-transparent group-hover:w-full transition-all duration-500"></div>
+
+                  <span className="relative z-10">
+                    {item.name}
+                  </span>
+
+                </Link>
+              ))}
+
+              <Link
+                to="/login"
+                onClick={() => setOpenNav(false)}
+                className="mt-3"
+              >
+
+                <button
+                  className="
+                    w-full
+                    py-4
+                    rounded-2xl
+                    bg-gradient-to-r
+                    from-yellow-400
+                    via-amber-500
+                    to-orange-500
+                    text-black
+                    font-black
+                    uppercase
+                    tracking-[0.2em]
+                    transition-all duration-300
+                    hover:scale-[1.02]
+                    active:scale-[0.98]
+                    shadow-[0_0_30px_rgba(255,215,0,0.35)]
+                  "
+                >
+                  Login
+                </button>
+
+              </Link>
+
+            </div>
+
+          </div>
+
+        </Collapse>
 
       </div>
+
     </div>
   );
 }

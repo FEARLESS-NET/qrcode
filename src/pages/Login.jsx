@@ -21,10 +21,14 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const ADMIN_EMAIL = "admin@gmail.com";
     const ADMIN_PASSWORD = "123456";
 
-    if (form.email === ADMIN_EMAIL && form.password === ADMIN_PASSWORD) {
+    if (
+      form.email === ADMIN_EMAIL &&
+      form.password === ADMIN_PASSWORD
+    ) {
       localStorage.setItem("auth", "true");
       setForm({ email: "", password: "" });
       navigate("/admin", { replace: true });
@@ -34,112 +38,314 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col relative overflow-hidden font-sans">
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] flex flex-col font-sans text-white p-10">
 
-      {/* BACKGROUND - Glow effektlari */}
-      <div className="absolute top-[-10%] left-[-10%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+      {/* GOLD CYBER BACKGROUND */}
+      <div className="absolute inset-0 pointer-events-none">
 
-      {/* HEADER */}
-      <div className="w-full py-5 border-b border-white/5 flex justify-center backdrop-blur-md z-10 px-4">
-        <div className="flex items-center gap-3 text-white font-black tracking-[0.2em]">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-300 flex items-center justify-center shadow-lg shadow-orange-500/20">
-            <span className="text-xl">🍽️</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-base sm:text-lg leading-none">RESTAURANT</span>
-            <span className="text-[9px] text-gray-500 font-medium">MANAGEMENT SYSTEM</span>
-          </div>
-        </div>
+        {/* BASE */}
+        <div className="absolute inset-0 bg-[#050505]"></div>
+
+        {/* GRID */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,215,0,0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,215,0,0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "55px 55px",
+          }}
+        ></div>
+
+        {/* GOLD GLOW */}
+        <div className="absolute top-[-10%] left-[-10%] w-[350px] md:w-[650px] h-[350px] md:h-[650px] bg-yellow-500/20 rounded-full blur-[160px] animate-pulse"></div>
+
+        <div className="absolute bottom-[-10%] right-[-10%] w-[350px] md:w-[650px] h-[350px] md:h-[650px] bg-amber-400/20 rounded-full blur-[160px] animate-pulse delay-700"></div>
+
+        {/* SCANLINES */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.08) 1px, transparent 2px)",
+            backgroundSize: "100% 6px",
+          }}
+        ></div>
+
       </div>
 
-      {/* FORM WRAPPER */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 z-10">
-        
-        {/* Karta kengligi: Telefonda deyarli to'liq (w-full), Kompyuterda max 400px */}
-        <div className="w-full max-w-[400px]">
+      {/* HEADER */}
+      <div className="relative z-10 w-full py-5 border-b border-yellow-500/10 backdrop-blur-xl flex justify-center px-4">
+
+        <div className="flex items-center gap-4">
+
+          {/* ICON */}
+          <div
+            className="
+              w-12 h-12
+              rounded-2xl
+              bg-gradient-to-br
+              from-yellow-400
+              via-amber-500
+              to-orange-500
+              flex items-center justify-center
+              text-2xl
+              shadow-[0_0_35px_rgba(255,215,0,0.4)]
+            "
+          >
+            🍽️
+          </div>
+
+          {/* TEXT */}
+          <div className="flex flex-col">
+
+            <span
+              className="
+                text-lg sm:text-xl
+                font-black
+                tracking-[0.25em]
+                text-transparent
+                bg-clip-text
+                bg-gradient-to-r
+                from-yellow-300
+                via-amber-400
+                to-orange-500
+              "
+            >
+              RESTAURANT
+            </span>
+
+            <span className="text-[10px] tracking-[0.35em] text-gray-500 uppercase">
+              MANAGEMENT SYSTEM
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* LOGIN */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-10">
+
+        <div className="w-full max-w-[420px]">
 
           <div className="relative group">
-            {/* Glow animatsiyasi */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-cyan-500 rounded-[2rem] blur opacity-10 group-hover:opacity-30 transition duration-700"></div>
 
+            {/* OUTER GLOW */}
+            <div
+              className="
+                absolute -inset-[1px]
+                rounded-[2rem]
+                bg-gradient-to-r
+                from-yellow-500
+                via-amber-400
+                to-orange-500
+                opacity-20
+                blur
+                group-hover:opacity-50
+                transition-all duration-700
+              "
+            ></div>
+
+            {/* CARD */}
             <form
               onSubmit={handleSubmit}
-              className="relative bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[2rem] p-6 sm:p-10 shadow-2xl"
+              className="
+                relative
+                bg-black/50
+                backdrop-blur-3xl
+                border border-yellow-500/10
+                rounded-[2rem]
+                p-6 sm:p-10
+                overflow-hidden
+                shadow-[0_0_60px_rgba(255,215,0,0.08)]
+              "
             >
 
+              {/* CARD GLOW */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-orange-500/5 pointer-events-none"></div>
+
               {/* ICON */}
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 text-orange-500 text-3xl">
-                  👤
+              <div className="flex justify-center mb-7">
+
+                <div
+                  className="
+                    relative
+                    w-20 h-20
+                    rounded-3xl
+                    bg-gradient-to-br
+                    from-yellow-400
+                    via-amber-500
+                    to-orange-500
+                    flex items-center justify-center
+                    text-4xl
+                    shadow-[0_0_40px_rgba(255,215,0,0.45)]
+                  "
+                >
+                  👑
+
+                  <div className="absolute inset-0 rounded-3xl border border-white/20"></div>
+
                 </div>
+
               </div>
 
-              <h2 className="text-center text-2xl sm:text-3xl font-black text-white">
-                Staff Login
+              {/* TITLE */}
+              <h2
+                className="
+                  text-center
+                  text-3xl sm:text-4xl
+                  font-black
+                  tracking-wide
+                  text-transparent
+                  bg-clip-text
+                  bg-gradient-to-r
+                  from-yellow-300
+                  via-amber-400
+                  to-orange-500
+                "
+              >
+                STAFF LOGIN
               </h2>
 
-              <p className="text-center text-xs sm:text-sm text-gray-500 mt-2 mb-8">
-                Xush kelibsiz, tizimga kiring
+              <p className="text-center text-sm text-gray-500 mt-3 mb-8 tracking-wide">
+                Secure Golden Access Panel
               </p>
 
               {/* ERROR */}
               {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-xl text-center font-bold">
+                <div
+                  className="
+                    mb-6
+                    p-4
+                    rounded-2xl
+                    bg-red-500/10
+                    border border-red-500/20
+                    text-red-400
+                    text-sm
+                    text-center
+                    font-bold
+                    backdrop-blur-xl
+                  "
+                >
                   ⚠️ {error}
                 </div>
               )}
 
+              {/* INPUTS */}
               <div className="space-y-5">
+
                 {/* EMAIL */}
                 <div>
-                  <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1 mb-2 block">
+
+                  <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black ml-1 mb-2 block">
                     Admin Email
                   </label>
+
                   <input
                     name="email"
                     required
-                    onChange={handleChange}
-                    value={form.email}
                     type="email"
+                    value={form.email}
+                    onChange={handleChange}
                     placeholder="admin@gmail.com"
-                    className="w-full bg-black/60 border border-white/10 focus:border-orange-500/60 focus:ring-2 focus:ring-orange-500/10 outline-none px-4 py-3.5 rounded-xl text-white transition-all placeholder:text-gray-700 text-sm"
+                    className="
+                      w-full
+                      bg-black/60
+                      border border-yellow-500/10
+                      rounded-2xl
+                      px-5 py-4
+                      outline-none
+                      text-white
+                      placeholder:text-gray-700
+                      transition-all duration-300
+                      focus:border-yellow-400
+                      focus:shadow-[0_0_30px_rgba(255,215,0,0.25)]
+                      hover:border-yellow-500/30
+                    "
                   />
+
                 </div>
 
                 {/* PASSWORD */}
                 <div>
-                  <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold ml-1 mb-2 block">
+
+                  <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black ml-1 mb-2 block">
                     Password
                   </label>
+
                   <input
                     name="password"
                     required
-                    onChange={handleChange}
-                    value={form.password}
                     type="password"
+                    value={form.password}
+                    onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full bg-black/60 border border-white/10 focus:border-orange-500/60 focus:ring-2 focus:ring-orange-500/10 outline-none px-4 py-3.5 rounded-xl text-white transition-all placeholder:text-gray-700 text-sm"
+                    className="
+                      w-full
+                      bg-black/60
+                      border border-yellow-500/10
+                      rounded-2xl
+                      px-5 py-4
+                      outline-none
+                      text-white
+                      placeholder:text-gray-700
+                      transition-all duration-300
+                      focus:border-yellow-400
+                      focus:shadow-[0_0_30px_rgba(255,215,0,0.25)]
+                      hover:border-yellow-500/30
+                    "
                   />
+
                 </div>
 
                 {/* BUTTON */}
                 <button
                   type="submit"
-                  className="w-full mt-4 py-4 rounded-xl bg-orange-500 hover:bg-orange-400 active:scale-[0.98] transition-all font-black uppercase tracking-widest text-black shadow-lg shadow-orange-500/20"
+                  className="
+                    relative overflow-hidden
+                    w-full
+                    mt-3
+                    py-4
+                    rounded-2xl
+                    bg-gradient-to-r
+                    from-yellow-400
+                    via-amber-500
+                    to-orange-500
+                    text-black
+                    font-black
+                    uppercase
+                    tracking-[0.25em]
+                    transition-all duration-300
+                    hover:scale-[1.03]
+                    hover:shadow-[0_0_40px_rgba(255,215,0,0.55)]
+                    active:scale-[0.98]
+                  "
                 >
+
+                  <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition"></span>
+
                   Kirish
+
                 </button>
+
               </div>
+
             </form>
+
           </div>
 
-          <p className="text-center text-gray-700 text-[10px] mt-10 uppercase tracking-[0.3em]">
-            © 2026 Secured Access Node
+          {/* FOOTER */}
+          <p className="text-center text-gray-700 text-[10px] mt-10 uppercase tracking-[0.45em]">
+            © 2026 GOLD SECURE NODE
           </p>
 
         </div>
+
       </div>
+
     </div>
   );
 }

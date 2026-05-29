@@ -2,62 +2,118 @@ import { Typography } from "@material-tailwind/react";
 
 export function SimpleFooter() {
   return (
-    <footer className="relative mt-20 border-t border-white/10 bg-black/40 backdrop-blur-xl text-white">
+    <footer
+      className="
+        relative
+        
+        overflow-hidden
 
-      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-yellow-400 to-transparent"></div>
+        border-t border-yellow-500/10
 
-      <div className="px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        bg-gradient-to-r
+        from-black/40
+        via-black/20
+        to-black/40
+
+        backdrop-blur-[35px]
+        backdrop-saturate-[180%]
+
+        text-white
+
+        shadow-[0_-10px_60px_rgba(0,0,0,0.7)]
+      "
+    >
+
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 pointer-events-none">
+
+        {/* GRID */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,215,0,0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,215,0,0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+
+        {/* GLOW */}
+        <div className="absolute -top-20 left-0 w-[300px] h-[300px] bg-yellow-500/10 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-20 right-0 w-[300px] h-[300px] bg-orange-500/10 rounded-full blur-[120px]" />
+
+      </div>
+
+      {/* TOP LINE */}
+      <div className="relative h-[1px] w-full bg-gradient-to-r from-transparent via-yellow-500 to-transparent shadow-[0_0_25px_rgba(255,215,0,0.4)]" />
+
+      {/* CONTENT */}
+      <div
+        className="
+          relative z-10
+          px-6 sm:px-10
+          py-10
+          flex flex-col lg:flex-row
+          items-center justify-between
+          gap-8
+        "
+      >
 
         {/* LEFT */}
-        <Typography className="text-sm opacity-80">
+        <Typography
+          className="
+            text-sm
+            text-gray-400
+            tracking-[0.15em]
+            uppercase
+            text-center lg:text-left
+          "
+        >
           © {new Date().getFullYear()} 🍽️ Restaurant. All rights reserved.
         </Typography>
 
-        <ul className="flex flex-wrap items-center gap-6 text-sm">
+        {/* LINKS */}
+        <ul
+          className="
+            flex flex-wrap
+            items-center justify-center
+            gap-4 sm:gap-8
+            text-xs sm:text-sm
+            uppercase
+            tracking-[0.25em]
+          "
+        >
 
-          <li>
-            <a className="hover:text-yellow-400 transition" href="/">
-              About
-            </a>
-          </li>
+          {["About", "Menu", "Careers", "Contact"].map((item, i) => (
+            <li key={i}>
+              <a
+                className="
+                  relative
+                  text-gray-400
+                  transition-all duration-300
+                  hover:text-yellow-400
 
-          <li>
-            <a className="hover:text-yellow-400 transition" href="/menu">
-              Menu
-            </a>
-          </li>
-
-          <li>
-            <a className="hover:text-yellow-400 transition" href="#">
-              Careers
-            </a>
-          </li>
-
-          <li>
-            <a className="hover:text-yellow-400 transition" href="#">
-              Contact
-            </a>
-          </li>
+                  after:absolute
+                  after:left-0
+                  after:-bottom-1
+                  after:h-[1px]
+                  after:w-0
+                  after:bg-yellow-400
+                  hover:after:w-full
+                  after:transition-all
+                "
+                href={item === "Menu" ? "/menu" : "/"}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
 
         </ul>
 
-        <div className="flex gap-3">
-
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-yellow-400 hover:text-black transition cursor-pointer">
-            f
-          </div>
-
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-yellow-400 hover:text-black transition cursor-pointer">
-            in
-          </div>
-
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-yellow-400 hover:text-black transition cursor-pointer">
-            ig
-          </div>
-
-        </div>
-
       </div>
+
     </footer>
   );
 }
