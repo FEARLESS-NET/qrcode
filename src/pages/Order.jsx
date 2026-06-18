@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../api/axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005/api/v1';
-const BASE_URL = API_URL.replace('/api/v1', '');
+// Render backend URL
+const BASE_URL = 'https://backend-2-nik3.onrender.com';
 
 const Order = () => {
   const [menus, setMenus] = useState([]);
@@ -20,15 +20,18 @@ const Order = () => {
   });
 
   useEffect(() => {
-    axiosInstance.get("/menus").then((res) => {
-      setMenus(Array.isArray(res.data.menus) ? res.data.menus : []);
-    }).catch(err => console.error("Menu yuklash xatosi:", err));
+    axiosInstance.get("/menus")
+      .then((res) => {
+        setMenus(Array.isArray(res.data.menus) ? res.data.menus : []);
+      })
+      .catch(err => console.error("Menu yuklash xatosi:", err));
   }, []);
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
     if (imagePath.startsWith('http')) return imagePath;
-    return `${BASE_URL}${imagePath}`;
+    // Render backend URL
+    return `https://backend-2-nik3.onrender.com${imagePath}`;
   };
 
   const addToCart = (menu) => {
@@ -121,73 +124,80 @@ const Order = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Menu */}
           <div className="lg:col-span-2 space-y-10">
-            {Object.keys(groupedMenus).map((cat) => (
-              <div key={cat}>
-                <h3 className="text-cyan-400 font-bold uppercase tracking-widest text-sm mb-5 border-b border-cyan-500/10 pb-3">
-                  {cat}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {groupedMenus[cat].map((menu) => {
-                    const qty = getQty(menu._id);
-                    return (
-                      <div
-                        key={menu._id}
-                        className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
-                          qty > 0
-                            ? "border-cyan-400/50 bg-cyan-500/5 shadow-[0_0_25px_rgba(0,255,255,0.1)]"
-                            : "border-white/10 bg-white/[0.03] hover:border-cyan-500/30"
-                        }`}
-                      >
-                        <img
-                          src={getImageUrl(menu.image)}
-                          alt={menu.name}
-                          className="w-full h-40 object-cover"
-                          onError={(e) => {
-                            e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
-                          }}
-                        />
-                        <div className="p-4">
-                          <div className="flex justify-between items-start gap-2">
-                            <div>
-                              <h4 className="font-bold text-white">{menu.name}</h4>
-                              <p className="text-gray-500 text-xs mt-1 line-clamp-2">{menu.retsept}</p>
+            {Object.keys(groupedMenus).length === 0 ? (
+              <div className="text-center text-gray-500 py-20">
+                <p className="text-xl">Menu hali yuklanmoqda...</p>
+                <p className="text-sm mt-2">Iltimos, biroz kuting</p>
+              </div>
+            ) : (
+              Object.keys(groupedMenus).map((cat) => (
+                <div key={cat}>
+                  <h3 className="text-cyan-400 font-bold uppercase tracking-widest text-sm mb-5 border-b border-cyan-500/10 pb-3">
+                    {cat}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {groupedMenus[cat].map((menu) => {
+                      const qty = getQty(menu._id);
+                      return (
+                        <div
+                          key={menu._id}
+                          className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
+                            qty > 0
+                              ? "border-cyan-400/50 bg-cyan-500/5 shadow-[0_0_25px_rgba(0,255,255,0.1)]"
+                              : "border-white/10 bg-white/[0.03] hover:border-cyan-500/30"
+                          }`}
+                        >
+                          <img
+                            src={getImageUrl(menu.image)}
+                            alt={menu.name}
+                            className="w-full h-40 object-cover"
+                            onError={(e) => {
+                              e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
+                            }}
+                          />
+                          <div className="p-4">
+                            <div className="flex justify-between items-start gap-2">
+                              <div>
+                                <h4 className="font-bold text-white">{menu.name}</h4>
+                                <p className="text-gray-500 text-xs mt-1 line-clamp-2">{menu.retsept}</p>
+                              </div>
+                              <span className="text-cyan-400 font-black text-sm whitespace-nowrap">
+                                {Number(menu.price).toLocaleString()} so'm
+                              </span>
                             </div>
-                            <span className="text-cyan-400 font-black text-sm whitespace-nowrap">
-                              {Number(menu.price).toLocaleString()} so'm
-                            </span>
-                          </div>
 
-                          {qty === 0 ? (
-                            <button
-                              onClick={() => addToCart(menu)}
-                              className="mt-4 w-full py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold text-sm transition-all hover:bg-cyan-400 hover:text-black hover:scale-105"
-                            >
-                              + Qo'shish
-                            </button>
-                          ) : (
-                            <div className="mt-4 flex items-center justify-between gap-3">
-                              <button
-                                onClick={() => removeFromCart(menu._id)}
-                                className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-black text-lg hover:bg-red-500 hover:text-white transition-all"
-                              >
-                                −
-                              </button>
-                              <span className="text-white font-black text-lg">{qty}</span>
+                            {qty === 0 ? (
                               <button
                                 onClick={() => addToCart(menu)}
-                                className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-black text-lg hover:bg-cyan-400 hover:text-black transition-all"
+                                className="mt-4 w-full py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-bold text-sm transition-all hover:bg-cyan-400 hover:text-black hover:scale-105"
                               >
-                                +
+                                + Qo'shish
                               </button>
-                            </div>
-                          )}
+                            ) : (
+                              <div className="mt-4 flex items-center justify-between gap-3">
+                                <button
+                                  onClick={() => removeFromCart(menu._id)}
+                                  className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-black text-lg hover:bg-red-500 hover:text-white transition-all"
+                                >
+                                  −
+                                </button>
+                                <span className="text-white font-black text-lg">{qty}</span>
+                                <button
+                                  onClick={() => addToCart(menu)}
+                                  className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-black text-lg hover:bg-cyan-400 hover:text-black transition-all"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
           {/* Cart + Form */}

@@ -7,6 +7,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "engines": {
+    "node": ">=18.0.0 <22.0.0",
+    "npm": ">=9.0.0"
+  },
   "dependencies": {
     "@material-tailwind/react": "^2.1.10",
     "axios": "^1.7.7",
