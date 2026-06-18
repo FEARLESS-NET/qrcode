@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-// Render backend URL
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-2-nik3.onrender.com/api/v1';
+// Environment variable dan URL olish
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005/api/v1';
 
 export const axiosInstance = axios.create({
     baseURL: BASE_URL,
-    headers: { 
-        'Content-Type': 'application/json' 
-    },
+    headers: { 'Content-Type': 'application/json' },
     timeout: 30000,
 });
+
+export default axiosInstance;
 
 // Request interceptor
 axiosInstance.interceptors.request.use(

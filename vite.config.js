@@ -7,12 +7,12 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://backend-2-nik3.onrender.com',
+        target: 'https://backend-3-9rko.onrender.com',
         changeOrigin: true,
         secure: false,
       },
       '/uploads': {
-        target: 'https://backend-2-nik3.onrender.com',
+        target: 'https://backend-3-9rko.onrender.com',
         changeOrigin: true,
         secure: false,
       }
