@@ -1,29 +1,32 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Home from './pages/Home'
-import Menu from './pages/Menu'
-import Admin from './pages/Admin'
-import { NavbarDefault } from './components/Navbar'
-import { SimpleFooter } from './components/Footer'
-import Login from './pages/Login'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { NavbarDefault } from "./components/Navbar";
+import { SimpleFooter } from "./components/Footer";
+import Home from "./pages/Home";
+import Menu from "./pages/Menu";
+import Order from "./pages/Order";
+import Reservation from "./pages/Reservation";
+import Admin from "./pages/Admin";
+import Login from "./pages/Login";
 
-const App = () => {
+function App() {
   return (
-    <Router>
-      <NavbarDefault />
-      
-      <div className=' mt-10'>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/menu' element={<Menu />} />
-          <Route path='/admin' element={<Admin />} />
-          <Route path='/login' element={<Login/>}/>
-        </Routes>
+    <BrowserRouter>
+      <div className="flex flex-col min-h-screen">
+        <NavbarDefault />
+        <main className="flex-grow pt-20">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/reservation" element={<Reservation />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </main>
+        <SimpleFooter />
       </div>
-
-      <SimpleFooter />
-    </Router>
-  )
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,296 @@
+import React, { useEffect, useState } from "react";
+import { axiosInstance } from "../api/axios";
+
+const Reservation = () => {
+  const [tables, setTables] = useState([]);
+  const [stats, setStats] = useState({ total: 0, available: 0, booked: 0 });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const [form, setForm] = useState({
+    customerName: "",
+    phone: "",
+    tableId: "",
+    date: "",
+    time: "",
+    guestCount: 1,
+    note: "",
+  });
+
+  const getTables = async () => {
+    try {
+      const res = await axiosInstance.get("/tables");
+      setTables(res.data.tables || []);
+      setStats(res.data.stats || { total: 0, available: 0, booked: 0 });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getTables();
+  }, []);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await axiosInstance.post("/reservations", form);
+      setSuccess(true);
+      setForm({
+        customerName: "",
+        phone: "",
+        tableId: "",
+        date: "",
+        time: "",
+        guestCount: 1,
+        note: "",
+      });
+      getTables();
+      setTimeout(() => setSuccess(false), 4000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Xatolik yuz berdi");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Bugungi sana (min uchun)
+  const today = new Date().toISOString().split("T")[0];
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white px-4 sm:px-6 lg:px-10 py-24">
+
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[#020617]" />
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(251,191,36,0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(251,191,36,0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: "55px 55px",
+          }}
+        />
+        <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] bg-yellow-500/15 blur-[180px] animate-pulse" />
+        <div className="absolute bottom-[-15%] right-[-10%] w-[600px] h-[600px] bg-amber-400/15 blur-[180px] animate-pulse delay-700" />
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto">
+
+        {/* HEADER */}
+        <div className="text-center mb-14">
+          <span className="text-yellow-500 uppercase tracking-[0.4em] text-xs font-black">
+            Premium Service
+          </span>
+          <h1 className="mt-4 text-5xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
+            Stol Bron
+          </h1>
+          <p className="mt-4 text-gray-400 text-base">
+            Kerakli stol va vaqtni tanlang, biz sizni kutamiz
+          </p>
+        </div>
+
+        {/* STATS */}
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          {[
+            { label: "Jami Stollar", value: stats.total, color: "text-white" },
+            { label: "Bo'sh Stollar", value: stats.available, color: "text-green-400" },
+            { label: "Band Stollar", value: stats.booked, color: "text-red-400" },
+          ].map((s, i) => (
+            <div
+              key={i}
+              className="bg-white/[0.03] border border-yellow-500/10 backdrop-blur-xl rounded-2xl p-5 text-center"
+            >
+              <p className={`text-4xl font-black ${s.color}`}>{s.value}</p>
+              <p className="text-gray-500 text-xs uppercase tracking-[0.2em] mt-2">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* STOLLAR */}
+        <div className="mb-10">
+          <h3 className="text-yellow-400 font-bold uppercase tracking-widest text-sm mb-5">
+            Stol tanlang
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {tables.map((table) => (
+              <button
+                key={table._id}
+                type="button"
+                onClick={() => setForm({ ...form, tableId: table._id })}
+                className={`
+                  relative p-4 rounded-2xl border transition-all duration-300 text-left
+                  ${form.tableId === table._id
+                    ? "border-yellow-400 bg-yellow-500/10 shadow-[0_0_30px_rgba(251,191,36,0.3)]"
+                    : table.isAvailable
+                    ? "border-white/10 bg-white/[0.03] hover:border-yellow-500/40 hover:bg-yellow-500/5"
+                    : "border-red-500/20 bg-red-500/5 opacity-60 cursor-not-allowed"
+                  }
+                `}
+              >
+                <p className="text-2xl font-black text-white">#{table.number}</p>
+                <p className="text-gray-400 text-xs mt-1">{table.capacity} kishi</p>
+                {table.location && (
+                  <p className="text-gray-500 text-[10px] mt-1">{table.location}</p>
+                )}
+                <span
+                  className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${
+                    table.isAvailable ? "bg-green-400" : "bg-red-500"
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* SUCCESS */}
+        {success && (
+          <div className="mb-6 p-5 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-400 font-bold text-center text-lg">
+            ✅ Broningiz qabul qilindi! Tez orada siz bilan bog'lanamiz.
+          </div>
+        )}
+
+        {/* ERROR */}
+        {error && (
+          <div className="mb-6 p-5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold text-center">
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* FORM */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white/[0.03] border border-yellow-500/15 backdrop-blur-3xl rounded-[30px] p-6 sm:p-10"
+        >
+          <h3 className="text-yellow-400 font-black text-xl mb-8 uppercase tracking-wide">
+            📋 Ma'lumotlaringiz
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+            {/* ISM */}
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black mb-2 block">
+                Ism Familiya
+              </label>
+              <input
+                name="customerName"
+                value={form.customerName}
+                onChange={handleChange}
+                placeholder="Sardor Alimov"
+                required
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)]"
+              />
+            </div>
+
+            {/* TELEFON */}
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black mb-2 block">
+                Telefon Raqam
+              </label>
+              <input
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="+998 90 123 45 67"
+                required
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)]"
+              />
+            </div>
+
+            {/* SANA */}
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black mb-2 block">
+                Sana
+              </label>
+              <input
+                name="date"
+                type="date"
+                value={form.date}
+                onChange={handleChange}
+                min={today}
+                required
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)] [color-scheme:dark]"
+              />
+            </div>
+
+            {/* VAQT */}
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black mb-2 block">
+                Vaqt
+              </label>
+              <input
+                name="time"
+                type="time"
+                value={form.time}
+                onChange={handleChange}
+                required
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)] [color-scheme:dark]"
+              />
+            </div>
+
+            {/* MEHMONLAR SONI */}
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black mb-2 block">
+                Mehmonlar Soni
+              </label>
+              <input
+                name="guestCount"
+                type="number"
+                value={form.guestCount}
+                onChange={handleChange}
+                min={1}
+                max={20}
+                required
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)]"
+              />
+            </div>
+
+            {/* IZOH */}
+            <div>
+              <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black mb-2 block">
+                Izoh (ixtiyoriy)
+              </label>
+              <input
+                name="note"
+                value={form.note}
+                onChange={handleChange}
+                placeholder="Tug'ilgan kun, alergiya..."
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(251,191,36,0.2)]"
+              />
+            </div>
+
+          </div>
+
+          {/* SUBMIT */}
+          <button
+            type="submit"
+            disabled={loading || !form.tableId}
+            className="mt-8 w-full py-5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black uppercase tracking-[0.25em] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,215,0,0.5)] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {loading ? "⏳ Yuborilmoqda..." : "🪑 Stol Bron Qilish"}
+          </button>
+
+          {!form.tableId && (
+            <p className="text-center text-yellow-600 text-xs mt-3 uppercase tracking-widest">
+              Yuqoridan stol tanlang
+            </p>
+          )}
+        </form>
+
+      </div>
+    </div>
+  );
+};
+
+export default Reservation;

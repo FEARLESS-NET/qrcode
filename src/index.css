@@ -1,67 +1,57 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --primary-gold: #fbbf24;
-  --premium-dark: #050505;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --neon-blue: #00f2ff;
-  --neon-green: #39ff14;
-}
-
-body {
+/* Custom styles */
+* {
   margin: 0;
-  padding: 0; /* Padding nol bo'lishi shart */
-  font-family: 'Poppins', sans-serif;
-  color: white;
-  min-height: 100vh; 
-  width: 100%; /* Butun kenglikni egallash uchun */
-  overflow-x: hidden; /* Gorizontal skrolni yo'qotadi */
-  background: 
-    radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
-    linear-gradient(to bottom right, #050505, #111, #050505);
-  background-attachment: fixed;
-}
-
-/* INPUTS - Responsive padding */
-.input, .inputAdmin {
-  width: 100%;
-  box-sizing: border-box; /* Input chetdan chiqib ketmasligi uchun */
-  padding: 12px 15px; /* Mobil uchun biroz kichraytirildi */
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
-  color: white;
-  outline: none;
-  border: 1.5px solid var(--glass-border);
-  transition: all 0.3s ease;
-}
-
-/* CARD - Mana shu yerda mobil uchun o'zgarishlar */
-.card {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 1px; /* Telefonda paddingni kamaytirdik (28px dan 16px ga) */
-  border-radius: 24px; /* Sal yumshoqroq */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(25px) saturate(200%);
-  transition: all 0.5s ease;
-  width: 100%; /* Karta kengligi o'rab turgan divga mos bo'lsin */
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* Katta ekranlar uchun paddingni qaytaramiz */
-@media (min-width: 640px) {
-  .card {
-    padding: 28px;
-  }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #020617;
+  color: white;
+  overflow-x: hidden;
 }
 
-@media (min-width: 430px) {
-  .card {
-    padding: 10px;
-  }
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
-.card:hover {
-  transform: translateY(-5px); /* Mobil uchun kichikroq effekt */
-  box-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #22d3ee, #8b5cf6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #06b6d4, #7c3aed);
+}
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.2; }
+}
+
+.animate-pulse {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-700 {
+  animation-delay: 700ms;
 }
