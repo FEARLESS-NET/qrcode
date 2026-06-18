@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-// API URL - muhit o'zgaruvchisi yoki default
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005/api/v1';
+// Render backend URL
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-2-nik3.onrender.com/api/v1';
 
 export const axiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: { 
         'Content-Type': 'application/json' 
     },
-    timeout: 10000,
+    timeout: 30000,
 });
 
 // Request interceptor

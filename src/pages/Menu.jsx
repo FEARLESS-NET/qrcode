@@ -2,8 +2,8 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../api/axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005/api/v1';
-const BASE_URL = API_URL.replace('/api/v1', '');
+// Render backend URL
+const BASE_URL = 'https://backend-2-nik3.onrender.com';
 
 const Menu = () => {
   const [menus, setMenus] = useState([]);
@@ -40,6 +40,8 @@ const Menu = () => {
     if (imagePath.startsWith('http')) return imagePath;
     return `${BASE_URL}${imagePath}`;
   };
+
+  // ... qolgan kod o'zgarmaydi
 
   const SkeletonCard = () => (
     <div className="relative overflow-hidden bg-black/40 border border-cyan-500/20 rounded-[30px] h-[420px] animate-pulse backdrop-blur-2xl">
