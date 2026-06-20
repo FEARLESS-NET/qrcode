@@ -2,17 +2,15 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../api/axios";
 
-// Render backend URL
-const BASE_URL = 'https://backend-2-nik3.onrender.com';
+// ✅ env dan olinadi, hardcode URL yo'q
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3005';
 
 const Menu = () => {
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getMenus();
-  }, []);
+  useEffect(() => { getMenus(); }, []);
 
   const getMenus = async () => {
     try {
@@ -27,7 +25,7 @@ const Menu = () => {
   };
 
   const groupedMenus = useMemo(() => {
-    return (Array.isArray(menus) ? menus : []).reduce((acc, menu) => {
+    return menus.reduce((acc, menu) => {
       const category = menu.category || "Boshqa";
       if (!acc[category]) acc[category] = [];
       acc[category].push(menu);
@@ -35,13 +33,12 @@ const Menu = () => {
     }, {});
   }, [menus]);
 
+  // ✅ Rasm URL to'g'ri
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/400x300?text=No+Image";
-    if (imagePath.startsWith('http')) return imagePath;
+    if (imagePath.startsWith("http")) return imagePath;
     return `${BASE_URL}${imagePath}`;
   };
-
-  // ... qolgan kod o'zgarmaydi
 
   const SkeletonCard = () => (
     <div className="relative overflow-hidden bg-black/40 border border-cyan-500/20 rounded-[30px] h-[420px] animate-pulse backdrop-blur-2xl">
@@ -49,14 +46,13 @@ const Menu = () => {
       <div className="p-8 space-y-5">
         <div className="h-7 bg-cyan-500/10 rounded-full w-3/4"></div>
         <div className="h-4 bg-white/10 rounded-full w-full"></div>
-        <div className="h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full w-20"></div>
       </div>
     </div>
   );
 
   return (
     <div className="relative w-full overflow-hidden bg-black text-white">
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[#020617]"></div>
       </div>
 
@@ -71,15 +67,13 @@ const Menu = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <button
             onClick={() => navigate("/order")}
-            className="group relative overflow-hidden px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-black font-black uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(0,255,255,0.5)] active:scale-[0.98]"
+            className="group relative overflow-hidden px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-black font-black uppercase tracking-[0.2em] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(0,255,255,0.5)]"
           >
-            <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
             🛒 Online Zakaz Berish
           </button>
-
           <button
             onClick={() => navigate("/reservation")}
-            className="px-10 py-4 rounded-2xl border border-yellow-500/30 bg-yellow-500/5 backdrop-blur-xl text-yellow-400 font-black uppercase tracking-[0.2em] transition-all duration-300 hover:bg-yellow-500/10 hover:border-yellow-400 hover:scale-105 hover:shadow-[0_0_35px_rgba(251,191,36,0.35)] active:scale-[0.98]"
+            className="px-10 py-4 rounded-2xl border border-yellow-500/30 bg-yellow-500/5 text-yellow-400 font-black uppercase tracking-[0.2em] transition-all hover:bg-yellow-500/10 hover:border-yellow-400 hover:scale-105"
           >
             🪑 Stol Bron Qilish
           </button>
@@ -90,50 +84,35 @@ const Menu = () => {
             {[1, 2, 3, 4].map((n) => <SkeletonCard key={n} />)}
           </div>
         ) : menus.length === 0 ? (
-          <div className="text-center text-gray-500 text-xl py-20">
-            Menu yo'q
-          </div>
+          <div className="text-center text-gray-500 text-xl py-20">Menu yo'q</div>
         ) : (
           Object.keys(groupedMenus).map((category) => (
             <section key={category} className="mb-20">
               <h3 className="text-2xl font-bold text-cyan-400 mb-6 border-b border-cyan-500/10 pb-3">
                 {category}
               </h3>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {groupedMenus[category].map((menu) => (
-                  <div
-                    key={menu._id}
-                    className="group bg-white/5 border border-cyan-500/20 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.12)]"
-                  >
+                  <div key={menu._id} className="group bg-white/5 border border-cyan-500/20 rounded-2xl overflow-hidden transition-all hover:scale-[1.03] hover:border-cyan-400/50">
                     <div className="relative h-48 overflow-hidden">
                       <img
                         src={getImageUrl(menu.image)}
                         alt={menu.name}
                         className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110"
-                        onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
-                        }}
+                        onError={(e) => { e.target.src = "https://via.placeholder.com/400x300?text=No+Image"; }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                       {menu.category && (
-                        <span className="absolute top-3 right-3 bg-black/60 border border-cyan-400/30 px-3 py-1 rounded-xl text-cyan-400 text-[10px] uppercase tracking-widest backdrop-blur-xl">
+                        <span className="absolute top-3 right-3 bg-black/60 border border-cyan-400/30 px-3 py-1 rounded-xl text-cyan-400 text-[10px] uppercase tracking-widest">
                           {menu.category}
                         </span>
                       )}
                     </div>
-
                     <div className="p-5">
-                      <h4 className="text-lg font-black text-white group-hover:text-cyan-400 transition-colors">
-                        {menu.name}
-                      </h4>
-                      <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-                        {menu.retsept}
-                      </p>
+                      <h4 className="text-lg font-black text-white group-hover:text-cyan-400 transition-colors">{menu.name}</h4>
+                      <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
                       <div className="flex items-center justify-between mt-4">
-                        <p className="text-cyan-400 font-black text-lg">
-                          {Number(menu.price).toLocaleString()} so'm
-                        </p>
+                        <p className="text-cyan-400 font-black text-lg">{Number(menu.price).toLocaleString()} so'm</p>
                         <button
                           onClick={() => navigate("/order")}
                           className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold hover:bg-cyan-400 hover:text-black transition-all"

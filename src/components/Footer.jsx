@@ -117,3 +117,6 @@ export function SimpleFooter() {
     </footer>
   );
 }
+
+// ✅ MUHIM: default export qo'shildi
+export default SimpleFooter;

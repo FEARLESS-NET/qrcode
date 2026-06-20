@@ -1,24 +1,36 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../api/axios";
+import PaymentModal from "../components/PaymentModal";
+import DeliveryTracker from "../components/DeliveryTracker";
+import { useNavigate } from "react-router-dom";
 
-// Render backend URL
-const BASE_URL = 'https://backend-2-nik3.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3005';
 
 const Order = () => {
+  const navigate = useNavigate();
   const [menus, setMenus] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [location, setLocation] = useState(null);
+  const [locationError, setLocationError] = useState("");
+  const [showPayment, setShowPayment] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState(null);
+  const [deliveryStatus, setDeliveryStatus] = useState('pending');
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [lastOrder, setLastOrder] = useState(null);
 
   const [form, setForm] = useState({
     customerName: "",
     phone: "",
     deliveryType: "dine-in",
     address: "",
+    tableNumber: "",
     note: "",
   });
 
+  // Menularni yuklash
   useEffect(() => {
     axiosInstance.get("/menus")
       .then((res) => {
@@ -27,11 +39,34 @@ const Order = () => {
       .catch(err => console.error("Menu yuklash xatosi:", err));
   }, []);
 
+  // Geolokatsiya olish
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            type: "Point",
+            coordinates: [position.coords.longitude, position.coords.latitude],
+          });
+          setLocationError("");
+        },
+        (error) => {
+          console.warn("Lokatsiya olish rad etildi:", error.message);
+          setLocationError("Lokatsiyaga ruxsat bering yoki manzilni qo'lda kiriting");
+          setLocation({
+            type: "Point",
+            coordinates: [69.2401, 41.2995],
+          });
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+  }, []);
+
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
     if (imagePath.startsWith('http')) return imagePath;
-    // Render backend URL
-    return `https://backend-2-nik3.onrender.com${imagePath}`;
+    return `${BASE_URL}${imagePath}`;
   };
 
   const addToCart = (menu) => {
@@ -75,19 +110,48 @@ const Order = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
+
+    if (form.deliveryType === "dine-in" && !form.tableNumber) {
+      return setError("Dine-in uchun stol raqamini kiriting!");
+    }
+
+    if (form.deliveryType === "delivery" && !form.address.trim()) {
+      return setError("Yetkazish uchun manzil kiritilishi shart!");
+    }
+
     setLoading(true);
     setError("");
     try {
-      await axiosInstance.post("/orders", { ...form, items: cart, totalPrice });
-      setSuccess(true);
+      const orderData = {
+        ...form,
+        items: cart,
+        totalPrice,
+        tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
+        location: location || { type: "Point", coordinates: [0, 0] },
+        paymentStatus: 'pending',
+        deliveryStatus: 'pending',
+      };
+
+      const res = await axiosInstance.post("/orders", orderData);
+      
+      setCurrentOrderId(res.data.order._id);
+      setLastOrder(res.data.order);
+      setShowPayment(true);
+      
       setCart([]);
-      setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", note: "" });
-      setTimeout(() => setSuccess(false), 5000);
+      setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", note: "" });
+      
     } catch (err) {
       setError(err.response?.data?.message || "Xatolik yuz berdi");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentSuccess = (method) => {
+    setPaymentMethod(method);
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 5000);
   };
 
   return (
@@ -119,6 +183,20 @@ const Order = () => {
             Online Zakaz
           </h1>
           <p className="mt-4 text-gray-400">Taomlarni tanlang va buyurtma bering</p>
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => navigate("/track")}
+              className="px-6 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm font-bold hover:border-cyan-500/30 hover:text-white transition-all"
+            >
+              🚚 Zakaz holati
+            </button>
+          </div>
+          {locationError && (
+            <p className="text-yellow-400 text-xs mt-2">⚠️ {locationError}</p>
+          )}
+          {location && !locationError && (
+            <p className="text-green-400 text-xs mt-2">✅ Lokatsiya aniqlandi</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -280,7 +358,7 @@ const Order = () => {
                       <button
                         key={opt.val}
                         type="button"
-                        onClick={() => setForm({ ...form, deliveryType: opt.val })}
+                        onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "" })}
                         className={`py-2 rounded-xl text-xs font-bold border transition-all ${
                           form.deliveryType === opt.val
                             ? "border-cyan-400 bg-cyan-500/10 text-cyan-400"
@@ -293,9 +371,25 @@ const Order = () => {
                   </div>
                 </div>
 
+                {form.deliveryType === "dine-in" && (
+                  <div>
+                    <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Stol raqami *</label>
+                    <input
+                      name="tableNumber"
+                      type="number"
+                      value={form.tableNumber}
+                      onChange={(e) => setForm({ ...form, tableNumber: e.target.value })}
+                      placeholder="12"
+                      required
+                      min={1}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-cyan-400 transition-all"
+                    />
+                  </div>
+                )}
+
                 {form.deliveryType === "delivery" && (
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Manzil</label>
+                    <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Manzil *</label>
                     <input
                       name="address"
                       value={form.address}
@@ -326,10 +420,27 @@ const Order = () => {
                   {loading ? "⏳ Yuborilmoqda..." : "🛒 Zakaz Berish"}
                 </button>
               </form>
+
+              {/* Zakaz holatini kuzatish */}
+              <button
+                onClick={() => navigate("/track")}
+                className="w-full py-3 rounded-xl border border-cyan-500/20 text-cyan-400 text-sm font-bold hover:bg-cyan-500/10 transition-all"
+              >
+                🚚 Zakaz holatini kuzatish
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPayment}
+        onClose={() => setShowPayment(false)}
+        orderId={currentOrderId}
+        totalPrice={totalPrice}
+        onSuccess={handlePaymentSuccess}
+      />
     </div>
   );
 };

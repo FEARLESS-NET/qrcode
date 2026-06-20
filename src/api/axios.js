@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Environment variable dan URL olish
+// ✅ /api/v1 ni o'zi qo'shadi — .env da faqat base URL yozing
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3005/api/v1';
 
 export const axiosInstance = axios.create({
@@ -9,20 +9,14 @@ export const axiosInstance = axios.create({
     timeout: 30000,
 });
 
-export default axiosInstance;
-
-// Request interceptor
 axiosInstance.interceptors.request.use(
     (config) => {
         console.log(`📤 ${config.method.toUpperCase()} ${config.url}`);
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
     (response) => {
         console.log(`📥 ${response.status} ${response.config.url}`);

@@ -158,3 +158,6 @@ export function NavbarDefault() {
     </div>
   );
 }
+
+// ✅ MUHIM: default export qo'shildi
+export default NavbarDefault;

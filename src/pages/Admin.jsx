@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import Reports from "../components/Reports";
+import OrderTracker from "../components/OrderTracker";
 
-const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar"];
+const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Yetkazib berish", "Hisobotlar"];
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ const Admin = () => {
 
   // ── ZAKAZLAR ──
   const [orders, setOrders] = useState([]);
+  const [editingDelivery, setEditingDelivery] = useState(null);
 
   const getOrders = async () => {
     try {
@@ -58,6 +61,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
+  // Birinchi yuklanish
   useEffect(() => {
     getMenus();
     getTables();
@@ -141,6 +145,22 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
+  // ── ✅ DELIVERY STATUS YANGILASH ──
+  const updateDeliveryStatus = async (id, deliveryStatus, courierName = '', courierPhone = '') => {
+    try {
+      await axiosInstance.patch(`/orders/${id}/delivery`, { 
+        deliveryStatus, 
+        courierName, 
+        courierPhone,
+        deliveryTime: deliveryStatus === 'delivered' ? new Date().toLocaleString() : undefined
+      });
+      getOrders();
+      setEditingDelivery(null);
+    } catch (err) { 
+      alert('Xatolik: ' + err.response?.data?.message); 
+    }
+  };
+
   const statusColor = {
     pending: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10",
     confirmed: "text-green-400 border-green-500/30 bg-green-500/10",
@@ -150,16 +170,35 @@ const Admin = () => {
   };
 
   const statusLabel = {
-    pending: "Kutilmoqda",
-    confirmed: "Tasdiqlandi",
-    cancelled: "Bekor",
-    preparing: "Tayyorlanmoqda",
-    ready: "Tayyor",
+    pending: "⏳ Kutilmoqda",
+    confirmed: "✅ Tasdiqlandi",
+    cancelled: "❌ Bekor",
+    preparing: "👨‍🍳 Tayyorlanmoqda",
+    ready: "🎉 Tayyor",
+  };
+
+  const deliveryStatusLabels = {
+    'pending': '⏳ Kutilmoqda',
+    'preparing': '👨‍🍳 Tayyorlanmoqda',
+    'on_the_way': '🚚 Yo\'lda',
+    'delivered': '✅ Yetkazildi',
+  };
+
+  const diningAreaMap = {
+    main_hall: "🏛 Asosiy zal",
+    terrace: "🌿 Terassa",
+    vip_room: "👑 VIP xona",
+    garden: "🌳 Bog'",
+  };
+
+  const deliveryTypeMap = {
+    "dine-in": "🍽 Restoran",
+    "takeaway": "🥡 Olib ketish",
+    "delivery": "🚚 Yetkazish",
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white px-4 sm:px-6 lg:px-10 py-10">
-
       {/* BACKGROUND */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[#020617]" />
@@ -169,7 +208,6 @@ const Admin = () => {
       </div>
 
       <div className="relative z-10">
-
         {/* HEADER */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-10 border-b border-cyan-500/20 pb-7">
           <div>
@@ -187,12 +225,13 @@ const Admin = () => {
         </div>
 
         {/* QUICK STATS */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">
           {[
             { label: "Menyu", value: menus.length, color: "cyan" },
             { label: "Jami Stollar", value: tableStats.total, color: "blue" },
             { label: "Bronlar", value: reservations.filter(r => r.status === "pending").length, color: "yellow", suffix: " yangi" },
             { label: "Zakazlar", value: orders.filter(o => o.status === "pending").length, color: "purple", suffix: " yangi" },
+            { label: "Yo'lda", value: orders.filter(o => o.deliveryStatus === "on_the_way").length, color: "orange", suffix: " ta" },
           ].map((s, i) => (
             <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-center">
               <p className={`text-3xl font-black text-${s.color}-400`}>{s.value}{s.suffix || ""}</p>
@@ -347,29 +386,28 @@ const Admin = () => {
               <p className="text-gray-500 text-center py-20 text-xl">Hali bron yo'q</p>
             ) : (
               reservations.map((r) => (
-                <div key={r._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 flex flex-col sm:flex-row justify-between gap-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-black text-lg">{r.customerName}</h3>
-                      <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>
-                        {statusLabel[r.status]}
-                      </span>
+                <div key={r._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                  <div className="flex flex-col sm:flex-row justify-between gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <h3 className="font-black text-lg">{r.customerName}</h3>
+                        <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>
+                          {statusLabel[r.status]}
+                        </span>
+                      </div>
+                      <p className="text-gray-400 text-sm">📞 {r.phone}</p>
+                      <p className="text-gray-400 text-sm">🪑 Stol #{r.tableId?.number} &nbsp;|&nbsp; 👥 {r.guestCount} kishi</p>
+                      <p className="text-gray-400 text-sm">📆 {r.date} &nbsp;⏰ {r.time}</p>
+                      {r.diningArea && <p className="text-yellow-400 text-sm">📍 {diningAreaMap[r.diningArea] || r.diningArea}</p>}
+                      {r.note && <p className="text-gray-500 text-xs">📝 {r.note}</p>}
                     </div>
-                    <p className="text-gray-400 text-sm">📞 {r.phone}</p>
-                    <p className="text-gray-400 text-sm">
-                      🪑 Stol #{r.tableId?.number} &nbsp;|&nbsp; 👥 {r.guestCount} kishi
-                    </p>
-                    <p className="text-gray-400 text-sm">
-                      📆 {r.date} &nbsp;⏰ {r.time}
-                    </p>
-                    {r.note && <p className="text-gray-500 text-xs">📝 {r.note}</p>}
+                    {r.status === "pending" && (
+                      <div className="flex gap-2 items-start">
+                        <button onClick={() => updateReservationStatus(r._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all">✅ Tasdiqlash</button>
+                        <button onClick={() => updateReservationStatus(r._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">❌ Bekor</button>
+                      </div>
+                    )}
                   </div>
-                  {r.status === "pending" && (
-                    <div className="flex gap-2 items-start">
-                      <button onClick={() => updateReservationStatus(r._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all">✅ Tasdiqlash</button>
-                      <button onClick={() => updateReservationStatus(r._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">❌ Bekor</button>
-                    </div>
-                  )}
                 </div>
               ))
             )}
@@ -392,11 +430,18 @@ const Admin = () => {
                           {statusLabel[o.status]}
                         </span>
                         <span className="text-xs px-3 py-1 rounded-full border border-white/10 text-gray-400">
-                          {o.deliveryType === "delivery" ? "🚚 Yetkazish" : o.deliveryType === "takeaway" ? "🥡 Olib ketish" : "🍽 Restoran"}
+                          {deliveryTypeMap[o.deliveryType] || o.deliveryType}
                         </span>
+                        {o.deliveryStatus && o.deliveryStatus !== 'pending' && (
+                          <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10">
+                            {deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}
+                          </span>
+                        )}
                       </div>
                       <p className="text-gray-400 text-sm">📞 {o.phone}</p>
-                      {o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
+                      {o.deliveryType === "dine-in" && o.tableNumber && <p className="text-yellow-400 text-sm">🪑 Stol #{o.tableNumber}</p>}
+                      {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
+                      {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
                       <div className="mt-2 space-y-1">
                         {o.items?.map((item, idx) => (
                           <p key={idx} className="text-gray-300 text-sm">
@@ -404,23 +449,40 @@ const Admin = () => {
                           </p>
                         ))}
                       </div>
-                      <p className="text-cyan-400 font-black mt-2">Jami: {o.totalPrice?.toLocaleString()} so'm</p>
+                      <p className="text-cyan-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
                       {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
+                      {o.courierName && (
+                        <p className="text-green-400 text-xs">👤 Kuryer: {o.courierName}</p>
+                      )}
                     </div>
-
                     {o.status !== "cancelled" && o.status !== "ready" && (
                       <div className="flex flex-col gap-2 items-start">
-                        {o.status === "pending" && (
-                          <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
-                        )}
-                        {o.status === "confirmed" && (
-                          <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
-                        )}
+                        {o.status === "pending" && <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>}
+                        {o.status === "confirmed" && <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>}
                         {o.status === "preparing" && (
-                          <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
+                          <>
+                            <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
+                            {o.deliveryType === "delivery" && (
+                              <button onClick={() => {
+                                const courierName = prompt("Kuryer ismi:");
+                                const courierPhone = prompt("Kuryer telefon raqami:");
+                                if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
+                              }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
+                            )}
+                          </>
+                        )}
+                        {o.deliveryStatus === "on_the_way" && (
+                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
                         )}
                         <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
                       </div>
+                    )}
+                    {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
+                      <button onClick={() => {
+                        const courierName = prompt("Kuryer ismi:");
+                        const courierPhone = prompt("Kuryer telefon raqami:");
+                        if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
+                      }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
                     )}
                   </div>
                 </div>
@@ -429,6 +491,15 @@ const Admin = () => {
           </div>
         )}
 
+        {/* ── TAB: YETKAZIB BERISH ── */}
+        {activeTab === "Yetkazib berish" && (
+          <OrderTracker />
+        )}
+
+        {/* ── TAB: HISOBOTLAR ── */}
+        {activeTab === "Hisobotlar" && (
+          <Reports />
+        )}
       </div>
     </div>
   );
