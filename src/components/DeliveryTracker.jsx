@@ -1,15 +1,46 @@
 import React from 'react';
 
-const DeliveryTracker = ({ order, onUpdate }) => {
-  const steps = [
-    { key: 'pending', label: '⏳ Kutilmoqda', icon: '🕐', color: 'text-gray-400', bg: 'bg-gray-800' },
-    { key: 'confirmed', label: '✅ Tasdiqlandi', icon: '✅', color: 'text-green-400', bg: 'bg-green-500' },
-    { key: 'preparing', label: '👨‍🍳 Tayyorlanmoqda', icon: '👨‍🍳', color: 'text-blue-400', bg: 'bg-blue-500' },
-    { key: 'on_the_way', label: '🚚 Yo\'lda', icon: '🚚', color: 'text-yellow-400', bg: 'bg-yellow-500' },
-    { key: 'delivered', label: '✅ Yetkazildi', icon: '🎉', color: 'text-green-400', bg: 'bg-green-500' },
-  ];
+const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
+  if (!order) return null;
 
-  const currentIndex = steps.findIndex(s => s.key === order?.deliveryStatus || 'pending');
+  const isCancelled = order.status === 'cancelled';
+  const isDelivery = order.deliveryType === 'delivery';
+
+  // ✅ Zakaz turiga qarab progress bosqichlari farqlanadi:
+  // - Yetkazib berish: 6 bosqich (kuryer yo'lda/yetkazildi ham bor)
+  // - Restoran / Olib ketish: 4 bosqich (kuryer kerak emas)
+  const steps = isDelivery
+    ? [
+        { key: 'pending', label: '⏳ Kutilmoqda', icon: '🕐', bg: 'bg-gray-600' },
+        { key: 'confirmed', label: '✅ Tasdiqlandi', icon: '✅', bg: 'bg-green-500' },
+        { key: 'preparing', label: '👨‍🍳 Tayyorlanmoqda', icon: '👨‍🍳', bg: 'bg-blue-500' },
+        { key: 'ready', label: '🎉 Tayyor', icon: '🎉', bg: 'bg-cyan-500' },
+        { key: 'on_the_way', label: "🚚 Yo'lda", icon: '🚚', bg: 'bg-yellow-500' },
+        { key: 'delivered', label: '✅ Yetkazildi', icon: '🏁', bg: 'bg-green-500' },
+      ]
+    : [
+        { key: 'pending', label: '⏳ Kutilmoqda', icon: '🕐', bg: 'bg-gray-600' },
+        { key: 'confirmed', label: '✅ Tasdiqlandi', icon: '✅', bg: 'bg-green-500' },
+        { key: 'preparing', label: '👨‍🍳 Tayyorlanmoqda', icon: '👨‍🍳', bg: 'bg-blue-500' },
+        {
+          key: 'ready',
+          label: order.deliveryType === 'takeaway' ? '🥡 Tayyor, kuting' : '🍽 Tayyor, taklif etiladi',
+          icon: '🎉',
+          bg: 'bg-cyan-500',
+        },
+      ];
+
+  // ✅ Joriy bosqichni order.status VA order.deliveryStatus ikkalasidan birga aniqlaymiz
+  const getCurrentKey = () => {
+    if (order.deliveryStatus === 'delivered') return 'delivered';
+    if (order.deliveryStatus === 'on_the_way') return 'on_the_way';
+    if (order.status === 'ready') return 'ready';
+    if (order.status === 'preparing') return 'preparing';
+    if (order.status === 'confirmed') return 'confirmed';
+    return 'pending';
+  };
+
+  const currentIndex = isCancelled ? -1 : steps.findIndex((s) => s.key === getCurrentKey());
   const deliveryTypeLabels = {
     'dine-in': '🍽 Restoran',
     'takeaway': '🥡 Olib ketish',
@@ -24,14 +55,7 @@ const DeliveryTracker = ({ order, onUpdate }) => {
     'cancelled': '❌ Bekor qilingan',
   };
 
-  const deliveryStatusLabels = {
-    'pending': '⏳ Kutilmoqda',
-    'preparing': '👨‍🍳 Tayyorlanmoqda',
-    'on_the_way': '🚚 Yo\'lda',
-    'delivered': '✅ Yetkazildi',
-  };
 
-  if (!order) return null;
 
   return (
     <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6">
@@ -78,8 +102,15 @@ const DeliveryTracker = ({ order, onUpdate }) => {
         </div>
       )}
 
+      {/* Bekor qilingan bo'lsa alohida banner */}
+      {isCancelled && (
+        <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold text-center">
+          ❌ Bu zakaz bekor qilingan
+        </div>
+      )}
+
       {/* Progress bar */}
-      <div className="relative flex items-center justify-between mb-6 mt-4">
+      <div className={`relative flex items-center justify-between mb-6 mt-4 ${isCancelled ? 'opacity-40 pointer-events-none' : ''}`}>
         {steps.map((step, idx) => {
           const isActive = idx <= currentIndex;
           const isCurrent = idx === currentIndex;
@@ -114,9 +145,9 @@ const DeliveryTracker = ({ order, onUpdate }) => {
       {/* Holat va vaqt */}
       <div className="flex justify-between items-center p-3 bg-white/5 rounded-xl">
         <div>
-          <p className="text-gray-500 text-[10px] uppercase tracking-widest">Hozirgi holat</p>
+          <p className="text-gray-500 text-[10px] uppercase tracking-widest">Hozirgi bosqich</p>
           <p className="text-yellow-400 font-bold text-sm">
-            {deliveryStatusLabels[order.deliveryStatus] || order.deliveryStatus}
+            {isCancelled ? '❌ Bekor qilingan' : (steps[currentIndex]?.label || statusLabels[order.status])}
           </p>
         </div>
         <div className="text-right">
@@ -130,10 +161,25 @@ const DeliveryTracker = ({ order, onUpdate }) => {
       {/* Kuryer ma'lumotlari */}
       {order.courierName && (
         <div className="mt-3 p-3 bg-green-500/5 border border-green-500/20 rounded-xl">
-          <p className="text-gray-500 text-[10px] uppercase tracking-widest">👤 Kuryer</p>
-          <p className="text-white text-sm">{order.courierName} {order.courierPhone && `(${order.courierPhone})`}</p>
+          <p className="text-gray-500 text-[10px] uppercase tracking-widest mb-1">👤 Kuryer ma'lumotlari</p>
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <p className="text-white text-sm font-bold">{order.courierName}</p>
+              {order.courierPhone && (
+                <p className="text-gray-400 text-xs mt-0.5">{order.courierPhone}</p>
+              )}
+            </div>
+            {order.courierPhone && (
+              <a
+                href={`tel:${order.courierPhone}`}
+                className="px-4 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap"
+              >
+                📞 Qo'ng'iroq qilish
+              </a>
+            )}
+          </div>
           {order.deliveryTime && (
-            <p className="text-gray-400 text-xs mt-1">⏱ Yetkazish vaqti: {order.deliveryTime}</p>
+            <p className="text-gray-400 text-xs mt-2">⏱ Yetkazish vaqti: {order.deliveryTime}</p>
           )}
         </div>
       )}
@@ -155,6 +201,23 @@ const DeliveryTracker = ({ order, onUpdate }) => {
         <div className="mt-3 p-2 bg-gray-500/5 border border-gray-500/20 rounded-xl">
           <p className="text-gray-500 text-[10px] uppercase tracking-widest">📝 Izoh</p>
           <p className="text-gray-400 text-sm">{order.note}</p>
+        </div>
+      )}
+
+      {/* ✅ Ixtiyoriy: zakazni o'z tarixidan o'chirish */}
+      {onDelete && (
+        <div className="mt-6 pt-4 border-t border-white/10 text-right">
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm("Ushbu zakazni tarixingizdan butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.")) {
+                onDelete();
+              }
+            }}
+            className="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-widest transition-all"
+          >
+            🗑 Zakazni tarixdan o'chirish
+          </button>
         </div>
       )}
     </div>

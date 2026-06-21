@@ -15,6 +15,7 @@ const Order = () => {
   const [error, setError] = useState("");
   const [location, setLocation] = useState(null);
   const [locationError, setLocationError] = useState("");
+  const [locationLoading, setLocationLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState(null);
   const [deliveryStatus, setDeliveryStatus] = useState('pending');
@@ -39,29 +40,45 @@ const Order = () => {
       .catch(err => console.error("Menu yuklash xatosi:", err));
   }, []);
 
-  // Geolokatsiya olish
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            type: "Point",
-            coordinates: [position.coords.longitude, position.coords.latitude],
-          });
-          setLocationError("");
-        },
-        (error) => {
-          console.warn("Lokatsiya olish rad etildi:", error.message);
-          setLocationError("Lokatsiyaga ruxsat bering yoki manzilni qo'lda kiriting");
-          setLocation({
-            type: "Point",
-            coordinates: [69.2401, 41.2995],
-          });
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
+  // ✅ Geolokatsiyani aniqlash (foydalanuvchi tugma bosganda ishga tushadi)
+  const detectLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Brauzeringiz geolokatsiyani qo'llab-quvvatlamaydi");
+      return;
     }
-  }, []);
+
+    setLocationLoading(true);
+    setLocationError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const geo = { type: "Point", coordinates: [longitude, latitude] };
+        setLocation(geo);
+
+        // ✅ Koordinatadan manzilni aniqlash (reverse geocoding)
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=uz`
+          );
+          const data = await res.json();
+          const address = data?.display_name || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+          setForm((f) => ({ ...f, address }));
+        } catch (err) {
+          console.warn("Manzilni aniqlashda xatolik:", err.message);
+          setForm((f) => ({ ...f, address: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}` }));
+        } finally {
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        console.warn("Lokatsiya olish rad etildi:", error.message);
+        setLocationError("Lokatsiyaga ruxsat berilmadi. Brauzer sozlamalaridan ruxsat bering yoki manzilni qo'lda kiriting.");
+        setLocationLoading(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
@@ -107,46 +124,59 @@ const Order = () => {
     }, {});
   }, [menus]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
+ // Faqat handleSubmit funksiyasini almashtiring:
 
-    if (form.deliveryType === "dine-in" && !form.tableNumber) {
-      return setError("Dine-in uchun stol raqamini kiriting!");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
+
+  if (form.deliveryType === "dine-in" && !form.tableNumber) {
+    return setError("Dine-in uchun stol raqamini kiriting!");
+  }
+
+  if (form.deliveryType === "delivery" && !form.address.trim()) {
+    return setError("Yetkazish uchun manzil kiritilishi shart!");
+  }
+
+  setLoading(true);
+  setError("");
+  try {
+    // ✅ Lokatsiyani tayyorlash
+    let locationData = location || { type: "Point", coordinates: [0, 0] };
+    
+    // Agar lokatsiya bo'lmasa va delivery bo'lsa, manzildan aniqlash
+    if (form.deliveryType === "delivery" && form.address && (!location || location.coordinates[0] === 0)) {
+      // Bu yerda manzilni koordinataga aylantirish mumkin (Geocoding API)
+      // Hozircha default qoldiramiz
     }
 
-    if (form.deliveryType === "delivery" && !form.address.trim()) {
-      return setError("Yetkazish uchun manzil kiritilishi shart!");
-    }
+    const orderData = {
+      ...form,
+      items: cart,
+      totalPrice,
+      tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
+      location: locationData,
+      paymentStatus: 'pending',
+      deliveryStatus: 'pending',
+      // ✅ Telegram ID (mijozning Telegram ID si)
+      telegramId: localStorage.getItem('telegramId') || null,
+    };
 
-    setLoading(true);
-    setError("");
-    try {
-      const orderData = {
-        ...form,
-        items: cart,
-        totalPrice,
-        tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
-        location: location || { type: "Point", coordinates: [0, 0] },
-        paymentStatus: 'pending',
-        deliveryStatus: 'pending',
-      };
-
-      const res = await axiosInstance.post("/orders", orderData);
-      
-      setCurrentOrderId(res.data.order._id);
-      setLastOrder(res.data.order);
-      setShowPayment(true);
-      
-      setCart([]);
-      setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", note: "" });
-      
-    } catch (err) {
-      setError(err.response?.data?.message || "Xatolik yuz berdi");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const res = await axiosInstance.post("/orders", orderData);
+    
+    setCurrentOrderId(res.data.order._id);
+    setLastOrder(res.data.order);
+    setShowPayment(true);
+    
+    setCart([]);
+    setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", note: "" });
+    
+  } catch (err) {
+    setError(err.response?.data?.message || "Xatolik yuz berdi");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handlePaymentSuccess = (method) => {
     setPaymentMethod(method);
@@ -389,15 +419,31 @@ const Order = () => {
 
                 {form.deliveryType === "delivery" && (
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Manzil *</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 block">Manzil *</label>
+                      <button
+                        type="button"
+                        onClick={detectLocation}
+                        disabled={locationLoading}
+                        className="text-[10px] font-bold text-cyan-400 hover:text-cyan-300 transition-all disabled:opacity-50 whitespace-nowrap"
+                      >
+                        {locationLoading ? "⏳ Aniqlanmoqda..." : "📍 Joylashuvimni aniqlash"}
+                      </button>
+                    </div>
                     <input
                       name="address"
                       value={form.address}
                       onChange={(e) => setForm({ ...form, address: e.target.value })}
-                      placeholder="Ko'cha, uy raqami..."
+                      placeholder="Ko'cha, uy raqami... yoki tugma orqali aniqlang"
                       required
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-cyan-400 transition-all"
                     />
+                    {locationError && (
+                      <p className="text-yellow-400 text-[10px] mt-1">⚠️ {locationError}</p>
+                    )}
+                    {location && !locationError && (
+                      <p className="text-green-400 text-[10px] mt-1">✅ Aniq joylashuv olindi — kuryer xaritada ko'radi</p>
+                    )}
                   </div>
                 )}
 

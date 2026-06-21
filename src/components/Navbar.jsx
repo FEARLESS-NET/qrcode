@@ -29,6 +29,7 @@ export function NavbarDefault() {
     { name: "Menu", link: "/menu" },
     { name: "Zakaz", link: "/order" },
     { name: "Bron", link: "/reservation" },
+    { name: "Kuzatish", link: "/track" },
     { name: "Admin", link: "/admin" },
   ];
 

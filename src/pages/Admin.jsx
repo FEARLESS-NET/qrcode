@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { useNavigate } from "react-router-dom";
-import Reports from "../components/Reports";
-import OrderTracker from "../components/OrderTracker";
+import Reports from "../components/Reports.jsx";
 
-const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Yetkazib berish", "Hisobotlar"];
+const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Hisobotlar"];
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3005';
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
+  if (imagePath.startsWith("http")) return imagePath;
+  return `${BASE_URL}${imagePath}`;
+};
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -83,7 +89,11 @@ const Admin = () => {
       formData.append("price", form.price);
       formData.append("retsept", form.retsept);
       formData.append("category", form.category);
-      if (form.image instanceof File) formData.append("image", form.image);
+      if (form.image instanceof File) {
+        formData.append("image", form.image);
+      } else if (typeof form.image === "string" && form.image.trim()) {
+        formData.append("image", form.image.trim());
+      }
 
       if (editingId) {
         await axiosInstance.put(`/menus/${editingId}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
@@ -264,9 +274,50 @@ const Admin = () => {
               <h3 className="text-cyan-400 font-black text-xl mb-6">
                 {editingId ? "📝 Tahrirlash" : "➕ Yangi Taom"}
               </h3>
+
               <div className="mb-4">
-                <label className="text-xs uppercase text-gray-500 block mb-2">Rasm yuklash</label>
-                <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files[0] })} className="text-gray-400 text-sm" />
+                <label className="text-xs uppercase text-gray-500 block mb-2">Rasm</label>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setForm({ ...form, image: e.target.files[0], imageUrl: "" })}
+                    className="text-gray-400 text-sm flex-1"
+                  />
+                  <div className="flex items-center gap-2 flex-1">
+                    <input
+                      type="text"
+                      value={form.imageUrl || ""}
+                      placeholder="Yoki rasm URL manzilini joylashtiring..."
+                      onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                      className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 outline-none text-white text-sm placeholder:text-gray-700 focus:border-cyan-400 transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!form.imageUrl?.trim()) return;
+                        // ✅ Backendga so'rov yubormasdan, URL to'g'ridan-to'g'ri rasm sifatida saqlanadi
+                        setForm({ ...form, image: form.imageUrl.trim() });
+                      }}
+                      className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap"
+                    >
+                      Biriktirish
+                    </button>
+                  </div>
+                </div>
+
+                {/* ✅ Tanlangan rasm preview */}
+                {form.image && (
+                  <div className="mt-3 flex items-center gap-3">
+                    <img
+                      src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)}
+                      alt="preview"
+                      className="w-20 h-20 object-cover rounded-xl border border-cyan-500/20"
+                      onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }}
+                    />
+                    <span className="text-green-400 text-xs">✅ Rasm tanlandi</span>
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {["name", "price", "retsept", "category"].map((key) => (
@@ -302,7 +353,9 @@ const Admin = () => {
               {menus.map((menu) => (
                 <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-cyan-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-cyan-400/50">
                   <div className="h-48 overflow-hidden">
-                    <img src={menu.image || "https://via.placeholder.com/400x200?text=No+Image"} alt={menu.name} className="w-full h-full object-cover" />
+                    <img src={getImageUrl(menu.image)} alt={menu.name} className="w-full h-full object-cover"
+                      onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }}
+                    />
                   </div>
                   <div className="p-5">
                     <div className="flex justify-between">
@@ -441,6 +494,16 @@ const Admin = () => {
                       <p className="text-gray-400 text-sm">📞 {o.phone}</p>
                       {o.deliveryType === "dine-in" && o.tableNumber && <p className="text-yellow-400 text-sm">🪑 Stol #{o.tableNumber}</p>}
                       {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
+                      {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
+                        <a
+                          href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block text-cyan-400 text-xs underline hover:text-cyan-300"
+                        >
+                          🗺 Xaritada ko'rish
+                        </a>
+                      )}
                       {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
                       <div className="mt-2 space-y-1">
                         {o.items?.map((item, idx) => (
@@ -455,45 +518,37 @@ const Admin = () => {
                         <p className="text-green-400 text-xs">👤 Kuryer: {o.courierName}</p>
                       )}
                     </div>
-                    {o.status !== "cancelled" && o.status !== "ready" && (
-                      <div className="flex flex-col gap-2 items-start">
-                        {o.status === "pending" && <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>}
-                        {o.status === "confirmed" && <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>}
-                        {o.status === "preparing" && (
-                          <>
-                            <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
-                            {o.deliveryType === "delivery" && (
-                              <button onClick={() => {
-                                const courierName = prompt("Kuryer ismi:");
-                                const courierPhone = prompt("Kuryer telefon raqami:");
-                                if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
-                              }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
-                            )}
-                          </>
-                        )}
-                        {o.deliveryStatus === "on_the_way" && (
-                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
-                        )}
+                    <div className="flex flex-col gap-2 items-start">
+                      {o.status === "pending" && (
+                        <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
+                      )}
+                      {o.status === "confirmed" && (
+                        <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
+                      )}
+                      {o.status === "preparing" && (
+                        <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
+                      )}
+                      {/* ✅ Faqat taom "Tayyor" bo'lib, yetkazish turi "delivery" bo'lsa va hali kuryer biriktirilmagan bo'lsa chiqadi */}
+                      {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
+                        <button onClick={() => {
+                          const courierName = prompt("Kuryer ismi:");
+                          const courierPhone = prompt("Kuryer telefon raqami:");
+                          if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
+                        }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
+                      )}
+                      {/* ✅ Status "ready" bo'lib qolsa ham, kuryer yo'lda ekan bu tugma har doim ko'rinadi (avval bu yerga hech qachon yetib bormas edi) */}
+                      {o.deliveryStatus === "on_the_way" && (
+                        <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
+                      )}
+                      {o.status !== "cancelled" && o.status !== "ready" && (
                         <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
-                      </div>
-                    )}
-                    {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
-                      <button onClick={() => {
-                        const courierName = prompt("Kuryer ismi:");
-                        const courierPhone = prompt("Kuryer telefon raqami:");
-                        if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
-                      }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               ))
             )}
           </div>
-        )}
-
-        {/* ── TAB: YETKAZIB BERISH ── */}
-        {activeTab === "Yetkazib berish" && (
-          <OrderTracker />
         )}
 
         {/* ── TAB: HISOBOTLAR ── */}

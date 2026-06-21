@@ -4,6 +4,7 @@ import DeliveryTracker from './DeliveryTracker';
 
 const OrderTracker = () => {
   const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -11,8 +12,11 @@ const OrderTracker = () => {
 
   const trackOrder = async (e) => {
     e.preventDefault();
-    if (!phone.trim()) {
-      setError('Iltimos, telefon raqamini kiriting!');
+    const trimmedPhone = phone.trim();
+    const trimmedName = name.trim();
+
+    if (!trimmedPhone || !trimmedName) {
+      setError('Iltimos, telefon raqami va ismni to\'liq kiriting!');
       return;
     }
 
@@ -21,12 +25,19 @@ const OrderTracker = () => {
     setSelectedOrder(null);
 
     try {
-      const res = await axiosInstance.get(`/orders/phone/${phone.trim()}`);
+      // ✅ Ikkala maydon ham (yoki birortasi) backendga query parametr
+      // sifatida yuboriladi. Backendda /orders/search route'i
+      // phone va name'ni ixtiyoriy qabul qilib, mos zakazlarni qaytarishi kerak.
+      const params = {};
+      if (trimmedPhone) params.phone = trimmedPhone;
+      if (trimmedName) params.name = trimmedName;
+
+      const res = await axiosInstance.get('/orders/search', { params });
       setOrders(res.data.orders || []);
       if (res.data.orders?.length > 0) {
         setSelectedOrder(res.data.orders[0]);
       } else {
-        setError('Bu raqam bilan zakaz topilmadi');
+        setError('Bu ma\'lumotlar bilan zakaz topilmadi');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Xatolik yuz berdi');
@@ -49,6 +60,15 @@ const OrderTracker = () => {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="+998 90 000 00 00"
+          required
+          className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-cyan-400 transition-all"
+        />
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ismingiz"
+          required
           className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-cyan-400 transition-all"
         />
         <button
