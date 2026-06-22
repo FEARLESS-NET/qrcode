@@ -7,12 +7,9 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      external: ['react', 'react-dom'],
       output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
+        // ✅ manualChunks ni butunlay o'chirib qo'yamiz
+        // manualChunks: {},
       },
     },
   },
