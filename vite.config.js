@@ -7,28 +7,13 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            // React core (eng katta qism)
-            if (id.includes('/react/') || id.includes('/react-dom/')) {
-              return 'react-core';
-            }
-            // React Router
-            if (id.includes('react-router')) {
-              return 'react-router';
-            }
-            // UI kutubxona
-            if (id.includes('@material-tailwind')) {
-              return 'ui';
-            }
-            // Axios
-            if (id.includes('axios')) {
-              return 'axios';
-            }
-            // Qolgan barcha node_modules
-            return 'vendor';
-            
-          }
+        // ✅ MANUAL CHUNKS NI O'CHIRIB QO'YAMIZ (VAQTINCHA)
+        // manualChunks: {},
+        
+        // YOKI FAQAT KATTA PAKETLARNI AJRATAMIZ
+        manualChunks: {
+          // React ni alohida (lekin boshqa hech narsa)
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
         },
       },
     },
