@@ -94,7 +94,7 @@ export default function Login() {
               shadow-[0_0_35px_rgba(255,215,0,0.4)]
             "
           >
-            🍽️
+            🐟
           </div>
 
           {/* TEXT */}
@@ -113,7 +113,7 @@ export default function Login() {
                 to-orange-500
               "
             >
-              RESTAURANT
+              SAZANCHIK
             </span>
 
             <span className="text-[10px] tracking-[0.35em] text-gray-500 uppercase">
@@ -339,7 +339,7 @@ export default function Login() {
 
           {/* FOOTER */}
           <p className="text-center text-gray-700 text-[10px] mt-10 uppercase tracking-[0.45em]">
-            © 2026 GOLD SECURE NODE
+            © 2026 SAZANCHIK SECURE NODE
           </p>
 
         </div>

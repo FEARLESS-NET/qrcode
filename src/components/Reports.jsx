@@ -4,16 +4,16 @@ import { axiosInstance } from "../api/axios";
 const Reports = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [generating, setGenerating] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null);
-  const [filterType, setFilterType] = useState("all");
+  const [deleting, setDeleting] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const [totalReports, setTotalReports] = useState(0);
 
   const getReports = async () => {
     setLoading(true);
     try {
-      const url = filterType === "all" ? "/reports" : `/reports?type=${filterType}`;
-      const res = await axiosInstance.get(url);
+      const res = await axiosInstance.get("/reports?limit=100");
       setReports(res.data.reports || []);
+      setTotalReports(res.data.total || 0);
     } catch (err) {
       console.error(err);
     } finally {
@@ -23,37 +23,72 @@ const Reports = () => {
 
   useEffect(() => {
     getReports();
-  }, [filterType]);
+  }, []);
 
-  const generateReport = async (type) => {
-    setGenerating(true);
+  // ─── ✅ KUNLIK HISOBOTNI RESET QILISH ──────────────────────────────────
+  const handleReset = async () => {
+    if (!window.confirm(
+      `⚠️ KUNLIK HISOBOTNI 0 GA TIKLASH!\n\n` +
+      `📌 Barcha kunlik hisobot ko'rsatkichlari 0 ga tushadi\n` +
+      `📌 Order va Reservation ma'lumotlari O'ZGARMAYDI\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setResetting(true);
     try {
-      await axiosInstance.post(`/reports/${type}`);
+      const res = await axiosInstance.post("/reports/reset");
+      alert(`✅ ${res.data.message}`);
       getReports();
     } catch (err) {
-      alert("Hisobot yaratishda xatolik");
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
     } finally {
-      setGenerating(false);
+      setResetting(false);
     }
   };
 
-  const deleteReport = async (id) => {
-    if (!window.confirm("Bu hisobotni o'chirmoqchimisiz?")) return;
+  const handleDeleteReport = async (id, reportNumber) => {
+    if (!window.confirm(
+      `⚠️ HISOBOTNI O'CHIRISH!\n\n` +
+      `📌 Hisobot №${reportNumber}\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setDeleting(true);
     try {
-      await axiosInstance.delete(`/reports/${id}`);
+      const res = await axiosInstance.delete(`/reports/${id}`);
+      alert(res.data.message);
       getReports();
     } catch (err) {
-      alert("O'chirishda xatolik");
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
+    } finally {
+      setDeleting(false);
     }
   };
 
-  const deleteAllReports = async () => {
-    if (!window.confirm("Barcha hisobotlarni o'chirmoqchimisiz?")) return;
+  const handleDeleteAllReports = async () => {
+    if (reports.length === 0) {
+      alert("O'chirish uchun hisobotlar mavjud emas!");
+      return;
+    }
+
+    if (!window.confirm(
+      `⚠️ BARCHA HISOBOTLARNI O'CHIRISH!\n\n` +
+      `📌 ${reports.length} ta hisobot o'chiriladi\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setDeleting(true);
     try {
-      await axiosInstance.delete("/reports");
+      const res = await axiosInstance.delete("/reports");
+      alert(res.data.message);
       getReports();
     } catch (err) {
-      alert("O'chirishda xatolik");
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -67,10 +102,8 @@ const Reports = () => {
     });
   };
 
-  const typeLabels = {
-    daily: "📅 Kunlik",
-    weekly: "📆 Haftalik",
-    monthly: "📊 Oylik",
+  const formatPeriod = (report) => {
+    return new Date(report.startDate).toLocaleDateString();
   };
 
   return (
@@ -78,55 +111,43 @@ const Reports = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-cyan-400 font-black text-xl">📊 Hisobotlar</h3>
-          <p className="text-gray-500 text-sm mt-1">Kunlik, haftalik va oylik statistikalar</p>
+          <h3 className="text-teal-400 font-black text-xl">📊 Kunlik Hisobot</h3>
+          <p className="text-gray-500 text-sm mt-1">
+            Jami: {totalReports} ta hisobot
+          </p>
+          <p className="text-gray-600 text-xs mt-1">
+            💡 Hisobotlar zakaz yaratilganda avtomatik yangilanadi
+          </p>
+          <p className="text-green-400 text-xs mt-1">
+            ✅ Reset faqat hisobotni 0 ga tushiradi (Order/Reservation o'zgarmaydi)
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {/* ✅ KUNLIK RESET TUGMASI */}
           <button
-            onClick={() => generateReport("daily")}
-            disabled={generating}
-            className="px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all"
+            onClick={handleReset}
+            disabled={resetting}
+            className="px-4 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-black transition-all disabled:opacity-50"
           >
-            📅 Kunlik
+            {resetting ? "⏳..." : "🔄 Kunlik 0"}
           </button>
+
           <button
-            onClick={() => generateReport("weekly")}
-            disabled={generating}
-            className="px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all"
+            onClick={handleDeleteAllReports}
+            disabled={deleting || reports.length === 0}
+            className="px-4 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
           >
-            📆 Haftalik
-          </button>
-          <button
-            onClick={() => generateReport("monthly")}
-            disabled={generating}
-            className="px-4 py-2 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm font-bold hover:bg-purple-500 hover:text-white transition-all"
-          >
-            📊 Oylik
-          </button>
-          <button
-            onClick={deleteAllReports}
-            className="px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all"
-          >
-            🗑 Barchasini o'chirish
+            {deleting ? "⏳..." : "🗑 Barchasini o'chirish"}
           </button>
         </div>
       </div>
 
-      {/* Filter */}
-      <div className="flex gap-2 flex-wrap">
-        {["all", "daily", "weekly", "monthly"].map((type) => (
-          <button
-            key={type}
-            onClick={() => setFilterType(type)}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-              filterType === type
-                ? "bg-cyan-400 text-black"
-                : "bg-white/5 border border-white/10 text-gray-400 hover:border-cyan-500/30"
-            }`}
-          >
-            {type === "all" ? "Hammasi" : typeLabels[type]}
-          </button>
-        ))}
+      {/* Info */}
+      <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-3 text-xs text-green-400">
+        💡 <strong>Kunlik 0</strong> — faqat kunlik hisobot 0 ga tushadi.
+        <br />
+        📌 Order va Reservation ma'lumotlari <strong>O'ZGARMAYDI</strong> — faqat hisobot
+        ko'rsatkichlari 0 bo'ladi. Yangi zakaz tushganda hisobot qayta hisoblanadi.
       </div>
 
       {/* Loading */}
@@ -138,7 +159,7 @@ const Reports = () => {
       {!loading && reports.length === 0 && (
         <div className="text-center text-gray-500 py-20">
           <p className="text-xl">📭 Hali hisobotlar mavjud emas</p>
-          <p className="text-sm mt-2">Yuqoridagi tugmalardan hisobot yarating</p>
+          <p className="text-sm mt-2">Zakaz yaratilganda hisobotlar avtomatik yaratiladi</p>
         </div>
       )}
 
@@ -146,37 +167,37 @@ const Reports = () => {
         {reports.map((report) => (
           <div
             key={report._id}
-            className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all"
+            className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 hover:border-teal-500/30 transition-all"
           >
             <div className="flex justify-between items-start">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">
-                    {report.type === "daily" ? "📅" : report.type === "weekly" ? "📆" : "📊"}
-                  </span>
-                  <h4 className="font-black text-white">
-                    {typeLabels[report.type] || report.type}
-                  </h4>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                    {report.period}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-lg">📅</span>
+                  <h4 className="font-black text-white">Kunlik</h4>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold">
+                    №{report.reportNumber}
                   </span>
                 </div>
                 <p className="text-gray-500 text-xs mt-1">
-                  {formatDate(report.createdAt)}
+                  📅 {formatPeriod(report)}
+                </p>
+                <p className="text-gray-500 text-xs">
+                  🕐 {formatDate(report.createdAt)}
                 </p>
               </div>
               <button
-                onClick={() => deleteReport(report._id)}
-                className="text-red-400 hover:text-red-300 transition-all text-sm"
+                onClick={() => handleDeleteReport(report._id, report.reportNumber)}
+                disabled={deleting}
+                className="text-red-400 hover:text-red-300 transition-all text-sm font-bold disabled:opacity-50"
               >
-                🗑
+                🗑 O'chirish
               </button>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
               <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-cyan-400">
+                <p className="text-2xl font-black text-teal-400">
                   {report.data.totalOrders}
                 </p>
                 <p className="text-gray-500 text-[10px] uppercase tracking-widest">Zakazlar</p>
@@ -188,7 +209,7 @@ const Reports = () => {
                 <p className="text-gray-500 text-[10px] uppercase tracking-widest">Daromad</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-purple-400">
+                <p className="text-2xl font-black text-orange-400">
                   {report.data.totalReservations}
                 </p>
                 <p className="text-gray-500 text-[10px] uppercase tracking-widest">Bronlar</p>
@@ -228,20 +249,31 @@ const Reports = () => {
                     key={key}
                     className="px-2 py-0.5 rounded-full text-[10px] font-bold border"
                     style={{
-                      color: key === "pending" ? "#fbbf24" : 
-                             key === "confirmed" ? "#34d399" :
-                             key === "preparing" ? "#60a5fa" :
-                             key === "ready" ? "#22d3ee" : "#f87171",
-                      borderColor: key === "pending" ? "#fbbf2440" : 
-                                   key === "confirmed" ? "#34d39940" :
-                                   key === "preparing" ? "#60a5fa40" :
-                                   key === "ready" ? "#22d3ee40" : "#f8717140",
+                      color: key === "pending" ? "#fbbf24" :
+                        key === "confirmed" ? "#34d399" :
+                        key === "preparing" ? "#60a5fa" :
+                        key === "ready" ? "#2dd4bf" : "#f87171",
+                      borderColor: key === "pending" ? "#fbbf2440" :
+                        key === "confirmed" ? "#34d39940" :
+                        key === "preparing" ? "#60a5fa40" :
+                        key === "ready" ? "#2dd4bf40" : "#f8717140",
                     }}
                   >
                     {key}: {value}
                   </span>
                 )
               ))}
+            </div>
+
+            {/* DELETE tugmasi */}
+            <div className="mt-4 pt-3 border-t border-white/5 flex justify-end">
+              <button
+                onClick={() => handleDeleteReport(report._id, report.reportNumber)}
+                disabled={deleting}
+                className="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+              >
+                🗑 Hisobotni o'chirish
+              </button>
             </div>
           </div>
         ))}

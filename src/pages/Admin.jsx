@@ -48,6 +48,8 @@ const Admin = () => {
 
   // ── BRONLAR ──
   const [reservations, setReservations] = useState([]);
+  const [deletingCompleted, setDeletingCompleted] = useState(false);
+  const [deletingAllReservations, setDeletingAllReservations] = useState(false);
 
   const getReservations = async () => {
     try {
@@ -59,6 +61,8 @@ const Admin = () => {
   // ── ZAKAZLAR ──
   const [orders, setOrders] = useState([]);
   const [editingDelivery, setEditingDelivery] = useState(null);
+  const [deletingCompletedOrders, setDeletingCompletedOrders] = useState(false);
+  const [deletingAllOrders, setDeletingAllOrders] = useState(false);
 
   const getOrders = async () => {
     try {
@@ -67,12 +71,134 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // Birinchi yuklanish
+  // ── ✅ YAKUNLANGAN BRONLARNI O'CHIRISH ──
+  const handleDeleteCompletedReservations = async () => {
+    const completed = reservations.filter(r => r.status === "confirmed" || r.status === "cancelled");
+    if (completed.length === 0) {
+      alert("O'chirish uchun yakunlangan bronlar mavjud emas!");
+      return;
+    }
+
+    if (!window.confirm(
+      `⚠️ YAKUNLANGAN BRONLARNI O'CHIRISH!\n\n` +
+      `📌 ${completed.length} ta bron o'chiriladi\n` +
+      `📌 Status: confirmed / cancelled\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setDeletingCompleted(true);
+    try {
+      const res = await axiosInstance.delete("/reservations/completed");
+      alert(res.data.message);
+      getReservations();
+    } catch (err) {
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
+    } finally {
+      setDeletingCompleted(false);
+    }
+  };
+
+  // ── ✅ ✅ BARCHA BRONLARNI BUTUNLAY O'CHIRISH ──
+  const handleDeleteAllReservations = async () => {
+    if (reservations.length === 0) {
+      alert("O'chirish uchun bronlar mavjud emas!");
+      return;
+    }
+
+    if (!window.confirm(
+      `⚠️ BARCHA BRONLARNI BUTUNLAY O'CHIRISH!\n\n` +
+      `📌 ${reservations.length} ta bron butunlay o'chiriladi\n` +
+      `📌 Status: barcha (pending, confirmed, cancelled)\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setDeletingAllReservations(true);
+    try {
+      const res = await axiosInstance.delete("/reservations/force");
+      alert(res.data.message);
+      getReservations();
+    } catch (err) {
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
+    } finally {
+      setDeletingAllReservations(false);
+    }
+  };
+
+  // ── ✅ YAKUNLANGAN ZAKAZLARNI O'CHIRISH ──
+  const handleDeleteCompletedOrders = async () => {
+    const completed = orders.filter(o => o.status === "ready" || o.deliveryStatus === "delivered");
+    if (completed.length === 0) {
+      alert("O'chirish uchun yakunlangan zakazlar mavjud emas!");
+      return;
+    }
+
+    if (!window.confirm(
+      `⚠️ YAKUNLANGAN ZAKAZLARNI O'CHIRISH!\n\n` +
+      `📌 ${completed.length} ta zakaz o'chiriladi\n` +
+      `📌 Status: ready / delivered\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setDeletingCompletedOrders(true);
+    try {
+      const res = await axiosInstance.delete("/orders/completed");
+      alert(res.data.message);
+      getOrders();
+    } catch (err) {
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
+    } finally {
+      setDeletingCompletedOrders(false);
+    }
+  };
+
+  // ── ✅ ✅ BARCHA ZAKAZLARNI BUTUNLAY O'CHIRISH ──
+  const handleDeleteAllOrders = async () => {
+    if (orders.length === 0) {
+      alert("O'chirish uchun zakazlar mavjud emas!");
+      return;
+    }
+
+    if (!window.confirm(
+      `⚠️ BARCHA ZAKAZLARNI BUTUNLAY O'CHIRISH!\n\n` +
+      `📌 ${orders.length} ta zakaz butunlay o'chiriladi\n` +
+      `📌 Status: barcha (pending, confirmed, preparing, ready, cancelled)\n` +
+      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
+      `Davom etasizmi?`
+    )) return;
+
+    setDeletingAllOrders(true);
+    try {
+      const res = await axiosInstance.delete("/orders/force");
+      alert(res.data.message);
+      getOrders();
+    } catch (err) {
+      alert("❌ Xatolik: " + (err.response?.data?.message || err.message));
+    } finally {
+      setDeletingAllOrders(false);
+    }
+  };
+
+  // ── BIRINCHI YUKLASH ──
   useEffect(() => {
     getMenus();
     getTables();
     getReservations();
     getOrders();
+  }, []);
+
+  // ✅ Avtomatik yangilash
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        getReservations();
+        getOrders();
+        getTables();
+      }
+    }, 15000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = () => {
@@ -155,7 +281,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── ✅ DELIVERY STATUS YANGILASH ──
+  // ── DELIVERY STATUS ──
   const updateDeliveryStatus = async (id, deliveryStatus, courierName = '', courierPhone = '') => {
     try {
       await axiosInstance.patch(`/orders/${id}/delivery`, { 
@@ -167,7 +293,7 @@ const Admin = () => {
       getOrders();
       setEditingDelivery(null);
     } catch (err) { 
-      alert('Xatolik: ' + err.response?.data?.message); 
+      alert('Xatolik: ' + (err.response?.data?.message)); 
     }
   };
 
@@ -207,6 +333,15 @@ const Admin = () => {
     "delivery": "🚚 Yetkazish",
   };
 
+  // Ranglar uchun map (Tailwind dinamik sinf muammosi uchun)
+  const colorMap = {
+    cyan: "text-cyan-400",
+    blue: "text-blue-400",
+    yellow: "text-yellow-400",
+    purple: "text-purple-400",
+    orange: "text-orange-400",
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white px-4 sm:px-6 lg:px-10 py-10">
       {/* BACKGROUND */}
@@ -244,7 +379,7 @@ const Admin = () => {
             { label: "Yo'lda", value: orders.filter(o => o.deliveryStatus === "on_the_way").length, color: "orange", suffix: " ta" },
           ].map((s, i) => (
             <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-center">
-              <p className={`text-3xl font-black text-${s.color}-400`}>{s.value}{s.suffix || ""}</p>
+              <p className={`text-3xl font-black ${colorMap[s.color]}`}>{s.value}{s.suffix || ""}</p>
               <p className="text-gray-500 text-xs uppercase tracking-widest mt-1">{s.label}</p>
             </div>
           ))}
@@ -296,7 +431,6 @@ const Admin = () => {
                       type="button"
                       onClick={() => {
                         if (!form.imageUrl?.trim()) return;
-                        // ✅ Backendga so'rov yubormasdan, URL to'g'ridan-to'g'ri rasm sifatida saqlanadi
                         setForm({ ...form, image: form.imageUrl.trim() });
                       }}
                       className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap"
@@ -306,7 +440,6 @@ const Admin = () => {
                   </div>
                 </div>
 
-                {/* ✅ Tanlangan rasm preview */}
                 {form.image && (
                   <div className="mt-3 flex items-center gap-3">
                     <img
@@ -434,127 +567,177 @@ const Admin = () => {
 
         {/* ── TAB: BRONLAR ── */}
         {activeTab === "Bronlar" && (
-          <div className="space-y-4">
-            {reservations.length === 0 ? (
-              <p className="text-gray-500 text-center py-20 text-xl">Hali bron yo'q</p>
-            ) : (
-              reservations.map((r) => (
-                <div key={r._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
-                  <div className="flex flex-col sm:flex-row justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <h3 className="font-black text-lg">{r.customerName}</h3>
-                        <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>
-                          {statusLabel[r.status]}
-                        </span>
+          <div>
+            {/* ✅ TUGMALAR QATORI */}
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+              <h3 className="text-yellow-400 font-bold">📋 Bronlar</h3>
+              <div className="flex flex-wrap gap-2">
+                {/* ✅ YAKUNLANGANLARNI O'CHIRISH */}
+                <button
+                  onClick={handleDeleteCompletedReservations}
+                  disabled={deletingCompleted}
+                  className="px-4 py-2 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
+                >
+                  {deletingCompleted ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}
+                </button>
+                
+                {/* ✅ ✅ BARCHASINI BUTUNLAY O'CHIRISH (QIZIL) */}
+                <button
+                  onClick={handleDeleteAllReservations}
+                  disabled={deletingAllReservations}
+                  className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
+                >
+                  {deletingAllReservations ? "⏳..." : "🔥 Barchasini o'chirish"}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {reservations.length === 0 ? (
+                <p className="text-gray-500 text-center py-20 text-xl">Hali bron yo'q</p>
+              ) : (
+                reservations.map((r) => (
+                  <div key={r._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                    <div className="flex flex-col sm:flex-row justify-between gap-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <h3 className="font-black text-lg">{r.customerName}</h3>
+                          <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>
+                            {statusLabel[r.status]}
+                          </span>
+                        </div>
+                        <p className="text-gray-400 text-sm">📞 {r.phone}</p>
+                        <p className="text-gray-400 text-sm">🪑 Stol #{r.tableId?.number} &nbsp;|&nbsp; 👥 {r.guestCount} kishi</p>
+                        <p className="text-gray-400 text-sm">📆 {r.date} &nbsp;⏰ {r.time}</p>
+                        {r.diningArea && <p className="text-yellow-400 text-sm">📍 {diningAreaMap[r.diningArea] || r.diningArea}</p>}
+                        {r.note && <p className="text-gray-500 text-xs">📝 {r.note}</p>}
                       </div>
-                      <p className="text-gray-400 text-sm">📞 {r.phone}</p>
-                      <p className="text-gray-400 text-sm">🪑 Stol #{r.tableId?.number} &nbsp;|&nbsp; 👥 {r.guestCount} kishi</p>
-                      <p className="text-gray-400 text-sm">📆 {r.date} &nbsp;⏰ {r.time}</p>
-                      {r.diningArea && <p className="text-yellow-400 text-sm">📍 {diningAreaMap[r.diningArea] || r.diningArea}</p>}
-                      {r.note && <p className="text-gray-500 text-xs">📝 {r.note}</p>}
+                      {r.status === "pending" && (
+                        <div className="flex gap-2 items-start">
+                          <button onClick={() => updateReservationStatus(r._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all">✅ Tasdiqlash</button>
+                          <button onClick={() => updateReservationStatus(r._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">❌ Bekor</button>
+                        </div>
+                      )}
                     </div>
-                    {r.status === "pending" && (
-                      <div className="flex gap-2 items-start">
-                        <button onClick={() => updateReservationStatus(r._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all">✅ Tasdiqlash</button>
-                        <button onClick={() => updateReservationStatus(r._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">❌ Bekor</button>
-                      </div>
-                    )}
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
         )}
 
         {/* ── TAB: ZAKAZLAR ── */}
         {activeTab === "Zakazlar" && (
-          <div className="space-y-4">
-            {orders.length === 0 ? (
-              <p className="text-gray-500 text-center py-20 text-xl">Hali zakaz yo'q</p>
-            ) : (
-              orders.map((o) => (
-                <div key={o._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
-                  <div className="flex flex-col sm:flex-row justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <h3 className="font-black text-lg">{o.customerName}</h3>
-                        <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>
-                          {statusLabel[o.status]}
-                        </span>
-                        <span className="text-xs px-3 py-1 rounded-full border border-white/10 text-gray-400">
-                          {deliveryTypeMap[o.deliveryType] || o.deliveryType}
-                        </span>
-                        {o.deliveryStatus && o.deliveryStatus !== 'pending' && (
-                          <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10">
-                            {deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}
+          <div>
+            {/* ✅ TUGMALAR QATORI */}
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+              <h3 className="text-purple-400 font-bold">📦 Zakazlar</h3>
+              <div className="flex flex-wrap gap-2">
+                {/* ✅ YAKUNLANGANLARNI O'CHIRISH */}
+                <button
+                  onClick={handleDeleteCompletedOrders}
+                  disabled={deletingCompletedOrders}
+                  className="px-4 py-2 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
+                >
+                  {deletingCompletedOrders ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}
+                </button>
+                
+                {/* ✅ ✅ BARCHASINI BUTUNLAY O'CHIRISH (QIZIL) */}
+                <button
+                  onClick={handleDeleteAllOrders}
+                  disabled={deletingAllOrders}
+                  className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
+                >
+                  {deletingAllOrders ? "⏳..." : "🔥 Barchasini o'chirish"}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {orders.length === 0 ? (
+                <p className="text-gray-500 text-center py-20 text-xl">Hali zakaz yo'q</p>
+              ) : (
+                orders.map((o) => (
+                  <div key={o._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                    <div className="flex flex-col sm:flex-row justify-between gap-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <h3 className="font-black text-lg">{o.customerName}</h3>
+                          <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>
+                            {statusLabel[o.status]}
                           </span>
+                          <span className="text-xs px-3 py-1 rounded-full border border-white/10 text-gray-400">
+                            {deliveryTypeMap[o.deliveryType] || o.deliveryType}
+                          </span>
+                          {o.deliveryStatus && o.deliveryStatus !== 'pending' && (
+                            <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10">
+                              {deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-gray-400 text-sm">📞 {o.phone}</p>
+                        {o.deliveryType === "dine-in" && o.tableNumber && <p className="text-yellow-400 text-sm">🪑 Stol #{o.tableNumber}</p>}
+                        {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
+                        {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
+                          <a
+                            href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block text-cyan-400 text-xs underline hover:text-cyan-300"
+                          >
+                            🗺 Xaritada ko'rish
+                          </a>
+                        )}
+                        {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
+                        <div className="mt-2 space-y-1">
+                          {o.items?.map((item, idx) => (
+                            <p key={idx} className="text-gray-300 text-sm">
+                              • {item.name} x{item.quantity} — {(item.price * item.quantity).toLocaleString()} so'm
+                            </p>
+                          ))}
+                        </div>
+                        <p className="text-cyan-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
+                        {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
+                        {o.courierName && (
+                          <p className="text-green-400 text-xs">👤 Kuryer: {o.courierName}</p>
                         )}
                       </div>
-                      <p className="text-gray-400 text-sm">📞 {o.phone}</p>
-                      {o.deliveryType === "dine-in" && o.tableNumber && <p className="text-yellow-400 text-sm">🪑 Stol #{o.tableNumber}</p>}
-                      {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
-                      {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
-                        <a
-                          href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-block text-cyan-400 text-xs underline hover:text-cyan-300"
-                        >
-                          🗺 Xaritada ko'rish
-                        </a>
-                      )}
-                      {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
-                      <div className="mt-2 space-y-1">
-                        {o.items?.map((item, idx) => (
-                          <p key={idx} className="text-gray-300 text-sm">
-                            • {item.name} x{item.quantity} — {(item.price * item.quantity).toLocaleString()} so'm
-                          </p>
-                        ))}
+                      <div className="flex flex-col gap-2 items-start">
+                        {o.status === "pending" && (
+                          <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
+                        )}
+                        {o.status === "confirmed" && (
+                          <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
+                        )}
+                        {o.status === "preparing" && (
+                          <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
+                        )}
+                        {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
+                          <button onClick={() => {
+                            const courierName = prompt("Kuryer ismi:");
+                            const courierPhone = prompt("Kuryer telefon raqami:");
+                            if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
+                          }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
+                        )}
+                        {o.deliveryStatus === "on_the_way" && (
+                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
+                        )}
+                        {o.status !== "cancelled" && o.status !== "ready" && (
+                          <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
+                        )}
                       </div>
-                      <p className="text-cyan-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
-                      {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
-                      {o.courierName && (
-                        <p className="text-green-400 text-xs">👤 Kuryer: {o.courierName}</p>
-                      )}
-                    </div>
-                    <div className="flex flex-col gap-2 items-start">
-                      {o.status === "pending" && (
-                        <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
-                      )}
-                      {o.status === "confirmed" && (
-                        <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
-                      )}
-                      {o.status === "preparing" && (
-                        <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
-                      )}
-                      {/* ✅ Faqat taom "Tayyor" bo'lib, yetkazish turi "delivery" bo'lsa va hali kuryer biriktirilmagan bo'lsa chiqadi */}
-                      {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
-                        <button onClick={() => {
-                          const courierName = prompt("Kuryer ismi:");
-                          const courierPhone = prompt("Kuryer telefon raqami:");
-                          if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
-                        }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
-                      )}
-                      {/* ✅ Status "ready" bo'lib qolsa ham, kuryer yo'lda ekan bu tugma har doim ko'rinadi (avval bu yerga hech qachon yetib bormas edi) */}
-                      {o.deliveryStatus === "on_the_way" && (
-                        <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
-                      )}
-                      {o.status !== "cancelled" && o.status !== "ready" && (
-                        <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
-                      )}
                     </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
         )}
 
         {/* ── TAB: HISOBOTLAR ── */}
-        {activeTab === "Hisobotlar" && (
+       {activeTab === "Hisobotlar" && (
           <Reports />
-        )}
+           )}
       </div>
     </div>
   );

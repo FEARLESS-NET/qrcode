@@ -41,10 +41,10 @@ const Menu = () => {
   };
 
   const SkeletonCard = () => (
-    <div className="relative overflow-hidden bg-black/40 border border-cyan-500/20 rounded-[30px] h-[420px] animate-pulse backdrop-blur-2xl">
-      <div className="h-56 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10"></div>
+    <div className="relative overflow-hidden bg-black/40 border border-teal-500/20 rounded-[30px] h-[420px] animate-pulse backdrop-blur-2xl">
+      <div className="h-56 bg-gradient-to-br from-teal-500/10 via-transparent to-amber-500/10"></div>
       <div className="p-8 space-y-5">
-        <div className="h-7 bg-cyan-500/10 rounded-full w-3/4"></div>
+        <div className="h-7 bg-teal-500/10 rounded-full w-3/4"></div>
         <div className="h-4 bg-white/10 rounded-full w-full"></div>
       </div>
     </div>
@@ -53,21 +53,34 @@ const Menu = () => {
   return (
     <div className="relative w-full overflow-hidden bg-black text-white">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[#020617]"></div>
+        <div className="absolute inset-0 bg-[#050505]"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <header className="text-center mb-12">
-          <h2 className="text-5xl font-black text-white">
-            ASOSIY <span className="text-cyan-400">MENU</span>
-          </h2>
-          <p className="text-gray-500 mt-3">Sevimli taomingizni tanlang</p>
-        </header>
+
+        {/* MENU BANNER */}
+        <div className="relative h-64 sm:h-80 rounded-[36px] overflow-hidden border border-yellow-500/15 mb-12">
+          <img
+            src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80"
+            alt="Sazanchik milliy taomlari"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/50 to-black/20"></div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+            <span className="text-yellow-400 uppercase tracking-[0.35em] text-[11px] font-black mb-3">
+              🐟 Sazanchik
+            </span>
+            <h2 className="text-5xl font-black text-white">
+              ASOSIY <span className="text-teal-400">MENU</span>
+            </h2>
+            <p className="text-gray-300 mt-3">Sevimli taomingizni tanlang</p>
+          </div>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <button
             onClick={() => navigate("/order")}
-            className="group relative overflow-hidden px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-black font-black uppercase tracking-[0.2em] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(0,255,255,0.5)]"
+            className="group relative overflow-hidden px-10 py-4 rounded-2xl bg-gradient-to-r from-teal-400 via-teal-500 to-amber-400 text-black font-black uppercase tracking-[0.2em] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(20,184,166,0.5)]"
           >
             🛒 Online Zakaz Berish
           </button>
@@ -88,12 +101,12 @@ const Menu = () => {
         ) : (
           Object.keys(groupedMenus).map((category) => (
             <section key={category} className="mb-20">
-              <h3 className="text-2xl font-bold text-cyan-400 mb-6 border-b border-cyan-500/10 pb-3">
+              <h3 className="text-2xl font-bold text-teal-400 mb-6 border-b border-teal-500/10 pb-3">
                 {category}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {groupedMenus[category].map((menu) => (
-                  <div key={menu._id} className="group bg-white/5 border border-cyan-500/20 rounded-2xl overflow-hidden transition-all hover:scale-[1.03] hover:border-cyan-400/50">
+                  <div key={menu._id} className="group bg-white/5 border border-teal-500/20 rounded-2xl overflow-hidden transition-all hover:scale-[1.03] hover:border-teal-400/50">
                     <div className="relative h-48 overflow-hidden">
                       <img
                         src={getImageUrl(menu.image)}
@@ -103,19 +116,19 @@ const Menu = () => {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                       {menu.category && (
-                        <span className="absolute top-3 right-3 bg-black/60 border border-cyan-400/30 px-3 py-1 rounded-xl text-cyan-400 text-[10px] uppercase tracking-widest">
+                        <span className="absolute top-3 right-3 bg-black/60 border border-teal-400/30 px-3 py-1 rounded-xl text-teal-400 text-[10px] uppercase tracking-widest">
                           {menu.category}
                         </span>
                       )}
                     </div>
                     <div className="p-5">
-                      <h4 className="text-lg font-black text-white group-hover:text-cyan-400 transition-colors">{menu.name}</h4>
+                      <h4 className="text-lg font-black text-white group-hover:text-teal-400 transition-colors">{menu.name}</h4>
                       <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
                       <div className="flex items-center justify-between mt-4">
-                        <p className="text-cyan-400 font-black text-lg">{Number(menu.price).toLocaleString()} so'm</p>
+                        <p className="text-teal-400 font-black text-lg">{Number(menu.price).toLocaleString()} so'm</p>
                         <button
                           onClick={() => navigate("/order")}
-                          className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold hover:bg-cyan-400 hover:text-black transition-all"
+                          className="px-4 py-2 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-bold hover:bg-teal-400 hover:text-black transition-all"
                         >
                           Buyurtma
                         </button>

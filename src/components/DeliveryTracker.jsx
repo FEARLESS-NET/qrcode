@@ -1,20 +1,17 @@
 import React from 'react';
 
-const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
+const DeliveryTracker = ({ order }) => {
   if (!order) return null;
 
   const isCancelled = order.status === 'cancelled';
   const isDelivery = order.deliveryType === 'delivery';
 
-  // ✅ Zakaz turiga qarab progress bosqichlari farqlanadi:
-  // - Yetkazib berish: 6 bosqich (kuryer yo'lda/yetkazildi ham bor)
-  // - Restoran / Olib ketish: 4 bosqich (kuryer kerak emas)
   const steps = isDelivery
     ? [
         { key: 'pending', label: '⏳ Kutilmoqda', icon: '🕐', bg: 'bg-gray-600' },
         { key: 'confirmed', label: '✅ Tasdiqlandi', icon: '✅', bg: 'bg-green-500' },
         { key: 'preparing', label: '👨‍🍳 Tayyorlanmoqda', icon: '👨‍🍳', bg: 'bg-blue-500' },
-        { key: 'ready', label: '🎉 Tayyor', icon: '🎉', bg: 'bg-cyan-500' },
+        { key: 'ready', label: '🎉 Tayyor', icon: '🎉', bg: 'bg-teal-500' },
         { key: 'on_the_way', label: "🚚 Yo'lda", icon: '🚚', bg: 'bg-yellow-500' },
         { key: 'delivered', label: '✅ Yetkazildi', icon: '🏁', bg: 'bg-green-500' },
       ]
@@ -26,11 +23,10 @@ const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
           key: 'ready',
           label: order.deliveryType === 'takeaway' ? '🥡 Tayyor, kuting' : '🍽 Tayyor, taklif etiladi',
           icon: '🎉',
-          bg: 'bg-cyan-500',
+          bg: 'bg-teal-500',
         },
       ];
 
-  // ✅ Joriy bosqichni order.status VA order.deliveryStatus ikkalasidan birga aniqlaymiz
   const getCurrentKey = () => {
     if (order.deliveryStatus === 'delivered') return 'delivered';
     if (order.deliveryStatus === 'on_the_way') return 'on_the_way';
@@ -55,15 +51,13 @@ const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
     'cancelled': '❌ Bekor qilingan',
   };
 
-
-
   return (
     <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-cyan-400 font-bold text-sm uppercase tracking-widest">
+        <h3 className="text-teal-400 font-bold text-sm uppercase tracking-widest">
           🚚 Yetkazib berish holati
         </h3>
-        <span className="text-xs px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+        <span className="text-xs px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20">
           #{order._id?.slice(-6)}
         </span>
       </div>
@@ -121,7 +115,7 @@ const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
                 <div className={`
                   w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold
                   transition-all duration-500
-                  ${isActive ? step.bg + ' text-white shadow-[0_0_20px_rgba(0,255,255,0.2)]' : 'bg-gray-800 text-gray-500'}
+                  ${isActive ? step.bg + ' text-white shadow-[0_0_20px_rgba(20,184,166,0.2)]' : 'bg-gray-800 text-gray-500'}
                   ${isCurrent ? 'ring-4 ring-yellow-400/50 animate-pulse' : ''}
                 `}>
                   {step.icon}
@@ -191,7 +185,7 @@ const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
           {order.items?.map((item, idx) => (
             <div key={idx} className="flex justify-between text-sm">
               <span className="text-gray-300">{item.name} x{item.quantity}</span>
-              <span className="text-cyan-400">{(item.price * item.quantity).toLocaleString()} so'm</span>
+              <span className="text-teal-400">{(item.price * item.quantity).toLocaleString()} so'm</span>
             </div>
           ))}
         </div>
@@ -201,23 +195,6 @@ const DeliveryTracker = ({ order, onUpdate, onDelete }) => {
         <div className="mt-3 p-2 bg-gray-500/5 border border-gray-500/20 rounded-xl">
           <p className="text-gray-500 text-[10px] uppercase tracking-widest">📝 Izoh</p>
           <p className="text-gray-400 text-sm">{order.note}</p>
-        </div>
-      )}
-
-      {/* ✅ Ixtiyoriy: zakazni o'z tarixidan o'chirish */}
-      {onDelete && (
-        <div className="mt-6 pt-4 border-t border-white/10 text-right">
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm("Ushbu zakazni tarixingizdan butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.")) {
-                onDelete();
-              }
-            }}
-            className="text-red-400 hover:text-red-300 text-xs font-bold uppercase tracking-widest transition-all"
-          >
-            🗑 Zakazni tarixdan o'chirish
-          </button>
         </div>
       )}
     </div>

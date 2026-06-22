@@ -70,7 +70,7 @@ export function SimpleFooter() {
             text-center lg:text-left
           "
         >
-          © {new Date().getFullYear()} 🍽️ Restaurant. All rights reserved.
+          © {new Date().getFullYear()} 🐟 Sazanchik. Barcha huquqlar himoyalangan.
         </Typography>
 
         {/* LINKS */}
@@ -85,7 +85,7 @@ export function SimpleFooter() {
           "
         >
 
-          {["About", "Menu", "Careers", "Contact"].map((item, i) => (
+          {["Biz haqimizda", "Menyu", "Bron", "Aloqa"].map((item, i) => (
             <li key={i}>
               <a
                 className="
@@ -103,7 +103,7 @@ export function SimpleFooter() {
                   hover:after:w-full
                   after:transition-all
                 "
-                href={item === "Menu" ? "/menu" : "/"}
+                href={item === "Menyu" ? "/menu" : item === "Bron" ? "/reservation" : "/"}
               >
                 {item}
               </a>

@@ -68,14 +68,14 @@ export function NavbarDefault() {
             className="group flex items-center gap-3 cursor-pointer transition-all duration-300 hover:scale-105"
           >
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 flex items-center justify-center text-black text-xl shadow-[0_0_30px_rgba(255,215,0,0.35)]">
-              🍽️
+             <img  className="rounded-2xl" src="sazanchik.jpg"></img>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-black uppercase tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
-                Restaurant
+              <span className="text-1xl font-black uppercase tracking-[0.18em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
+                SAZANCHIK 
               </span>
               <span className="text-[9px] text-gray-500 uppercase tracking-[0.35em]">
-                Premium Experience
+                Milliy Taom & Baliq
               </span>
             </div>
           </Typography>
@@ -160,5 +160,5 @@ export function NavbarDefault() {
   );
 }
 
-// ✅ MUHIM: default export qo'shildi
+
 export default NavbarDefault;

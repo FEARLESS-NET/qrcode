@@ -13,8 +13,8 @@ const Home = () => {
         {/* MAIN IMAGE */}
         <img
           className="absolute inset-0 w-full h-full object-cover scale-110 opacity-30 animate-slowZoom"
-          src="https://bunny-wp-pullzone-tnssu64psr.b-cdn.net/wp-content/uploads/sites/6/2025/10/@mooncakepictures-skylon-evening-dinner.jpg"
-          alt=""
+          src="https://images.unsplash.com/photo-1776993298422-3e8c397d0235?auto=format&fit=crop&w=1740&q=80"
+          alt="Sazanchik restorani interyeri"
         />
 
         {/* DARK OVERLAY */}
@@ -62,7 +62,7 @@ const Home = () => {
               <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
 
               <span className="text-yellow-400 uppercase tracking-[0.35em] text-[11px] font-black">
-                Premium Restaurant Experience
+                🐟 Milliy Taom & Yangi Baliq
               </span>
             </div>
 
@@ -77,7 +77,7 @@ const Home = () => {
               "
             >
               <span className="block text-white">
-                Royal
+                Xush kelibsiz
               </span>
 
               <span
@@ -91,11 +91,11 @@ const Home = () => {
                   to-orange-500
                 "
               >
-                Taste
+                Sazanchik
               </span>
 
-              <span className="block text-white mt-2">
-                Journey
+              <span className="block text-white mt-2 text-3xl sm:text-4xl lg:text-5xl normal-case tracking-normal text-gray-300">
+                dasturxoniga
               </span>
             </h1>
 
@@ -110,9 +110,9 @@ const Home = () => {
                 mx-auto lg:mx-0
               "
             >
-              Har bir taom san’at darajasida tayyorlanadi.
-              Nafaqat ovqat, balki haqiqiy premium atmosfera,
-              hashamat va unutilmas lazzatni his qilasiz.
+              Tabiiy daryo baliqlaridan tayyorlangan taomlar va
+              Xorazm milliy oshxonasining mazali retseptlari —
+              barchasi oilangiz bilan unutilmas oqshom uchun.
             </p>
 
             {/* BUTTONS */}
@@ -146,6 +146,7 @@ const Home = () => {
               </button>
 
               <button
+                onClick={() => navigate("/reservation")}
                 className="
                   px-10 py-4
                   rounded-2xl
@@ -162,7 +163,7 @@ const Home = () => {
                   hover:scale-105
                 "
               >
-                Biz Haqimizda
+                Stol Bron Qilish
               </button>
 
             </div>
@@ -173,7 +174,7 @@ const Home = () => {
               {[
                 { val: "12+", label: "Yillik Tajriba" },
                 { val: "50K+", label: "Mijozlar" },
-                { val: "100+", label: "Premium Taom" },
+                { val: "100+", label: "Milliy Taom" },
               ].map((item, i) => (
                 <div
                   key={i}
@@ -181,7 +182,7 @@ const Home = () => {
                     bg-white/[0.03]
                     border border-white/5
                     backdrop-blur-xl
-                    rounded-2xl
+                    rounded-1xl
                     p-5
                     text-center
                     hover:border-yellow-500/20
@@ -191,7 +192,7 @@ const Home = () => {
 
                   <h3
                     className="
-                      text-3xl sm:text-4xl
+                      text-1xl sm:text-2xl
                       font-black
                       text-transparent
                       bg-clip-text
@@ -237,8 +238,8 @@ const Home = () => {
 
               {/* IMAGE */}
               <img
-                src="https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-1.2.1&auto=format&fit=crop&w=1074&q=80"
-                alt="Restaurant"
+                src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1200&q=80"
+                alt="Sazanchikning tabiiy baliq taomi"
                 className="
                   w-full
                   h-[650px]
@@ -264,16 +265,16 @@ const Home = () => {
               >
 
                 <span className="text-yellow-400 uppercase tracking-[0.35em] text-[10px] font-black">
-                  Signature Experience
+                  Signature Taom
                 </span>
 
                 <h3 className="text-2xl font-black mt-3">
-                  Luxury Dining
+                  Olovda Pishirilgan Baliq
                 </h3>
 
                 <p className="text-gray-400 text-sm mt-2 leading-relaxed">
-                  Maxsus interyer, professional xizmat va premium
-                  gastronomik tajriba.
+                  Achchiq pomidor sousi bilan, Sazanchikning
+                  eng sevimli milliy taomi.
                 </p>
 
               </div>
@@ -294,11 +295,11 @@ const Home = () => {
           <div className="text-center mb-16">
 
             <span className="text-yellow-500 uppercase tracking-[0.4em] text-xs font-black">
-              Why Choose Us
+              Nega Sazanchik
             </span>
 
             <h2 className="mt-5 text-4xl sm:text-6xl font-black uppercase">
-              Premium <span className="text-yellow-500">Quality</span>
+              Daryodan <span className="text-yellow-500">Dasturxonga</span>
             </h2>
 
           </div>
@@ -307,19 +308,19 @@ const Home = () => {
 
             {[
               {
-                icon: "👨‍🍳",
-                title: "Master Chefs",
-                text: "Dunyo darajasidagi professional oshpazlar."
+                icon: "🐟",
+                title: "Tabiiy Baliq",
+                text: "Har kuni yangi sazan va boshqa daryo baliqlaridan tayyorlangan taomlar."
               },
               {
-                icon: "🥂",
-                title: "Luxury Atmosphere",
-                text: "Hashamat va premium interyer uyg‘unligi."
+                icon: "🥘",
+                title: "Xorazm Oshxonasi",
+                text: "Avlodlardan o'tib kelgan milliy retseptlar asosida pishiriladi."
               },
               {
-                icon: "🍽️",
-                title: "Exclusive Menu",
-                text: "Noyob va eksklyuziv premium taomlar."
+                icon: "👨‍👩‍👧‍👦",
+                title: "Oilaviy Muhit",
+                text: "Daryo bo'yidagi qulay terrasa va samimiy oilaviy atmosfera."
               },
             ].map((item, i) => (
               <div
@@ -372,6 +373,43 @@ const Home = () => {
               </div>
             ))}
 
+          </div>
+
+          {/* TAOMLAR GALEREYASI */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+            {[
+              {
+                src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80",
+                label: "Milliy Osh",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+                label: "Olovda Baliq",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80",
+                label: "Restoran Muhiti",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&sat=-30",
+                label: "Sazan Taomi",
+              },
+            ].map((g, i) => (
+              <div
+                key={i}
+                className="group relative h-48 sm:h-56 rounded-3xl overflow-hidden border border-yellow-500/10"
+              >
+                <img
+                  src={g.src}
+                  alt={g.label}
+                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+                <span className="absolute bottom-3 left-4 text-white text-xs uppercase tracking-[0.2em] font-bold">
+                  {g.label}
+                </span>
+              </div>
+            ))}
           </div>
 
         </div>

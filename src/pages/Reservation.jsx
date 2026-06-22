@@ -66,11 +66,11 @@ const Reservation = () => {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white px-4 sm:px-6 lg:px-10 py-24">
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white px-4 sm:px-6 lg:px-10 py-24">
 
       {/* BACKGROUND */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[#020617]" />
+        <div className="absolute inset-0 bg-[#050505]" />
         <div
           className="absolute inset-0 opacity-[0.06]"
           style={{
