@@ -28,7 +28,7 @@ const NotFound = () => (
 
 function App() {
   return (
-    <BrowserRouter>
+   
       <div className="flex flex-col min-h-screen bg-black">
         <NavbarDefault />
         <main className="flex-grow pt-20">
@@ -45,7 +45,7 @@ function App() {
         </main>
         <SimpleFooter />
       </div>
-    </BrowserRouter>
+   
   );
 }
 
