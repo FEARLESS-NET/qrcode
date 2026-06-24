@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // ✅ /api/v1 ni o'zi qo'shadi — .env da faqat base URL yozing
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-2-qyr4.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-4-9otm.onrender.com/api/v1';
 
 export const axiosInstance = axios.create({
     baseURL: BASE_URL,
