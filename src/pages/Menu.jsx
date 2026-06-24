@@ -2,8 +2,9 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../api/axios";
 
-// ✅ env dan olinadi, hardcode URL yo'q
+
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3005';
+
 
 const Menu = () => {
   const [menus, setMenus] = useState([]);
