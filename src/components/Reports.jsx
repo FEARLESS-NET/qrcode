@@ -25,7 +25,6 @@ const Reports = () => {
     getReports();
   }, []);
 
-  // ─── ✅ KUNLIK HISOBOTNI RESET QILISH ──────────────────────────────────
   const handleReset = async () => {
     if (!window.confirm(
       `⚠️ KUNLIK HISOBOTNI 0 GA TIKLASH!\n\n` +
@@ -108,57 +107,51 @@ const Reports = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-teal-400 font-black text-xl">📊 Kunlik Hisobot</h3>
-          <p className="text-gray-500 text-sm mt-1">
+          <h3 className="text-yellow-400 font-black text-2xl">📊 Kunlik Hisobot</h3>
+          <p className="text-gray-500 text-sm mt-1 font-bold">
             Jami: {totalReports} ta hisobot
           </p>
           <p className="text-gray-600 text-xs mt-1">
             💡 Hisobotlar zakaz yaratilganda avtomatik yangilanadi
           </p>
-          <p className="text-green-400 text-xs mt-1">
+          <p className="text-green-400 text-xs mt-1 font-bold">
             ✅ Reset faqat hisobotni 0 ga tushiradi (Order/Reservation o'zgarmaydi)
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {/* ✅ KUNLIK RESET TUGMASI */}
           <button
             onClick={handleReset}
             disabled={resetting}
-            className="px-4 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-black transition-all disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-black transition-all disabled:opacity-50"
           >
             {resetting ? "⏳..." : "🔄 Kunlik 0"}
           </button>
-
           <button
             onClick={handleDeleteAllReports}
             disabled={deleting || reports.length === 0}
-            className="px-4 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
           >
             {deleting ? "⏳..." : "🗑 Barchasini o'chirish"}
           </button>
         </div>
       </div>
 
-      {/* Info */}
-      <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-3 text-xs text-green-400">
+      <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-xs text-green-400 font-bold">
         💡 <strong>Kunlik 0</strong> — faqat kunlik hisobot 0 ga tushadi.
         <br />
         📌 Order va Reservation ma'lumotlari <strong>O'ZGARMAYDI</strong> — faqat hisobot
         ko'rsatkichlari 0 bo'ladi. Yangi zakaz tushganda hisobot qayta hisoblanadi.
       </div>
 
-      {/* Loading */}
       {loading && (
-        <div className="text-center text-gray-500 py-10">⏳ Yuklanmoqda...</div>
+        <div className="text-center text-gray-500 py-12 text-xl">⏳ Yuklanmoqda...</div>
       )}
 
-      {/* Reports List */}
       {!loading && reports.length === 0 && (
-        <div className="text-center text-gray-500 py-20">
-          <p className="text-xl">📭 Hali hisobotlar mavjud emas</p>
+        <div className="text-center text-gray-500 py-24">
+          <p className="text-2xl">📭 Hali hisobotlar mavjud emas</p>
           <p className="text-sm mt-2">Zakaz yaratilganda hisobotlar avtomatik yaratiladi</p>
         </div>
       )}
@@ -167,18 +160,18 @@ const Reports = () => {
         {reports.map((report) => (
           <div
             key={report._id}
-            className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 hover:border-teal-500/30 transition-all"
+            className="bg-white/[0.03] border border-yellow-500/15 rounded-2xl p-6 hover:border-yellow-500/30 hover:shadow-[0_0_40px_rgba(255,215,0,0.03)] transition-all"
           >
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-lg">📅</span>
-                  <h4 className="font-black text-white">Kunlik</h4>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold">
+                  <h4 className="font-black text-white text-lg">Kunlik</h4>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold">
                     №{report.reportNumber}
                   </span>
                 </div>
-                <p className="text-gray-500 text-xs mt-1">
+                <p className="text-gray-500 text-xs mt-1 font-bold">
                   📅 {formatPeriod(report)}
                 </p>
                 <p className="text-gray-500 text-xs">
@@ -194,45 +187,43 @@ const Reports = () => {
               </button>
             </div>
 
-            {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
               <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-teal-400">
+                <p className="text-2xl font-black text-yellow-400">
                   {report.data.totalOrders}
                 </p>
-                <p className="text-gray-500 text-[10px] uppercase tracking-widest">Zakazlar</p>
+                <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Zakazlar</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-2xl font-black text-yellow-400">
                   {report.data.totalRevenue?.toLocaleString()}
                 </p>
-                <p className="text-gray-500 text-[10px] uppercase tracking-widest">Daromad</p>
+                <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Daromad</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-2xl font-black text-orange-400">
                   {report.data.totalReservations}
                 </p>
-                <p className="text-gray-500 text-[10px] uppercase tracking-widest">Bronlar</p>
+                <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Bronlar</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-2xl font-black text-green-400">
                   {report.data.averageOrderValue?.toLocaleString()}
                 </p>
-                <p className="text-gray-500 text-[10px] uppercase tracking-widest">O'rtacha</p>
+                <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">O'rtacha</p>
               </div>
             </div>
 
-            {/* Top Items */}
             {report.data.topItems?.length > 0 && (
               <div className="mt-4">
-                <p className="text-gray-400 text-xs uppercase tracking-widest mb-2">
+                <p className="text-gray-400 text-xs uppercase tracking-widest mb-2 font-bold">
                   🔥 Eng ko'p sotilganlar
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {report.data.topItems.slice(0, 5).map((item, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300"
+                      className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300 font-bold"
                     >
                       {item.name} ({item.quantity} dona)
                     </span>
@@ -241,13 +232,12 @@ const Reports = () => {
               </div>
             )}
 
-            {/* Status */}
             <div className="flex gap-2 mt-4 flex-wrap">
               {Object.entries(report.data.ordersByStatus || {}).map(([key, value]) => (
                 value > 0 && (
                   <span
                     key={key}
-                    className="px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                    className="px-2.5 py-0.5 rounded-full text-[10px] font-bold border"
                     style={{
                       color: key === "pending" ? "#fbbf24" :
                         key === "confirmed" ? "#34d399" :
@@ -265,7 +255,6 @@ const Reports = () => {
               ))}
             </div>
 
-            {/* DELETE tugmasi */}
             <div className="mt-4 pt-3 border-t border-white/5 flex justify-end">
               <button
                 onClick={() => handleDeleteReport(report._id, report.reportNumber)}

@@ -38,86 +38,72 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050505] flex flex-col font-sans text-white p-10">
+    <div className="relative min-h-screen overflow-hidden flex flex-col text-white p-4 sm:p-10 font-serif">
 
-      {/* GOLD CYBER BACKGROUND */}
-      <div className="absolute inset-0 pointer-events-none">
-
-        {/* BASE */}
-        <div className="absolute inset-0 bg-[#050505]"></div>
-
-        {/* GRID */}
-        <div
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,215,0,0.15) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,215,0,0.15) 1px, transparent 1px)
-            `,
-            backgroundSize: "55px 55px",
-          }}
-        ></div>
-
-        {/* GOLD GLOW */}
-        <div className="absolute top-[-10%] left-[-10%] w-[350px] md:w-[650px] h-[350px] md:h-[650px] bg-yellow-500/20 rounded-full blur-[160px] animate-pulse"></div>
-
-        <div className="absolute bottom-[-10%] right-[-10%] w-[350px] md:w-[650px] h-[350px] md:h-[650px] bg-amber-400/20 rounded-full blur-[160px] animate-pulse delay-700"></div>
-
-        {/* SCANLINES */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(to bottom, transparent 0px, rgba(255,255,255,0.08) 1px, transparent 2px)",
-            backgroundSize: "100% 6px",
-          }}
-        ></div>
-
+      {/* 🌟 FULL RESTAURANT BACKGROUND IMAGE */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80"
+          alt="Restaurant interior"
+          className="w-full h-full object-cover"
+        />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/70 to-black/80"></div>
+        {/* Gold Glow Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/5 via-transparent to-amber-500/5"></div>
+        {/* Gold Pattern */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `
+            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px),
+            repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px)
+          `
+        }}></div>
       </div>
 
       {/* HEADER */}
-      <div className="relative z-10 w-full py-5 border-b border-yellow-500/10 backdrop-blur-xl flex justify-center px-4">
+      <div className="relative z-10 w-full py-6 border-b border-yellow-500/30 backdrop-blur-3xl flex justify-center px-4 bg-black/40 rounded-2xl">
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
 
-          {/* ICON */}
           <div
             className="
-              w-12 h-12
+              w-16 h-16
               rounded-2xl
               bg-gradient-to-br
               from-yellow-400
               via-amber-500
               to-orange-500
               flex items-center justify-center
-              text-2xl
-              shadow-[0_0_35px_rgba(255,215,0,0.4)]
+              text-4xl
+              shadow-[0_0_60px_rgba(255,215,0,0.4)]
+              transform hover:scale-110 transition-all duration-500
             "
           >
             🐟
           </div>
 
-          {/* TEXT */}
           <div className="flex flex-col">
 
             <span
               className="
-                text-lg sm:text-xl
-                font-black
-                tracking-[0.25em]
+                text-2xl sm:text-3xl
+                font-serif
+                font-bold
+                tracking-[0.35em]
                 text-transparent
                 bg-clip-text
                 bg-gradient-to-r
-                from-yellow-300
-                via-amber-400
-                to-orange-500
+                from-yellow-200
+                via-amber-300
+                to-orange-400
+                drop-shadow-[0_0_40px_rgba(255,215,0,0.3)]
               "
             >
               SAZANCHIK
             </span>
 
-            <span className="text-[10px] tracking-[0.35em] text-gray-500 uppercase">
-              MANAGEMENT SYSTEM
+            <span className="text-[10px] tracking-[0.5em] text-yellow-500/60 uppercase font-light">
+              PREMIUM RESTAURANT
             </span>
 
           </div>
@@ -129,23 +115,24 @@ export default function Login() {
       {/* LOGIN */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-10">
 
-        <div className="w-full max-w-[420px]">
+        <div className="w-full max-w-[460px]">
 
           <div className="relative group">
 
-            {/* OUTER GLOW */}
+            {/* Outer Glow */}
             <div
               className="
-                absolute -inset-[1px]
-                rounded-[2rem]
+                absolute -inset-[3px]
+                rounded-[3rem]
                 bg-gradient-to-r
-                from-yellow-500
+                from-yellow-400
                 via-amber-400
                 to-orange-500
-                opacity-20
-                blur
-                group-hover:opacity-50
-                transition-all duration-700
+                opacity-30
+                blur-2xl
+                group-hover:opacity-60
+                transition-all duration-1000
+                animate-pulse
               "
             ></div>
 
@@ -154,39 +141,49 @@ export default function Login() {
               onSubmit={handleSubmit}
               className="
                 relative
-                bg-black/50
-                backdrop-blur-3xl
-                border border-yellow-500/10
-                rounded-[2rem]
-                p-6 sm:p-10
+                bg-black/60
+                backdrop-blur-4xl
+                border border-yellow-500/20
+                rounded-[3rem]
+                p-8 sm:p-14
                 overflow-hidden
-                shadow-[0_0_60px_rgba(255,215,0,0.08)]
+                shadow-[0_0_100px_rgba(255,215,0,0.05)]
+                hover:shadow-[0_0_120px_rgba(255,215,0,0.1)]
+                transition-all duration-700
               "
             >
 
-              {/* CARD GLOW */}
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-orange-500/5 pointer-events-none"></div>
+              {/* Card Inner Glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 pointer-events-none"></div>
 
-              {/* ICON */}
-              <div className="flex justify-center mb-7">
+              {/* Decorative Corners */}
+              <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-yellow-500/20 rounded-tl-3xl"></div>
+              <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-yellow-500/20 rounded-tr-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-yellow-500/20 rounded-bl-3xl"></div>
+              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-yellow-500/20 rounded-br-3xl"></div>
+
+              {/* Icon */}
+              <div className="flex justify-center mb-10">
 
                 <div
                   className="
                     relative
-                    w-20 h-20
+                    w-28 h-28
                     rounded-3xl
                     bg-gradient-to-br
                     from-yellow-400
                     via-amber-500
                     to-orange-500
                     flex items-center justify-center
-                    text-4xl
-                    shadow-[0_0_40px_rgba(255,215,0,0.45)]
+                    text-6xl
+                    shadow-[0_0_70px_rgba(255,215,0,0.5)]
+                    transform hover:scale-110 hover:rotate-6 transition-all duration-500
                   "
                 >
                   👑
 
-                  <div className="absolute inset-0 rounded-3xl border border-white/20"></div>
+                  <div className="absolute inset-0 rounded-3xl border-2 border-white/30"></div>
+                  <div className="absolute -inset-4 rounded-3xl border border-yellow-500/20 animate-ping opacity-30"></div>
 
                 </div>
 
@@ -196,22 +193,24 @@ export default function Login() {
               <h2
                 className="
                   text-center
-                  text-3xl sm:text-4xl
-                  font-black
+                  text-5xl sm:text-6xl
+                  font-serif
+                  font-bold
                   tracking-wide
                   text-transparent
                   bg-clip-text
                   bg-gradient-to-r
-                  from-yellow-300
-                  via-amber-400
-                  to-orange-500
+                  from-yellow-200
+                  via-amber-300
+                  to-orange-400
+                  drop-shadow-[0_0_40px_rgba(255,215,0,0.2)]
                 "
               >
-                STAFF LOGIN
+                Staff Login
               </h2>
 
-              <p className="text-center text-sm text-gray-500 mt-3 mb-8 tracking-wide">
-                Secure Golden Access Panel
+              <p className="text-center text-sm text-yellow-500/60 mt-4 mb-10 tracking-[0.3em] uppercase font-light">
+                Secure Golden Access
               </p>
 
               {/* ERROR */}
@@ -219,15 +218,16 @@ export default function Login() {
                 <div
                   className="
                     mb-6
-                    p-4
+                    p-5
                     rounded-2xl
-                    bg-red-500/10
-                    border border-red-500/20
+                    bg-red-500/15
+                    border border-red-500/30
                     text-red-400
                     text-sm
                     text-center
                     font-bold
                     backdrop-blur-xl
+                    animate-shake
                   "
                 >
                   ⚠️ {error}
@@ -235,100 +235,100 @@ export default function Login() {
               )}
 
               {/* INPUTS */}
-              <div className="space-y-5">
+              <div className="space-y-7">
 
-                {/* EMAIL */}
                 <div>
-
-                  <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black ml-1 mb-2 block">
+                  <label className="text-[10px] uppercase tracking-[0.4em] text-yellow-500/80 font-bold ml-1 mb-2 block">
                     Admin Email
                   </label>
-
-                  <input
-                    name="email"
-                    required
-                    type="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="admin@gmail.com"
-                    className="
-                      w-full
-                      bg-black/60
-                      border border-yellow-500/10
-                      rounded-2xl
-                      px-5 py-4
-                      outline-none
-                      text-white
-                      placeholder:text-gray-700
-                      transition-all duration-300
-                      focus:border-yellow-400
-                      focus:shadow-[0_0_30px_rgba(255,215,0,0.25)]
-                      hover:border-yellow-500/30
-                    "
-                  />
-
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500/40 text-lg">✉</span>
+                    <input
+                      name="email"
+                      required
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="admin@gmail.com"
+                      className="
+                        w-full
+                        bg-black/60
+                        border border-yellow-500/15
+                        rounded-2xl
+                        pl-12 pr-5 py-4
+                        outline-none
+                        text-white text-sm
+                        placeholder:text-gray-700
+                        transition-all duration-300
+                        focus:border-yellow-400
+                        focus:shadow-[0_0_40px_rgba(255,215,0,0.15)]
+                        hover:border-yellow-500/40
+                        font-serif
+                      "
+                    />
+                  </div>
                 </div>
 
-                {/* PASSWORD */}
                 <div>
-
-                  <label className="text-[11px] uppercase tracking-[0.3em] text-yellow-500 font-black ml-1 mb-2 block">
+                  <label className="text-[10px] uppercase tracking-[0.4em] text-yellow-500/80 font-bold ml-1 mb-2 block">
                     Password
                   </label>
-
-                  <input
-                    name="password"
-                    required
-                    type="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="
-                      w-full
-                      bg-black/60
-                      border border-yellow-500/10
-                      rounded-2xl
-                      px-5 py-4
-                      outline-none
-                      text-white
-                      placeholder:text-gray-700
-                      transition-all duration-300
-                      focus:border-yellow-400
-                      focus:shadow-[0_0_30px_rgba(255,215,0,0.25)]
-                      hover:border-yellow-500/30
-                    "
-                  />
-
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500/40 text-lg">🔒</span>
+                    <input
+                      name="password"
+                      required
+                      type="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      className="
+                        w-full
+                        bg-black/60
+                        border border-yellow-500/15
+                        rounded-2xl
+                        pl-12 pr-5 py-4
+                        outline-none
+                        text-white text-sm
+                        placeholder:text-gray-700
+                        transition-all duration-300
+                        focus:border-yellow-400
+                        focus:shadow-[0_0_40px_rgba(255,215,0,0.15)]
+                        hover:border-yellow-500/40
+                        font-serif
+                      "
+                    />
+                  </div>
                 </div>
 
-                {/* BUTTON */}
                 <button
                   type="submit"
                   className="
                     relative overflow-hidden
                     w-full
-                    mt-3
-                    py-4
+                    mt-6
+                    py-5
                     rounded-2xl
                     bg-gradient-to-r
                     from-yellow-400
                     via-amber-500
                     to-orange-500
                     text-black
-                    font-black
+                    font-serif
+                    font-bold
+                    text-base
                     uppercase
-                    tracking-[0.25em]
-                    transition-all duration-300
+                    tracking-[0.35em]
+                    transition-all duration-500
                     hover:scale-[1.03]
-                    hover:shadow-[0_0_40px_rgba(255,215,0,0.55)]
-                    active:scale-[0.98]
+                    hover:shadow-[0_0_60px_rgba(255,215,0,0.5)]
+                    active:scale-[0.97]
+                    group
                   "
                 >
-
-                  <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition"></span>
-
+                  <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-500"></span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
                   Kirish
-
                 </button>
 
               </div>
@@ -337,9 +337,8 @@ export default function Login() {
 
           </div>
 
-          {/* FOOTER */}
-          <p className="text-center text-gray-700 text-[10px] mt-10 uppercase tracking-[0.45em]">
-            © 2026 SAZANCHIK SECURE NODE
+          <p className="text-center text-gray-700/60 text-[10px] mt-12 uppercase tracking-[0.5em] font-light">
+            © 2026 SAZANCHIK · PREMIUM RESTAURANT
           </p>
 
         </div>

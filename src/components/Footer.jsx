@@ -5,50 +5,36 @@ export function SimpleFooter() {
     <footer
       className="
         relative
-        
         overflow-hidden
-
-        border-t border-yellow-500/10
-
+        border-t border-yellow-500/15
         bg-gradient-to-r
-        from-black/40
-        via-black/20
-        to-black/40
-
-        backdrop-blur-[35px]
-        backdrop-saturate-[180%]
-
+        from-black/60
+        via-black/40
+        to-black/60
+        backdrop-blur-[40px]
+        backdrop-saturate-[200%]
         text-white
-
-        shadow-[0_-10px_60px_rgba(0,0,0,0.7)]
+        shadow-[0_-10px_70px_rgba(0,0,0,0.8)]
       "
     >
 
-      {/* BACKGROUND */}
       <div className="absolute inset-0 pointer-events-none">
-
-        {/* GRID */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(255,215,0,0.15) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,215,0,0.15) 1px, transparent 1px)
+              linear-gradient(rgba(255,215,0,0.12) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,215,0,0.12) 1px, transparent 1px)
             `,
-            backgroundSize: "60px 60px",
+            backgroundSize: "50px 50px",
           }}
         />
-
-        {/* GLOW */}
-        <div className="absolute -top-20 left-0 w-[300px] h-[300px] bg-yellow-500/10 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-20 right-0 w-[300px] h-[300px] bg-orange-500/10 rounded-full blur-[120px]" />
-
+        <div className="absolute -top-20 left-0 w-[300px] h-[300px] bg-yellow-500/15 rounded-full blur-[150px]" />
+        <div className="absolute -bottom-20 right-0 w-[300px] h-[300px] bg-orange-500/15 rounded-full blur-[150px]" />
       </div>
 
-      {/* TOP LINE */}
-      <div className="relative h-[1px] w-full bg-gradient-to-r from-transparent via-yellow-500 to-transparent shadow-[0_0_25px_rgba(255,215,0,0.4)]" />
+      <div className="relative h-[1px] w-full bg-gradient-to-r from-transparent via-yellow-500 to-transparent shadow-[0_0_30px_rgba(255,215,0,0.3)]" />
 
-      {/* CONTENT */}
       <div
         className="
           relative z-10
@@ -60,31 +46,29 @@ export function SimpleFooter() {
         "
       >
 
-        {/* LEFT */}
         <Typography
           className="
             text-sm
             text-gray-400
-            tracking-[0.15em]
+            tracking-[0.2em]
             uppercase
             text-center lg:text-left
+            font-bold
           "
         >
           © {new Date().getFullYear()} 🐟 Sazanchik. Barcha huquqlar himoyalangan.
         </Typography>
 
-        {/* LINKS */}
         <ul
           className="
             flex flex-wrap
             items-center justify-center
-            gap-4 sm:gap-8
+            gap-6 sm:gap-10
             text-xs sm:text-sm
             uppercase
-            tracking-[0.25em]
+            tracking-[0.3em]
           "
         >
-
           {["Biz haqimizda", "Menyu", "Bron", "Aloqa"].map((item, i) => (
             <li key={i}>
               <a
@@ -93,7 +77,7 @@ export function SimpleFooter() {
                   text-gray-400
                   transition-all duration-300
                   hover:text-yellow-400
-
+                  font-bold
                   after:absolute
                   after:left-0
                   after:-bottom-1
@@ -109,7 +93,6 @@ export function SimpleFooter() {
               </a>
             </li>
           ))}
-
         </ul>
 
       </div>
@@ -118,5 +101,4 @@ export function SimpleFooter() {
   );
 }
 
-// ✅ MUHIM: default export qo'shildi
 export default SimpleFooter;

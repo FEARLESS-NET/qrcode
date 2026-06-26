@@ -33,11 +33,10 @@ const PaymentModal = ({ isOpen, onClose, orderId, totalPrice, onSuccess }) => {
       const res = await axiosInstance.post(endpoint, {
         orderId,
         amount: totalPrice,
-        phone: '+998901234567', // Mijoz telefon raqami
+        phone: '+998901234567',
       });
 
       if (res.data.paymentUrl) {
-        // Yangi oynada to'lov sahifasini ochish
         window.open(res.data.paymentUrl, '_blank');
         onSuccess(selectedMethod);
         onClose();
@@ -53,29 +52,24 @@ const PaymentModal = ({ isOpen, onClose, orderId, totalPrice, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose}></div>
 
-      {/* Modal */}
-      <div className="relative bg-gradient-to-br from-gray-900 to-black border border-yellow-500/20 rounded-[32px] p-6 sm:p-10 max-w-lg w-full shadow-[0_0_80px_rgba(255,215,0,0.1)] animate-fadeInUp">
+      <div className="relative bg-gradient-to-br from-gray-900 to-black border border-yellow-500/20 rounded-[32px] p-8 sm:p-12 max-w-lg w-full shadow-[0_0_100px_rgba(255,215,0,0.08)] animate-fadeInUp">
         
-        {/* Close */}
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition text-xl">
           ✕
         </button>
 
-        {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center text-3xl shadow-[0_0_40px_rgba(255,215,0,0.3)]">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center text-4xl shadow-[0_0_50px_rgba(255,215,0,0.3)]">
             💳
           </div>
           <h2 className="text-2xl font-black mt-4 text-white">To'lov</h2>
           <p className="text-gray-400 text-sm mt-2">
-            Jami: <span className="text-yellow-400 font-bold">{totalPrice.toLocaleString()} so'm</span>
+            Jami: <span className="text-yellow-400 font-bold text-lg">{totalPrice.toLocaleString()} so'm</span>
           </p>
         </div>
 
-        {/* Payment Methods */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           {paymentMethods.map((method) => (
             <button
@@ -84,42 +78,41 @@ const PaymentModal = ({ isOpen, onClose, orderId, totalPrice, onSuccess }) => {
               className={`
                 relative p-4 rounded-2xl border transition-all
                 ${selectedMethod === method.id
-                  ? `border-yellow-400 bg-yellow-500/10 shadow-[0_0_30px_rgba(255,215,0,0.2)]`
+                  ? `border-yellow-400 bg-yellow-500/15 shadow-[0_0_35px_rgba(255,215,0,0.15)]`
                   : 'border-white/10 bg-white/[0.03] hover:border-yellow-500/30'
                 }
               `}
             >
-              <div className="text-2xl">{method.icon}</div>
+              <div className="text-3xl">{method.icon}</div>
               <p className="text-white text-sm font-bold mt-1">{method.name}</p>
               {selectedMethod === method.id && (
-                <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-yellow-400"></div>
+                <div className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(255,215,0,0.5)]"></div>
               )}
             </button>
           ))}
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+          <div className="mb-4 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm text-center font-bold">
             ⚠️ {error}
           </div>
         )}
 
-        {/* Buttons */}
         <button
           onClick={handlePayment}
           disabled={loading || !selectedMethod}
           className="
-            w-full py-4 rounded-2xl
+            w-full py-5 rounded-2xl
             bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500
-            text-black font-black uppercase tracking-[0.2em]
-            transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,215,0,0.4)]
+            text-black font-black uppercase tracking-[0.25em]
+            transition-all hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(255,215,0,0.4)]
             disabled:opacity-40 disabled:cursor-not-allowed
           "
         >
           {loading ? '⏳ Jarayon...' : 'To\'lovni amalga oshirish'}
         </button>
 
-        <p className="text-center text-gray-600 text-xs mt-4">
+        <p className="text-center text-gray-600 text-xs mt-4 tracking-widest">
           Xavfsiz to'lov tizimi. Ma'lumotlaringiz himoyalangan.
         </p>
       </div>

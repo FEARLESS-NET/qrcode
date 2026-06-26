@@ -12,7 +12,6 @@ const OrderTracker = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deletedOrderIds, setDeletedOrderIds] = useState([]);
 
-  // ✅ LocalStorage dan o'chirilgan zakaz ID larini yuklash
   useEffect(() => {
     const saved = localStorage.getItem('deletedOrderIds');
     if (saved) {
@@ -24,7 +23,6 @@ const OrderTracker = () => {
     }
   }, []);
 
-  // ✅ O'chirilgan ID larni localStorage ga saqlash
   const saveDeletedIds = (ids) => {
     localStorage.setItem('deletedOrderIds', JSON.stringify(ids));
     setDeletedOrderIds(ids);
@@ -51,7 +49,6 @@ const OrderTracker = () => {
 
       const res = await axiosInstance.get('/orders/search', { params });
       
-      // ✅ O'chirilgan zakazlarni filtrlash (qaytib kelmasligi uchun)
       const filteredOrders = (res.data.orders || []).filter(
         (order) => !deletedOrderIds.includes(order._id)
       );
@@ -61,7 +58,6 @@ const OrderTracker = () => {
       if (filteredOrders.length > 0) {
         setSelectedOrder(filteredOrders[0]);
       } else {
-        // ✅ Barcha zakazlar o'chirilgan bo'lsa
         if (res.data.orders?.length > 0 && filteredOrders.length === 0) {
           setError('Barcha zakazlar tarixdan o\'chirilgan');
         } else {
@@ -75,7 +71,6 @@ const OrderTracker = () => {
     }
   };
 
-  // ✅ Bitta zakazni o'chirish
   const handleDeleteOrder = async (orderId) => {
     if (!window.confirm("Ushbu zakazni tarixingizdan butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.")) {
       return;
@@ -83,18 +78,12 @@ const OrderTracker = () => {
 
     setDeleteLoading(true);
     try {
-      // ✅ Backenddan o'chirish (agar kerak bo'lsa)
-      // await axiosInstance.delete(`/orders/${orderId}`);
-      
-      // ✅ LocalStorage ga o'chirilgan ID ni qo'shish
       const newDeletedIds = [...deletedOrderIds, orderId];
       saveDeletedIds(newDeletedIds);
       
-      // ✅ Ro'yxatdan o'chiramiz
       const updatedOrders = orders.filter((o) => o._id !== orderId);
       setOrders(updatedOrders);
       
-      // ✅ Agar tanlangan zakaz o'chirilgan bo'lsa, boshqasini tanlaymiz
       if (selectedOrder?._id === orderId) {
         setSelectedOrder(updatedOrders.length > 0 ? updatedOrders[0] : null);
       }
@@ -107,7 +96,6 @@ const OrderTracker = () => {
     }
   };
 
-  // ✅ Barcha zakazlarni o'chirish
   const handleDeleteAllOrders = async () => {
     if (orders.length === 0) {
       alert('O\'chirish uchun zakazlar mavjud emas');
@@ -120,12 +108,10 @@ const OrderTracker = () => {
 
     setDeleteLoading(true);
     try {
-      // ✅ Barcha zakaz ID larini o'chirilganlar ro'yxatiga qo'shish
       const allIds = orders.map((o) => o._id);
       const newDeletedIds = [...deletedOrderIds, ...allIds];
       saveDeletedIds(newDeletedIds);
       
-      // ✅ Ro'yxatni tozalash
       setOrders([]);
       setSelectedOrder(null);
       
@@ -137,7 +123,6 @@ const OrderTracker = () => {
     }
   };
 
-  // ✅ O'chirilgan zakazlarni qayta tiklash (agar xato bo'lsa)
   const handleRestoreDeleted = () => {
     if (deletedOrderIds.length === 0) {
       alert('O\'chirilgan zakazlar mavjud emas');
@@ -147,7 +132,6 @@ const OrderTracker = () => {
     if (window.confirm(`Barcha ${deletedOrderIds.length} ta o'chirilgan zakazni qayta tiklash?`)) {
       saveDeletedIds([]);
       alert('✅ Barcha zakazlar qayta tiklandi!');
-      // Qayta qidirishni amalga oshiramiz
       if (phone || name) {
         trackOrder(new Event('submit'));
       }
@@ -156,27 +140,25 @@ const OrderTracker = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-black text-white">🚚 Zakaz Holati</h2>
-        <p className="text-gray-400 mt-2">Zakazingizni telefon raqam orqali kuzating</p>
+      <div className="text-center mb-10">
+        <h2 className="text-4xl font-black text-white">🚚 Zakaz Holati</h2>
+        <p className="text-gray-400 mt-3">Zakazingizni telefon raqam orqali kuzating</p>
         
-        {/* ✅ O'chirilgan zakazlar soni */}
         {deletedOrderIds.length > 0 && (
-          <p className="text-gray-500 text-xs mt-2">
+          <p className="text-gray-500 text-xs mt-3 font-bold">
             📌 {deletedOrderIds.length} ta zakaz tarixdan o'chirilgan
           </p>
         )}
       </div>
 
-      {/* Search form */}
-      <form onSubmit={trackOrder} className="flex flex-col sm:flex-row gap-3 mb-8">
+      <form onSubmit={trackOrder} className="flex flex-col sm:flex-row gap-3 mb-10">
         <input
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="+998 90 000 00 00"
           required
-          className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-teal-400 transition-all"
+          className="flex-1 bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all"
         />
         <input
           type="text"
@@ -184,33 +166,30 @@ const OrderTracker = () => {
           onChange={(e) => setName(e.target.value)}
           placeholder="Ismingiz"
           required
-          className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-teal-400 transition-all"
+          className="flex-1 bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all"
         />
         <button
           type="submit"
           disabled={loading}
-          className="px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-400 via-teal-500 to-amber-400 text-black font-black uppercase tracking-[0.2em] transition-all hover:scale-105 disabled:opacity-50"
+          className="px-10 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black uppercase tracking-[0.25em] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] disabled:opacity-50"
         >
           {loading ? '⏳...' : '🔍 Qidirish'}
         </button>
       </form>
 
-      {/* Error */}
       {error && (
-        <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-center">
+        <div className="mb-6 p-4 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-400 text-center font-bold">
           ⚠️ {error}
         </div>
       )}
 
-      {/* Barcha zakazlar */}
       {orders.length > 0 && (
         <div className="mb-6">
           <div className="flex justify-between items-center flex-wrap gap-2">
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-sm font-bold">
               📋 {orders.length} ta zakaz topildi
             </p>
             <div className="flex gap-2">
-              {/* ✅ Barchasini o'chirish tugmasi */}
               <button
                 onClick={handleDeleteAllOrders}
                 disabled={deleteLoading}
@@ -218,8 +197,6 @@ const OrderTracker = () => {
               >
                 {deleteLoading ? '⏳...' : '🗑 Barchasini o\'chirish'}
               </button>
-              
-              {/* ✅ O'chirilganlarni tiklash (yashirin - agar xato bo'lsa) */}
               {deletedOrderIds.length > 0 && (
                 <button
                   onClick={handleRestoreDeleted}
@@ -230,15 +207,15 @@ const OrderTracker = () => {
               )}
             </div>
           </div>
-          <div className="flex gap-2 mt-2 flex-wrap">
+          <div className="flex gap-2 mt-3 flex-wrap">
             {orders.map((order, idx) => (
               <button
                 key={order._id}
                 onClick={() => setSelectedOrder(order)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   selectedOrder?._id === order._id
-                    ? 'bg-teal-400 text-black'
-                    : 'bg-white/5 border border-white/10 text-gray-400 hover:border-teal-500/30'
+                    ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black'
+                    : 'bg-white/5 border border-white/10 text-gray-400 hover:border-yellow-500/30'
                 }`}
               >
                 #{idx + 1} - {new Date(order.createdAt).toLocaleDateString()}
@@ -248,20 +225,16 @@ const OrderTracker = () => {
         </div>
       )}
 
-      {/* ✅ Hech qanday zakaz qolmagan holat */}
       {!loading && !error && orders.length === 0 && (
-        <div className="text-center py-10">
-          <p className="text-gray-500 text-lg">📭 Hozircha zakazlar mavjud emas</p>
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-xl">📭 Hozircha zakazlar mavjud emas</p>
           <p className="text-gray-600 text-sm mt-2">Yangi zakaz berish uchun menyuga o'ting</p>
         </div>
       )}
 
-      {/* Delivery Tracker + Delete button */}
       {selectedOrder && (
         <div className="relative">
           <DeliveryTracker order={selectedOrder} />
-          
-          {/* ✅ O'chirish tugmasi */}
           <div className="mt-4 pt-4 border-t border-white/10 flex justify-end">
             <button
               type="button"

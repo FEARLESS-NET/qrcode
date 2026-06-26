@@ -22,7 +22,6 @@ const Order = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [lastOrder, setLastOrder] = useState(null);
 
-  // ✅ Telegram ulanish holati
   const [telegramLinked, setTelegramLinked] = useState(() => !!localStorage.getItem("telegramId"));
   const [telegramLinking, setTelegramLinking] = useState(false);
   const [telegramError, setTelegramError] = useState("");
@@ -36,7 +35,6 @@ const Order = () => {
     note: "",
   });
 
-  // Menularni yuklash
   useEffect(() => {
     axiosInstance.get("/menus")
       .then((res) => {
@@ -45,7 +43,6 @@ const Order = () => {
       .catch(err => console.error("Menu yuklash xatosi:", err));
   }, []);
 
-  // ✅ Geolokatsiyani aniqlash (foydalanuvchi tugma bosganda ishga tushadi)
   const detectLocation = () => {
     if (!navigator.geolocation) {
       setLocationError("Brauzeringiz geolokatsiyani qo'llab-quvvatlamaydi");
@@ -61,7 +58,6 @@ const Order = () => {
         const geo = { type: "Point", coordinates: [longitude, latitude] };
         setLocation(geo);
 
-        // ✅ Koordinatadan manzilni aniqlash (reverse geocoding)
         try {
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=uz`
@@ -91,54 +87,51 @@ const Order = () => {
     return `${BASE_URL}${imagePath}`;
   };
 
-  // ✅ Mijozni Telegram botiga ulash — token yaratib, botga yo'naltiradi,
-  // so'ng natijani har 3 soniyada tekshirib turadi (polling).
- // ✅ Telegram ulanish funksiyasi (to'g'irlangan)
-const connectTelegram = async () => {
-  setTelegramLinking(true);
-  setTelegramError("");
-  try {
-    const [{ data: linkData }, { data: botData }] = await Promise.all([
-      axiosInstance.post("/telegram/link"),
-      axiosInstance.get("/telegram/bot-info"),
-    ]);
+  const connectTelegram = async () => {
+    setTelegramLinking(true);
+    setTelegramError("");
+    try {
+      const [{ data: linkData }, { data: botData }] = await Promise.all([
+        axiosInstance.post("/telegram/link"),
+        axiosInstance.get("/telegram/bot-info"),
+      ]);
 
-    const token = linkData.token;
-    const botUsername = botData.username;
+      const token = linkData.token;
+      const botUsername = botData.username;
 
-    window.open(`https://t.me/${botUsername}?start=${token}`, "_blank");
+      window.open(`https://t.me/${botUsername}?start=${token}`, "_blank");
 
-    let attempts = 0;
-    const maxAttempts = 40; // 40 * 3s = 120s
+      let attempts = 0;
+      const maxAttempts = 40;
 
-    const intervalId = setInterval(async () => {
-      attempts++;
-      try {
-        const { data } = await axiosInstance.get(`/telegram/link/${token}`);
-        if (data.telegramId) {
-          localStorage.setItem("telegramId", data.telegramId);
-          setTelegramLinked(true);
-          setTelegramLinking(false);
-          clearInterval(intervalId);
-          setTelegramError("");
-        } else if (attempts >= maxAttempts) {
-          clearInterval(intervalId);
-          setTelegramLinking(false);
-          setTelegramError("Ulanish vaqti tugadi. Qaytadan urinib ko'ring.");
+      const intervalId = setInterval(async () => {
+        attempts++;
+        try {
+          const { data } = await axiosInstance.get(`/telegram/link/${token}`);
+          if (data.telegramId) {
+            localStorage.setItem("telegramId", data.telegramId);
+            setTelegramLinked(true);
+            setTelegramLinking(false);
+            clearInterval(intervalId);
+            setTelegramError("");
+          } else if (attempts >= maxAttempts) {
+            clearInterval(intervalId);
+            setTelegramLinking(false);
+            setTelegramError("Ulanish vaqti tugadi. Qaytadan urinib ko'ring.");
+          }
+        } catch (err) {
+          if (err.response?.status === 404) {
+            clearInterval(intervalId);
+            setTelegramLinking(false);
+            setTelegramError("Ulanish vaqti tugadi. Qaytadan urinib ko'ring.");
+          }
         }
-      } catch (err) {
-        if (err.response?.status === 404) {
-          clearInterval(intervalId);
-          setTelegramLinking(false);
-          setTelegramError("Ulanish vaqti tugadi. Qaytadan urinib ko'ring.");
-        }
-      }
-    }, 3000);
-  } catch (err) {
-    setTelegramLinking(false);
-    setTelegramError("Telegramga ulanishda xatolik yuz berdi.");
-  }
-};
+      }, 3000);
+    } catch (err) {
+      setTelegramLinking(false);
+      setTelegramError("Telegramga ulanishda xatolik yuz berdi.");
+    }
+  };
 
   const addToCart = (menu) => {
     setCart((prev) => {
@@ -178,59 +171,49 @@ const connectTelegram = async () => {
     }, {});
   }, [menus]);
 
- // Faqat handleSubmit funksiyasini almashtiring:
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
-
-  if (form.deliveryType === "dine-in" && !form.tableNumber) {
-    return setError("Dine-in uchun stol raqamini kiriting!");
-  }
-
-  if (form.deliveryType === "delivery" && !form.address.trim()) {
-    return setError("Yetkazish uchun manzil kiritilishi shart!");
-  }
-
-  setLoading(true);
-  setError("");
-  try {
-    // ✅ Lokatsiyani tayyorlash
-    let locationData = location || { type: "Point", coordinates: [0, 0] };
-    
-    // Agar lokatsiya bo'lmasa va delivery bo'lsa, manzildan aniqlash
-    if (form.deliveryType === "delivery" && form.address && (!location || location.coordinates[0] === 0)) {
-      // Bu yerda manzilni koordinataga aylantirish mumkin (Geocoding API)
-      // Hozircha default qoldiramiz
+    if (form.deliveryType === "dine-in" && !form.tableNumber) {
+      return setError("Dine-in uchun stol raqamini kiriting!");
     }
 
-    const orderData = {
-      ...form,
-      items: cart,
-      totalPrice,
-      tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
-      location: locationData,
-      paymentStatus: 'pending',
-      deliveryStatus: 'pending',
-      // ✅ Telegram ID (mijozning Telegram ID si)
-      telegramId: localStorage.getItem('telegramId') || null,
-    };
+    if (form.deliveryType === "delivery" && !form.address.trim()) {
+      return setError("Yetkazish uchun manzil kiritilishi shart!");
+    }
 
-    const res = await axiosInstance.post("/orders", orderData);
-    
-    setCurrentOrderId(res.data.order._id);
-    setLastOrder(res.data.order);
-    setShowPayment(true);
-    
-    setCart([]);
-    setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", note: "" });
-    
-  } catch (err) {
-    setError(err.response?.data?.message || "Xatolik yuz berdi");
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    setError("");
+    try {
+      let locationData = location || { type: "Point", coordinates: [0, 0] };
+      
+      const orderData = {
+        ...form,
+        items: cart,
+        totalPrice,
+        tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
+        location: locationData,
+        paymentStatus: 'pending',
+        deliveryStatus: 'pending',
+        telegramId: localStorage.getItem('telegramId') || null,
+      };
+
+      const res = await axiosInstance.post("/orders", orderData);
+      
+      setCurrentOrderId(res.data.order._id);
+      setLastOrder(res.data.order);
+      setShowPayment(true);
+      
+      setCart([]);
+      setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", note: "" });
+      
+    } catch (err) {
+      setError(err.response?.data?.message || "Xatolik yuz berdi");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePaymentSuccess = (method) => {
     setPaymentMethod(method);
@@ -239,51 +222,54 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white px-4 sm:px-6 lg:px-10 py-24">
+    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-28">
+
       {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[#050505]" />
+        <div className="absolute inset-0 bg-[#0a0a0a]" />
         <div
           className="absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(20,184,166,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(20,184,166,0.1) 1px, transparent 1px)
+              linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px)
             `,
-            backgroundSize: "55px 55px",
+            backgroundSize: "50px 50px",
           }}
         />
-        <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] bg-teal-500/15 blur-[180px] animate-pulse" />
-        <div className="absolute bottom-[-15%] right-[-10%] w-[600px] h-[600px] bg-amber-600/15 blur-[180px] animate-pulse delay-700" />
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-amber-500/15 blur-[200px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-yellow-400/15 blur-[200px] animate-pulse delay-700" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
+
         {/* Header */}
-        <div className="text-center mb-14">
-          <span className="text-teal-400 uppercase tracking-[0.4em] text-xs font-black">
+        <div className="text-center mb-16">
+          <span className="text-yellow-400 uppercase tracking-[0.5em] text-xs font-black">
             Online Xizmat
           </span>
-          <h1 className="mt-4 text-5xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-teal-400 to-amber-400">
+          <h1 className="mt-4 text-5xl sm:text-7xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
             Online Zakaz
           </h1>
-          <p className="mt-4 text-gray-400">Taomlarni tanlang va buyurtma bering</p>
-          <div className="flex justify-center gap-4 mt-4">
+          <p className="mt-4 text-gray-400 text-lg">Taomlarni tanlang va buyurtma bering</p>
+          <div className="flex justify-center gap-4 mt-6">
             <button
               onClick={() => navigate("/track")}
-              className="px-6 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm font-bold hover:border-teal-500/30 hover:text-white transition-all"
+              className="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm font-bold hover:border-yellow-500/30 hover:text-white transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.05)]"
             >
               🚚 Zakaz holati
             </button>
           </div>
           {locationError && (
-            <p className="text-yellow-400 text-xs mt-2">⚠️ {locationError}</p>
+            <p className="text-yellow-400 text-xs mt-3">⚠️ {locationError}</p>
           )}
           {location && !locationError && (
-            <p className="text-green-400 text-xs mt-2">✅ Lokatsiya aniqlandi</p>
+            <p className="text-green-400 text-xs mt-3">✅ Lokatsiya aniqlandi</p>
           )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
           {/* Menu */}
           <div className="lg:col-span-2 space-y-10">
             {Object.keys(groupedMenus).length === 0 ? (
@@ -294,7 +280,7 @@ const handleSubmit = async (e) => {
             ) : (
               Object.keys(groupedMenus).map((cat) => (
                 <div key={cat}>
-                  <h3 className="text-teal-400 font-bold uppercase tracking-widest text-sm mb-5 border-b border-teal-500/10 pb-3">
+                  <h3 className="text-yellow-400 font-black uppercase tracking-widest text-sm mb-5 border-b border-yellow-500/15 pb-4">
                     {cat}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -305,14 +291,14 @@ const handleSubmit = async (e) => {
                           key={menu._id}
                           className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
                             qty > 0
-                              ? "border-teal-400/50 bg-teal-500/5 shadow-[0_0_25px_rgba(20,184,166,0.1)]"
-                              : "border-white/10 bg-white/[0.03] hover:border-teal-500/30"
+                              ? "border-yellow-400/50 bg-yellow-500/10 shadow-[0_0_30px_rgba(255,215,0,0.08)]"
+                              : "border-white/10 bg-white/[0.03] hover:border-yellow-500/30 hover:bg-yellow-500/5"
                           }`}
                         >
                           <img
                             src={getImageUrl(menu.image)}
                             alt={menu.name}
-                            className="w-full h-40 object-cover"
+                            className="w-full h-44 object-cover"
                             onError={(e) => {
                               e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
                             }}
@@ -320,10 +306,10 @@ const handleSubmit = async (e) => {
                           <div className="p-4">
                             <div className="flex justify-between items-start gap-2">
                               <div>
-                                <h4 className="font-bold text-white">{menu.name}</h4>
+                                <h4 className="font-bold text-white text-lg">{menu.name}</h4>
                                 <p className="text-gray-500 text-xs mt-1 line-clamp-2">{menu.retsept}</p>
                               </div>
-                              <span className="text-teal-400 font-black text-sm whitespace-nowrap">
+                              <span className="text-yellow-400 font-black text-sm whitespace-nowrap">
                                 {Number(menu.price).toLocaleString()} so'm
                               </span>
                             </div>
@@ -331,7 +317,7 @@ const handleSubmit = async (e) => {
                             {qty === 0 ? (
                               <button
                                 onClick={() => addToCart(menu)}
-                                className="mt-4 w-full py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-bold text-sm transition-all hover:bg-teal-400 hover:text-black hover:scale-105"
+                                className="mt-4 w-full py-3 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 font-bold text-sm transition-all hover:bg-yellow-400 hover:text-black hover:scale-105 hover:shadow-[0_0_25px_rgba(255,215,0,0.2)]"
                               >
                                 + Qo'shish
                               </button>
@@ -339,14 +325,14 @@ const handleSubmit = async (e) => {
                               <div className="mt-4 flex items-center justify-between gap-3">
                                 <button
                                   onClick={() => removeFromCart(menu._id)}
-                                  className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-black text-lg hover:bg-red-500 hover:text-white transition-all"
+                                  className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 font-black text-lg hover:bg-red-500 hover:text-white transition-all"
                                 >
                                   −
                                 </button>
-                                <span className="text-white font-black text-lg">{qty}</span>
+                                <span className="text-white font-black text-xl">{qty}</span>
                                 <button
                                   onClick={() => addToCart(menu)}
-                                  className="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 font-black text-lg hover:bg-teal-400 hover:text-black transition-all"
+                                  className="w-10 h-10 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 font-black text-lg hover:bg-yellow-400 hover:text-black transition-all"
                                 >
                                   +
                                 </button>
@@ -365,8 +351,8 @@ const handleSubmit = async (e) => {
           {/* Cart + Form */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
-              <div className="bg-white/[0.03] border border-teal-500/15 backdrop-blur-3xl rounded-[24px] p-6">
-                <h3 className="text-teal-400 font-black uppercase tracking-widest text-sm mb-5">
+              <div className="bg-white/[0.03] border border-yellow-500/15 backdrop-blur-3xl rounded-[24px] p-6">
+                <h3 className="text-yellow-400 font-black uppercase tracking-widest text-sm mb-5">
                   🛒 Savat {cart.length > 0 && `(${cart.length} xil)`}
                 </h3>
 
@@ -379,60 +365,60 @@ const handleSubmit = async (e) => {
                         <span className="text-gray-300">
                           {item.name} <span className="text-gray-600">x{item.quantity}</span>
                         </span>
-                        <span className="text-teal-400 font-bold">
+                        <span className="text-yellow-400 font-bold">
                           {(item.price * item.quantity).toLocaleString()}
                         </span>
                       </div>
                     ))}
                     <div className="border-t border-white/10 pt-3 flex justify-between font-black text-lg">
                       <span>Jami:</span>
-                      <span className="text-teal-400">{totalPrice.toLocaleString()} so'm</span>
+                      <span className="text-yellow-400">{totalPrice.toLocaleString()} so'm</span>
                     </div>
                   </div>
                 )}
               </div>
 
               {success && (
-                <div className="p-5 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-400 font-bold text-center">
+                <div className="p-5 rounded-2xl bg-green-500/15 border border-green-500/30 text-green-400 font-bold text-center">
                   ✅ Zakazingiz qabul qilindi! Tez orada bog'lanamiz.
                 </div>
               )}
 
               {error && (
-                <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold text-center">
+                <div className="p-4 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold text-center">
                   ⚠️ {error}
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-teal-500/15 backdrop-blur-3xl rounded-[24px] p-6 space-y-4">
-                <h3 className="text-teal-400 font-black uppercase tracking-widest text-sm mb-2">📋 Ma'lumotlar</h3>
+              <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-yellow-500/15 backdrop-blur-3xl rounded-[24px] p-6 space-y-5">
+                <h3 className="text-yellow-400 font-black uppercase tracking-widest text-sm mb-2">📋 Ma'lumotlar</h3>
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Ism</label>
+                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Ism</label>
                   <input
                     name="customerName"
                     value={form.customerName}
                     onChange={(e) => setForm({ ...form, customerName: e.target.value })}
                     placeholder="Sardor Alimov"
                     required
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-teal-400 transition-all"
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Telefon</label>
+                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Telefon</label>
                   <input
                     name="phone"
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     placeholder="+998 90 000 00 00"
                     required
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-teal-400 transition-all"
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-2 block">Tur</label>
+                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-2 block font-bold">Tur</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { val: "dine-in", label: "🍽 Restoran" },
@@ -443,10 +429,10 @@ const handleSubmit = async (e) => {
                         key={opt.val}
                         type="button"
                         onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "" })}
-                        className={`py-2 rounded-xl text-xs font-bold border transition-all ${
+                        className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${
                           form.deliveryType === opt.val
-                            ? "border-teal-400 bg-teal-500/10 text-teal-400"
-                            : "border-white/10 bg-white/[0.03] text-gray-500 hover:border-teal-500/30"
+                            ? "border-yellow-400 bg-yellow-500/15 text-yellow-400 shadow-[0_0_20px_rgba(255,215,0,0.05)]"
+                            : "border-white/10 bg-white/[0.03] text-gray-500 hover:border-yellow-500/30 hover:text-white"
                         }`}
                       >
                         {opt.label}
@@ -457,7 +443,7 @@ const handleSubmit = async (e) => {
 
                 {form.deliveryType === "dine-in" && (
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Stol raqami *</label>
+                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Stol raqami *</label>
                     <input
                       name="tableNumber"
                       type="number"
@@ -466,20 +452,20 @@ const handleSubmit = async (e) => {
                       placeholder="12"
                       required
                       min={1}
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-teal-400 transition-all"
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all"
                     />
                   </div>
                 )}
 
                 {form.deliveryType === "delivery" && (
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 block">Manzil *</label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 block font-bold">Manzil *</label>
                       <button
                         type="button"
                         onClick={detectLocation}
                         disabled={locationLoading}
-                        className="text-[10px] font-bold text-teal-400 hover:text-teal-300 transition-all disabled:opacity-50 whitespace-nowrap"
+                        className="text-[10px] font-bold text-yellow-400 hover:text-yellow-300 transition-all disabled:opacity-50 whitespace-nowrap"
                       >
                         {locationLoading ? "⏳ Aniqlanmoqda..." : "📍 Joylashuvimni aniqlash"}
                       </button>
@@ -490,7 +476,7 @@ const handleSubmit = async (e) => {
                       onChange={(e) => setForm({ ...form, address: e.target.value })}
                       placeholder="Ko'cha, uy raqami... yoki tugma orqali aniqlang"
                       required
-                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-teal-400 transition-all"
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all"
                     />
                     {locationError && (
                       <p className="text-yellow-400 text-[10px] mt-1">⚠️ {locationError}</p>
@@ -502,18 +488,18 @@ const handleSubmit = async (e) => {
                 )}
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1 block">Izoh</label>
+                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Izoh</label>
                   <input
                     name="note"
                     value={form.note}
                     onChange={(e) => setForm({ ...form, note: e.target.value })}
                     placeholder="Qo'shimcha izoh..."
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-teal-400 transition-all"
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all"
                   />
                 </div>
 
-                {/* ✅ Telegram orqali ulanish — zakaz holati haqida shaxsiy xabar olish uchun */}
-                <div className="p-3 rounded-xl border border-teal-500/15 bg-teal-500/5">
+                {/* Telegram */}
+                <div className="p-3 rounded-xl border border-yellow-500/15 bg-yellow-500/5">
                   {telegramLinked ? (
                     <p className="text-green-400 text-xs font-bold text-center">
                       ✅ Telegram ulangan — zakaz holati haqida shu yerga xabar olasiz
@@ -524,7 +510,7 @@ const handleSubmit = async (e) => {
                         type="button"
                         onClick={connectTelegram}
                         disabled={telegramLinking}
-                        className="w-full py-2.5 rounded-xl border border-teal-500/30 text-teal-400 text-xs font-bold hover:bg-teal-500/10 transition-all disabled:opacity-50"
+                        className="w-full py-2.5 rounded-xl border border-yellow-500/30 text-yellow-400 text-xs font-bold hover:bg-yellow-500/10 transition-all disabled:opacity-50"
                       >
                         {telegramLinking ? "⏳ Kutilmoqda... (botda Start bosing)" : "📲 Telegram orqali ulanish"}
                       </button>
@@ -541,16 +527,15 @@ const handleSubmit = async (e) => {
                 <button
                   type="submit"
                   disabled={loading || cart.length === 0}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-400 via-teal-500 to-amber-400 text-black font-black uppercase tracking-[0.2em] text-sm transition-all hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(20,184,166,0.4)] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black uppercase tracking-[0.25em] text-sm transition-all hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,215,0,0.4)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {loading ? "⏳ Yuborilmoqda..." : "🛒 Zakaz Berish"}
                 </button>
               </form>
 
-              {/* Zakaz holatini kuzatish */}
               <button
                 onClick={() => navigate("/track")}
-                className="w-full py-3 rounded-xl border border-teal-500/20 text-teal-400 text-sm font-bold hover:bg-teal-500/10 transition-all"
+                className="w-full py-3.5 rounded-xl border border-yellow-500/20 text-yellow-400 text-sm font-bold hover:bg-yellow-500/10 hover:border-yellow-500/40 transition-all"
               >
                 🚚 Zakaz holatini kuzatish
               </button>

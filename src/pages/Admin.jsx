@@ -21,7 +21,7 @@ const Admin = () => {
     if (!auth) navigate("/login");
   }, [navigate]);
 
-  // ── MENU ──
+  // MENU
   const [menus, setMenus] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ name: "", price: "", retsept: "", image: "", category: "" });
@@ -33,7 +33,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── STOLLAR ──
+  // STOLLAR
   const [tables, setTables] = useState([]);
   const [tableStats, setTableStats] = useState({ total: 0, available: 0, booked: 0 });
   const [tableForm, setTableForm] = useState({ number: "", capacity: "", location: "" });
@@ -46,7 +46,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── BRONLAR ──
+  // BRONLAR
   const [reservations, setReservations] = useState([]);
   const [deletingCompleted, setDeletingCompleted] = useState(false);
   const [deletingAllReservations, setDeletingAllReservations] = useState(false);
@@ -58,7 +58,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── ZAKAZLAR ──
+  // ZAKAZLAR
   const [orders, setOrders] = useState([]);
   const [editingDelivery, setEditingDelivery] = useState(null);
   const [deletingCompletedOrders, setDeletingCompletedOrders] = useState(false);
@@ -71,7 +71,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── ✅ YAKUNLANGAN BRONLARNI O'CHIRISH ──
   const handleDeleteCompletedReservations = async () => {
     const completed = reservations.filter(r => r.status === "confirmed" || r.status === "cancelled");
     if (completed.length === 0) {
@@ -99,7 +98,6 @@ const Admin = () => {
     }
   };
 
-  // ── ✅ ✅ BARCHA BRONLARNI BUTUNLAY O'CHIRISH ──
   const handleDeleteAllReservations = async () => {
     if (reservations.length === 0) {
       alert("O'chirish uchun bronlar mavjud emas!");
@@ -126,7 +124,6 @@ const Admin = () => {
     }
   };
 
-  // ── ✅ YAKUNLANGAN ZAKAZLARNI O'CHIRISH ──
   const handleDeleteCompletedOrders = async () => {
     const completed = orders.filter(o => o.status === "ready" || o.deliveryStatus === "delivered");
     if (completed.length === 0) {
@@ -154,7 +151,6 @@ const Admin = () => {
     }
   };
 
-  // ── ✅ ✅ BARCHA ZAKAZLARNI BUTUNLAY O'CHIRISH ──
   const handleDeleteAllOrders = async () => {
     if (orders.length === 0) {
       alert("O'chirish uchun zakazlar mavjud emas!");
@@ -181,7 +177,6 @@ const Admin = () => {
     }
   };
 
-  // ── BIRINCHI YUKLASH ──
   useEffect(() => {
     getMenus();
     getTables();
@@ -189,24 +184,23 @@ const Admin = () => {
     getOrders();
   }, []);
 
-  // ✅ Avtomatik yangilash
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        getReservations();
-        getOrders();
-        getTables();
-      }
-    }, 15000);
-    return () => clearInterval(interval);
-  }, []);
+// ✅ Auto-refresh optimallashtirildi
+useEffect(() => {
+  const interval = setInterval(() => {
+    if (document.visibilityState === 'visible' && document.hasFocus()) {
+      getReservations();
+      getOrders();
+      getTables();
+    }
+  }, 30000); // 15 soniya → 30 soniya
+  return () => clearInterval(interval);
+}, []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth");
     navigate("/");
   };
 
-  // ── MENU SUBMIT ──
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -241,7 +235,6 @@ const Admin = () => {
 
   const handleEdit = (menu) => { setForm(menu); setEditingId(menu._id); };
 
-  // ── TABLE SUBMIT ──
   const handleTableSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -265,7 +258,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── RESERVATION STATUS ──
   const updateReservationStatus = async (id, status) => {
     try {
       await axiosInstance.put(`/reservations/${id}`, { status });
@@ -273,7 +265,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── ORDER STATUS ──
   const updateOrderStatus = async (id, status) => {
     try {
       await axiosInstance.patch(`/orders/${id}/status`, { status });
@@ -281,7 +272,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ── DELIVERY STATUS ──
   const updateDeliveryStatus = async (id, deliveryStatus, courierName = '', courierPhone = '') => {
     try {
       await axiosInstance.patch(`/orders/${id}/delivery`, { 
@@ -333,7 +323,6 @@ const Admin = () => {
     "delivery": "🚚 Yetkazish",
   };
 
-  // Ranglar uchun map (Tailwind dinamik sinf muammosi uchun)
   const colorMap = {
     cyan: "text-cyan-400",
     blue: "text-blue-400",
@@ -343,58 +332,69 @@ const Admin = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#020617] text-white px-4 sm:px-6 lg:px-10 py-10">
+    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-12">
+
       {/* BACKGROUND */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[#020617]" />
-        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `linear-gradient(rgba(0,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.15) 1px, transparent 1px)`, backgroundSize: "55px 55px" }} />
-        <div className="absolute top-[-15%] left-[-10%] w-[650px] h-[650px] bg-cyan-500/20 blur-[180px] animate-pulse" />
-        <div className="absolute bottom-[-15%] right-[-10%] w-[650px] h-[650px] bg-purple-600/20 blur-[180px] animate-pulse delay-700" />
+        <div className="absolute inset-0 bg-[#0a0a0a]" />
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: "50px 50px",
+          }}
+        />
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-yellow-500/15 blur-[200px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-amber-400/15 blur-[200px] animate-pulse delay-700" />
       </div>
 
       <div className="relative z-10">
+
         {/* HEADER */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-10 border-b border-cyan-500/20 pb-7">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-12 border-b border-yellow-500/20 pb-8">
           <div>
-            <h2 className="mt-3 text-4xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">
+            <h2 className="mt-3 text-5xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
               ADMIN PANEL
             </h2>
-            <p className="text-gray-500 mt-2 text-sm">Restoran boshqaruv tizimi</p>
+            <p className="text-gray-500 mt-2 text-sm tracking-widest">Restoran boshqaruv tizimi</p>
           </div>
           <button
             onClick={handleLogout}
-            className="px-6 py-3 rounded-2xl border border-red-500/40 text-red-400 transition-all hover:bg-red-500 hover:text-white hover:scale-105"
+            className="px-8 py-4 rounded-2xl border border-red-500/40 text-red-400 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]"
           >
             🚪 Chiqish
           </button>
         </div>
 
         {/* QUICK STATS */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-10">
           {[
-            { label: "Menyu", value: menus.length, color: "cyan" },
+            { label: "Menyu", value: menus.length, color: "yellow" },
             { label: "Jami Stollar", value: tableStats.total, color: "blue" },
             { label: "Bronlar", value: reservations.filter(r => r.status === "pending").length, color: "yellow", suffix: " yangi" },
             { label: "Zakazlar", value: orders.filter(o => o.status === "pending").length, color: "purple", suffix: " yangi" },
             { label: "Yo'lda", value: orders.filter(o => o.deliveryStatus === "on_the_way").length, color: "orange", suffix: " ta" },
           ].map((s, i) => (
-            <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-center">
+            <div key={i} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 text-center">
               <p className={`text-3xl font-black ${colorMap[s.color]}`}>{s.value}{s.suffix || ""}</p>
-              <p className="text-gray-500 text-xs uppercase tracking-widest mt-1">{s.label}</p>
+              <p className="text-gray-500 text-xs uppercase tracking-widest mt-1 font-bold">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* TABS */}
-        <div className="flex gap-2 mb-8 flex-wrap">
+        <div className="flex gap-2 mb-10 flex-wrap">
           {TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 py-3 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${
+              className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${
                 activeTab === tab
-                  ? "bg-cyan-400 text-black shadow-[0_0_30px_rgba(0,255,255,0.4)]"
-                  : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-cyan-500/30 hover:text-white"
+                  ? "bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black shadow-[0_0_40px_rgba(255,215,0,0.3)]"
+                  : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-yellow-500/30 hover:text-white"
               }`}
             >
               {tab}
@@ -402,16 +402,16 @@ const Admin = () => {
           ))}
         </div>
 
-        {/* ── TAB: MENU ── */}
+        {/* TAB: MENU */}
         {activeTab === "Menu" && (
           <div>
-            <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-cyan-500/20 backdrop-blur-3xl rounded-[30px] p-6 sm:p-8 mb-10">
-              <h3 className="text-cyan-400 font-black text-xl mb-6">
+            <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-yellow-500/20 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 mb-12">
+              <h3 className="text-yellow-400 font-black text-2xl mb-8">
                 {editingId ? "📝 Tahrirlash" : "➕ Yangi Taom"}
               </h3>
 
-              <div className="mb-4">
-                <label className="text-xs uppercase text-gray-500 block mb-2">Rasm</label>
+              <div className="mb-5">
+                <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Rasm</label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input
                     type="file"
@@ -425,7 +425,7 @@ const Admin = () => {
                       value={form.imageUrl || ""}
                       placeholder="Yoki rasm URL manzilini joylashtiring..."
                       onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                      className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 outline-none text-white text-sm placeholder:text-gray-700 focus:border-cyan-400 transition-all"
+                      className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(255,215,0,0.05)] transition-all"
                     />
                     <button
                       type="button"
@@ -433,7 +433,7 @@ const Admin = () => {
                         if (!form.imageUrl?.trim()) return;
                         setForm({ ...form, image: form.imageUrl.trim() });
                       }}
-                      className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap"
+                      className="px-4 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all whitespace-nowrap"
                     >
                       Biriktirish
                     </button>
@@ -445,17 +445,18 @@ const Admin = () => {
                     <img
                       src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)}
                       alt="preview"
-                      className="w-20 h-20 object-cover rounded-xl border border-cyan-500/20"
+                      className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20"
                       onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }}
                     />
-                    <span className="text-green-400 text-xs">✅ Rasm tanlandi</span>
+                    <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
                   </div>
                 )}
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {["name", "price", "retsept", "category"].map((key) => (
                   <div key={key}>
-                    <label className="text-xs uppercase tracking-widest text-gray-500 block mb-2">
+                    <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">
                       {key === "name" ? "Nomi" : key === "price" ? "Narxi (so'm)" : key === "retsept" ? "Retsept" : "Kategoriya"}
                     </label>
                     <input
@@ -464,18 +465,19 @@ const Admin = () => {
                       type={key === "price" ? "number" : "text"}
                       min={key === "price" ? "0" : undefined}
                       required
-                      className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white focus:border-cyan-400 transition-all"
+                      className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all"
                     />
                   </div>
                 ))}
               </div>
-              <div className="flex gap-4 mt-6">
-                <button type="submit" className="px-8 py-4 rounded-2xl bg-cyan-400 text-black font-black hover:scale-105 hover:bg-cyan-300 transition-all">
+
+              <div className="flex gap-4 mt-8">
+                <button type="submit" className="px-10 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] transition-all">
                   {editingId ? "Yangilash" : "Saqlash"}
                 </button>
                 {editingId && (
                   <button type="button" onClick={() => { setEditingId(null); setForm({ name: "", price: "", retsept: "", image: "", category: "" }); }}
-                    className="px-8 py-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
+                    className="px-10 py-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
                     Bekor
                   </button>
                 )}
@@ -484,21 +486,21 @@ const Admin = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
-                <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-cyan-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-cyan-400/50">
-                  <div className="h-48 overflow-hidden">
-                    <img src={getImageUrl(menu.image)} alt={menu.name} className="w-full h-full object-cover"
+                <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-yellow-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-yellow-400/50 hover:shadow-[0_0_40px_rgba(255,215,0,0.05)]">
+                  <div className="h-52 overflow-hidden">
+                    <img src={getImageUrl(menu.image)} alt={menu.name} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                       onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }}
                     />
                   </div>
                   <div className="p-5">
                     <div className="flex justify-between">
-                      <h3 className="font-black text-lg">{menu.name}</h3>
-                      <span className="text-green-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span>
+                      <h3 className="font-black text-xl">{menu.name}</h3>
+                      <span className="text-yellow-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span>
                     </div>
                     <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
                     <div className="flex gap-3 mt-4">
-                      <button onClick={() => handleEdit(menu)} className="flex-1 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 text-sm font-semibold hover:bg-yellow-400 hover:text-black transition-all">Tahrirlash</button>
-                      <button onClick={() => handleDelete(menu._id)} className="flex-1 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold hover:bg-red-500 hover:text-white transition-all">O'chirish</button>
+                      <button onClick={() => handleEdit(menu)} className="flex-1 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all">Tahrirlash</button>
+                      <button onClick={() => handleDelete(menu._id)} className="flex-1 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">O'chirish</button>
                     </div>
                   </div>
                 </div>
@@ -507,39 +509,39 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ── TAB: STOLLAR ── */}
+        {/* TAB: STOLLAR */}
         {activeTab === "Stollar" && (
           <div>
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-4 mb-10">
               {[
                 { label: "Jami", value: tableStats.total, color: "text-white" },
                 { label: "Bo'sh", value: tableStats.available, color: "text-green-400" },
                 { label: "Band", value: tableStats.booked, color: "text-red-400" },
               ].map((s, i) => (
-                <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-center">
+                <div key={i} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 text-center">
                   <p className={`text-4xl font-black ${s.color}`}>{s.value}</p>
-                  <p className="text-gray-500 text-xs uppercase tracking-widest mt-2">{s.label}</p>
+                  <p className="text-gray-500 text-xs uppercase tracking-widest mt-2 font-bold">{s.label}</p>
                 </div>
               ))}
             </div>
 
-            <form onSubmit={handleTableSubmit} className="bg-white/[0.03] border border-cyan-500/20 rounded-[24px] p-6 mb-8">
-              <h3 className="text-cyan-400 font-black text-lg mb-5">➕ Yangi Stol</h3>
+            <form onSubmit={handleTableSubmit} className="bg-white/[0.03] border border-yellow-500/20 rounded-[24px] p-6 mb-10">
+              <h3 className="text-yellow-400 font-black text-xl mb-6">➕ Yangi Stol</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs uppercase text-gray-500 block mb-2">Stol raqami</label>
-                  <input value={tableForm.number} onChange={(e) => setTableForm({ ...tableForm, number: e.target.value })} type="number" required placeholder="1" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-cyan-400 transition-all" />
+                  <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Stol raqami</label>
+                  <input value={tableForm.number} onChange={(e) => setTableForm({ ...tableForm, number: e.target.value })} type="number" required placeholder="1" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" />
                 </div>
                 <div>
-                  <label className="text-xs uppercase text-gray-500 block mb-2">Sig'im (kishi)</label>
-                  <input value={tableForm.capacity} onChange={(e) => setTableForm({ ...tableForm, capacity: e.target.value })} type="number" required placeholder="4" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-cyan-400 transition-all" />
+                  <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Sig'im (kishi)</label>
+                  <input value={tableForm.capacity} onChange={(e) => setTableForm({ ...tableForm, capacity: e.target.value })} type="number" required placeholder="4" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" />
                 </div>
                 <div>
-                  <label className="text-xs uppercase text-gray-500 block mb-2">Joylashuv</label>
-                  <input value={tableForm.location} onChange={(e) => setTableForm({ ...tableForm, location: e.target.value })} placeholder="Ichki zal" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-cyan-400 transition-all" />
+                  <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Joylashuv</label>
+                  <input value={tableForm.location} onChange={(e) => setTableForm({ ...tableForm, location: e.target.value })} placeholder="Ichki zal" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" />
                 </div>
               </div>
-              <button type="submit" className="mt-5 px-8 py-3 rounded-2xl bg-cyan-400 text-black font-black hover:scale-105 transition-all">Stol Qo'shish</button>
+              <button type="submit" className="mt-6 px-10 py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all">Stol Qo'shish</button>
             </form>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -551,13 +553,13 @@ const Admin = () => {
                       <p className="text-gray-400 text-sm mt-1">{table.capacity} kishi</p>
                       {table.location && <p className="text-gray-500 text-xs">{table.location}</p>}
                     </div>
-                    <span className={`w-3 h-3 rounded-full mt-1 ${table.isAvailable ? "bg-green-400" : "bg-red-500"}`} />
+                    <span className={`w-3 h-3 rounded-full mt-1 ${table.isAvailable ? "bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.3)]" : "bg-red-500 shadow-[0_0_10px_rgba(248,113,113,0.3)]"}`} />
                   </div>
                   <div className="flex gap-2 mt-4">
-                    <button onClick={() => toggleTableAvailability(table)} className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-all ${table.isAvailable ? "border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white" : "border-green-500/30 text-green-400 hover:bg-green-500 hover:text-black"}`}>
+                    <button onClick={() => toggleTableAvailability(table)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold border transition-all ${table.isAvailable ? "border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white" : "border-green-500/30 text-green-400 hover:bg-green-500 hover:text-black"}`}>
                       {table.isAvailable ? "Band qilish" : "Bo'shatish"}
                     </button>
-                    <button onClick={() => handleTableDelete(table._id)} className="px-3 py-2 rounded-xl border border-red-500/20 text-red-400 text-xs hover:bg-red-500 hover:text-white transition-all">✕</button>
+                    <button onClick={() => handleTableDelete(table._id)} className="px-3 py-2.5 rounded-xl border border-red-500/20 text-red-400 text-xs hover:bg-red-500 hover:text-white transition-all">✕</button>
                   </div>
                 </div>
               ))}
@@ -565,27 +567,23 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ── TAB: BRONLAR ── */}
+        {/* TAB: BRONLAR */}
         {activeTab === "Bronlar" && (
           <div>
-            {/* ✅ TUGMALAR QATORI */}
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
-              <h3 className="text-yellow-400 font-bold">📋 Bronlar</h3>
+              <h3 className="text-yellow-400 font-black text-xl">📋 Bronlar</h3>
               <div className="flex flex-wrap gap-2">
-                {/* ✅ YAKUNLANGANLARNI O'CHIRISH */}
                 <button
                   onClick={handleDeleteCompletedReservations}
                   disabled={deletingCompleted}
-                  className="px-4 py-2 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
                 >
                   {deletingCompleted ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}
                 </button>
-                
-                {/* ✅ ✅ BARCHASINI BUTUNLAY O'CHIRISH (QIZIL) */}
                 <button
                   onClick={handleDeleteAllReservations}
                   disabled={deletingAllReservations}
-                  className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
                 >
                   {deletingAllReservations ? "⏳..." : "🔥 Barchasini o'chirish"}
                 </button>
@@ -597,11 +595,11 @@ const Admin = () => {
                 <p className="text-gray-500 text-center py-20 text-xl">Hali bron yo'q</p>
               ) : (
                 reservations.map((r) => (
-                  <div key={r._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                  <div key={r._id} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 hover:border-yellow-500/30 transition-all">
                     <div className="flex flex-col sm:flex-row justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <h3 className="font-black text-lg">{r.customerName}</h3>
+                          <h3 className="font-black text-xl">{r.customerName}</h3>
                           <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>
                             {statusLabel[r.status]}
                           </span>
@@ -614,8 +612,8 @@ const Admin = () => {
                       </div>
                       {r.status === "pending" && (
                         <div className="flex gap-2 items-start">
-                          <button onClick={() => updateReservationStatus(r._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all">✅ Tasdiqlash</button>
-                          <button onClick={() => updateReservationStatus(r._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">❌ Bekor</button>
+                          <button onClick={() => updateReservationStatus(r._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all">✅ Tasdiqlash</button>
+                          <button onClick={() => updateReservationStatus(r._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">❌ Bekor</button>
                         </div>
                       )}
                     </div>
@@ -626,27 +624,23 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ── TAB: ZAKAZLAR ── */}
+        {/* TAB: ZAKAZLAR */}
         {activeTab === "Zakazlar" && (
           <div>
-            {/* ✅ TUGMALAR QATORI */}
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
-              <h3 className="text-purple-400 font-bold">📦 Zakazlar</h3>
+              <h3 className="text-yellow-400 font-black text-xl">📦 Zakazlar</h3>
               <div className="flex flex-wrap gap-2">
-                {/* ✅ YAKUNLANGANLARNI O'CHIRISH */}
                 <button
                   onClick={handleDeleteCompletedOrders}
                   disabled={deletingCompletedOrders}
-                  className="px-4 py-2 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
                 >
                   {deletingCompletedOrders ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}
                 </button>
-                
-                {/* ✅ ✅ BARCHASINI BUTUNLAY O'CHIRISH (QIZIL) */}
                 <button
                   onClick={handleDeleteAllOrders}
                   disabled={deletingAllOrders}
-                  className="px-4 py-2 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
                 >
                   {deletingAllOrders ? "⏳..." : "🔥 Barchasini o'chirish"}
                 </button>
@@ -658,19 +652,19 @@ const Admin = () => {
                 <p className="text-gray-500 text-center py-20 text-xl">Hali zakaz yo'q</p>
               ) : (
                 orders.map((o) => (
-                  <div key={o._id} className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
+                  <div key={o._id} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 hover:border-yellow-500/30 transition-all">
                     <div className="flex flex-col sm:flex-row justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <h3 className="font-black text-lg">{o.customerName}</h3>
+                          <h3 className="font-black text-xl">{o.customerName}</h3>
                           <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>
                             {statusLabel[o.status]}
                           </span>
-                          <span className="text-xs px-3 py-1 rounded-full border border-white/10 text-gray-400">
+                          <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/20 text-yellow-400 bg-yellow-500/10 font-bold">
                             {deliveryTypeMap[o.deliveryType] || o.deliveryType}
                           </span>
                           {o.deliveryStatus && o.deliveryStatus !== 'pending' && (
-                            <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10">
+                            <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 font-bold">
                               {deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}
                             </span>
                           )}
@@ -683,7 +677,7 @@ const Admin = () => {
                             href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block text-cyan-400 text-xs underline hover:text-cyan-300"
+                            className="inline-block text-yellow-400 text-xs underline hover:text-yellow-300"
                           >
                             🗺 Xaritada ko'rish
                           </a>
@@ -696,34 +690,34 @@ const Admin = () => {
                             </p>
                           ))}
                         </div>
-                        <p className="text-cyan-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
+                        <p className="text-yellow-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
                         {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
                         {o.courierName && (
-                          <p className="text-green-400 text-xs">👤 Kuryer: {o.courierName}</p>
+                          <p className="text-green-400 text-xs font-bold">👤 Kuryer: {o.courierName}</p>
                         )}
                       </div>
                       <div className="flex flex-col gap-2 items-start">
                         {o.status === "pending" && (
-                          <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
+                          <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
                         )}
                         {o.status === "confirmed" && (
-                          <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-5 py-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
+                          <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-6 py-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
                         )}
                         {o.status === "preparing" && (
-                          <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-5 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
+                          <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
                         )}
                         {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
                           <button onClick={() => {
                             const courierName = prompt("Kuryer ismi:");
                             const courierPhone = prompt("Kuryer telefon raqami:");
                             if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
-                          }} className="px-5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
+                          }} className="px-6 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
                         )}
                         {o.deliveryStatus === "on_the_way" && (
-                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-5 py-2 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
+                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
                         )}
                         {o.status !== "cancelled" && o.status !== "ready" && (
-                          <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
+                          <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
                         )}
                       </div>
                     </div>
@@ -734,10 +728,10 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ── TAB: HISOBOTLAR ── */}
-       {activeTab === "Hisobotlar" && (
+        {/* TAB: HISOBOTLAR */}
+        {activeTab === "Hisobotlar" && (
           <Reports />
-           )}
+        )}
       </div>
     </div>
   );

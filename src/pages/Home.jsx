@@ -5,68 +5,60 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#030303] text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white">
 
       {/* ULTRA LUXURY BACKGROUND */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
 
-        {/* MAIN IMAGE */}
         <img
-          className="absolute inset-0 w-full h-full object-cover scale-110 opacity-30 animate-slowZoom"
+          className="absolute inset-0 w-full h-full object-cover scale-110 opacity-25 animate-slowZoom"
           src="https://images.unsplash.com/photo-1776993298422-3e8c397d0235?auto=format&fit=crop&w=1740&q=80"
           alt="Sazanchik restorani interyeri"
         />
 
-        {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-[#030303]/80"></div>
+        <div className="absolute inset-0 bg-[#0a0a0a]/80"></div>
 
-        {/* GOLD LIGHT */}
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[140px] animate-pulse"></div>
+        <div className="absolute top-[-15%] left-[-15%] w-[600px] h-[600px] bg-yellow-500/15 rounded-full blur-[180px] animate-pulse"></div>
+        <div className="absolute bottom-[-15%] right-[-15%] w-[600px] h-[600px] bg-amber-400/15 rounded-full blur-[180px] animate-pulse delay-700"></div>
 
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[140px] animate-pulse delay-700"></div>
-
-        {/* GRID */}
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `
               linear-gradient(rgba(255,215,0,0.12) 1px, transparent 1px),
               linear-gradient(90deg, rgba(255,215,0,0.12) 1px, transparent 1px)
             `,
-            backgroundSize: "70px 70px",
+            backgroundSize: "60px 60px",
           }}
         ></div>
 
       </div>
 
       {/* HERO */}
-      <section className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-10 py-24">
+      <section className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-10 py-28">
 
-        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
           {/* LEFT SIDE */}
           <div className="text-center lg:text-left">
 
-            {/* MINI BADGE */}
             <div
               className="
                 inline-flex items-center gap-3
-                px-5 py-3
+                px-6 py-3
                 rounded-full
                 border border-yellow-500/20
-                bg-yellow-500/5
+                bg-yellow-500/10
                 backdrop-blur-xl
                 mb-8
               "
             >
-              <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
-
-              <span className="text-yellow-400 uppercase tracking-[0.35em] text-[11px] font-black">
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse"></div>
+              <span className="text-yellow-400 uppercase tracking-[0.4em] text-[11px] font-black">
                 🐟 Milliy Taom & Yangi Baliq
               </span>
             </div>
 
-            {/* TITLE */}
             <h1
               className="
                 text-5xl sm:text-7xl lg:text-8xl
@@ -79,10 +71,9 @@ const Home = () => {
               <span className="block text-white">
                 Xush kelibsiz
               </span>
-
               <span
                 className="
-                  block mt-2
+                  block mt-3
                   text-transparent
                   bg-clip-text
                   bg-gradient-to-r
@@ -93,13 +84,11 @@ const Home = () => {
               >
                 Sazanchik
               </span>
-
-              <span className="block text-white mt-2 text-3xl sm:text-4xl lg:text-5xl normal-case tracking-normal text-gray-300">
+              <span className="block text-white mt-3 text-3xl sm:text-4xl lg:text-5xl normal-case tracking-normal text-gray-300">
                 dasturxoniga
               </span>
             </h1>
 
-            {/* DESCRIPTION */}
             <p
               className="
                 mt-8
@@ -115,14 +104,13 @@ const Home = () => {
               barchasi oilangiz bilan unutilmas oqshom uchun.
             </p>
 
-            {/* BUTTONS */}
             <div className="flex flex-col sm:flex-row gap-5 mt-10 justify-center lg:justify-start">
 
               <button
                 onClick={() => navigate("/menu")}
                 className="
                   group relative overflow-hidden
-                  px-10 py-4
+                  px-12 py-5
                   rounded-2xl
                   bg-gradient-to-r
                   from-yellow-400
@@ -130,37 +118,37 @@ const Home = () => {
                   to-orange-500
                   text-black
                   font-black
+                  text-sm
                   uppercase
-                  tracking-[0.25em]
+                  tracking-[0.3em]
                   transition-all duration-300
                   hover:scale-105
-                  hover:shadow-[0_0_45px_rgba(255,215,0,0.55)]
-                  active:scale-[0.98]
+                  hover:shadow-[0_0_50px_rgba(255,215,0,0.5)]
+                  active:scale-95
                 "
               >
-
-                <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
-
+                <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                 Menyuni Ko‘rish
-
               </button>
 
               <button
                 onClick={() => navigate("/reservation")}
                 className="
-                  px-10 py-4
+                  px-12 py-5
                   rounded-2xl
                   border border-white/10
                   bg-white/[0.03]
                   backdrop-blur-xl
                   text-white
                   font-bold
+                  text-sm
                   uppercase
-                  tracking-[0.2em]
+                  tracking-[0.25em]
                   transition-all duration-300
                   hover:bg-white/10
                   hover:border-yellow-500/30
                   hover:scale-105
+                  hover:shadow-[0_0_30px_rgba(255,215,0,0.05)]
                 "
               >
                 Stol Bron Qilish
@@ -168,8 +156,7 @@ const Home = () => {
 
             </div>
 
-            {/* STATS */}
-            <div className="grid grid-cols-3 gap-5 mt-14">
+            <div className="grid grid-cols-3 gap-5 mt-16">
 
               {[
                 { val: "12+", label: "Yillik Tajriba" },
@@ -189,10 +176,9 @@ const Home = () => {
                     transition-all duration-300
                   "
                 >
-
                   <h3
                     className="
-                      text-1xl sm:text-2xl
+                      text-2xl sm:text-3xl
                       font-black
                       text-transparent
                       bg-clip-text
@@ -203,11 +189,9 @@ const Home = () => {
                   >
                     {item.val}
                   </h3>
-
-                  <p className="text-gray-500 text-[11px] uppercase tracking-[0.25em] mt-2">
+                  <p className="text-gray-500 text-[11px] uppercase tracking-[0.3em] mt-2 font-bold">
                     {item.label}
                   </p>
-
                 </div>
               ))}
 
@@ -218,10 +202,8 @@ const Home = () => {
           {/* RIGHT SIDE */}
           <div className="relative flex justify-center">
 
-            {/* OUTER GLOW */}
-            <div className="absolute inset-0 bg-yellow-500/10 blur-[120px] rounded-full"></div>
+            <div className="absolute inset-0 bg-yellow-500/15 blur-[150px] rounded-full"></div>
 
-            {/* IMAGE CARD */}
             <div
               className="
                 relative
@@ -231,12 +213,11 @@ const Home = () => {
                 border border-yellow-500/20
                 bg-white/[0.03]
                 backdrop-blur-3xl
-                shadow-[0_0_80px_rgba(255,215,0,0.08)]
+                shadow-[0_0_100px_rgba(255,215,0,0.06)]
                 group
               "
             >
 
-              {/* IMAGE */}
               <img
                 src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1200&q=80"
                 alt="Sazanchikning tabiiy baliq taomi"
@@ -249,34 +230,28 @@ const Home = () => {
                 "
               />
 
-              {/* OVERLAY */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
 
-              {/* FLOAT CARD */}
               <div
                 className="
                   absolute bottom-6 left-6 right-6
-                  bg-black/40
+                  bg-black/50
                   border border-yellow-500/20
                   backdrop-blur-2xl
                   rounded-3xl
                   p-6
                 "
               >
-
-                <span className="text-yellow-400 uppercase tracking-[0.35em] text-[10px] font-black">
+                <span className="text-yellow-400 uppercase tracking-[0.4em] text-[10px] font-black">
                   Signature Taom
                 </span>
-
                 <h3 className="text-2xl font-black mt-3">
                   Olovda Pishirilgan Baliq
                 </h3>
-
                 <p className="text-gray-400 text-sm mt-2 leading-relaxed">
                   Achchiq pomidor sousi bilan, Sazanchikning
                   eng sevimli milliy taomi.
                 </p>
-
               </div>
 
             </div>
@@ -288,17 +263,17 @@ const Home = () => {
       </section>
 
       {/* BOTTOM SECTION */}
-      <section className="relative z-10 py-24 border-t border-yellow-500/10">
+      <section className="relative z-10 py-28 border-t border-yellow-500/15">
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
 
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
 
-            <span className="text-yellow-500 uppercase tracking-[0.4em] text-xs font-black">
+            <span className="text-yellow-500 uppercase tracking-[0.5em] text-xs font-black">
               Nega Sazanchik
             </span>
 
-            <h2 className="mt-5 text-4xl sm:text-6xl font-black uppercase">
+            <h2 className="mt-5 text-5xl sm:text-7xl font-black uppercase">
               Daryodan <span className="text-yellow-500">Dasturxonga</span>
             </h2>
 
@@ -333,28 +308,28 @@ const Home = () => {
                   border border-white/5
                   bg-white/[0.03]
                   backdrop-blur-3xl
-                  p-10
+                  p-12
                   hover:border-yellow-500/30
                   hover:scale-[1.03]
+                  hover:shadow-[0_0_50px_rgba(255,215,0,0.05)]
                   transition-all duration-500
                 "
               >
 
-                {/* GLOW */}
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition"></div>
 
                 <div className="relative z-10">
 
                   <div
                     className="
-                      w-20 h-20
+                      w-24 h-24
                       rounded-3xl
                       bg-gradient-to-br
                       from-yellow-400
                       to-orange-500
                       flex items-center justify-center
-                      text-4xl
-                      shadow-[0_0_35px_rgba(255,215,0,0.35)]
+                      text-5xl
+                      shadow-[0_0_45px_rgba(255,215,0,0.3)]
                     "
                   >
                     {item.icon}
@@ -375,8 +350,7 @@ const Home = () => {
 
           </div>
 
-          {/* TAOMLAR GALEREYASI */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
             {[
               {
                 src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80",
@@ -397,7 +371,7 @@ const Home = () => {
             ].map((g, i) => (
               <div
                 key={i}
-                className="group relative h-48 sm:h-56 rounded-3xl overflow-hidden border border-yellow-500/10"
+                className="group relative h-56 sm:h-64 rounded-3xl overflow-hidden border border-yellow-500/10"
               >
                 <img
                   src={g.src}
@@ -405,7 +379,7 @@ const Home = () => {
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-                <span className="absolute bottom-3 left-4 text-white text-xs uppercase tracking-[0.2em] font-bold">
+                <span className="absolute bottom-4 left-5 text-white text-xs uppercase tracking-[0.25em] font-bold">
                   {g.label}
                 </span>
               </div>
