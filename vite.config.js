@@ -1,18 +1,27 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+// vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  
   build: {
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
+      // fsevents ni external qilish (Windows uchun)
+      external: ['fsevents'],
       output: {
         manualChunks: {
-          // Tashqi kutubxonalarni alohida fayllarga ajratish
-          vendor: ['react', 'react-dom', 'axios'],
-          ui: ['@material-tailwind/react'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'http': ['axios'],
+          'state': ['@tanstack/react-query'],
         },
       },
     },
-    chunkSizeWarningLimit: 1000, // Ogohlantirish chegarasini oshirish (ixtiyoriy)
   },
-});
+
+  server: {
+    port: 5173,
+    open: true,
+  },
+})

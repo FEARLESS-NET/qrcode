@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Reports from "../components/Reports.jsx";
 
 const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Hisobotlar"];
-const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3005';
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
@@ -15,10 +15,15 @@ const getImageUrl = (imagePath) => {
 const Admin = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Menu");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const auth = localStorage.getItem("auth");
-    if (!auth) navigate("/login");
+    if (!auth || auth !== "true") {
+      navigate("/login", { replace: true });
+    } else {
+      setLoading(false);
+    }
   }, [navigate]);
 
   // MENU
@@ -77,14 +82,7 @@ const Admin = () => {
       alert("O'chirish uchun yakunlangan bronlar mavjud emas!");
       return;
     }
-
-    if (!window.confirm(
-      `⚠️ YAKUNLANGAN BRONLARNI O'CHIRISH!\n\n` +
-      `📌 ${completed.length} ta bron o'chiriladi\n` +
-      `📌 Status: confirmed / cancelled\n` +
-      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
-      `Davom etasizmi?`
-    )) return;
+    if (!window.confirm(`⚠️ YAKUNLANGAN BRONLARNI O'CHIRISH!\n\n📌 ${completed.length} ta bron o'chiriladi\n📌 Status: confirmed / cancelled\n📌 Bu amalni qaytarib bo'lmaydi!\n\nDavom etasizmi?`)) return;
 
     setDeletingCompleted(true);
     try {
@@ -103,14 +101,7 @@ const Admin = () => {
       alert("O'chirish uchun bronlar mavjud emas!");
       return;
     }
-
-    if (!window.confirm(
-      `⚠️ BARCHA BRONLARNI BUTUNLAY O'CHIRISH!\n\n` +
-      `📌 ${reservations.length} ta bron butunlay o'chiriladi\n` +
-      `📌 Status: barcha (pending, confirmed, cancelled)\n` +
-      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
-      `Davom etasizmi?`
-    )) return;
+    if (!window.confirm(`⚠️ BARCHA BRONLARNI BUTUNLAY O'CHIRISH!\n\n📌 ${reservations.length} ta bron butunlay o'chiriladi\n📌 Status: barcha (pending, confirmed, cancelled)\n📌 Bu amalni qaytarib bo'lmaydi!\n\nDavom etasizmi?`)) return;
 
     setDeletingAllReservations(true);
     try {
@@ -130,14 +121,7 @@ const Admin = () => {
       alert("O'chirish uchun yakunlangan zakazlar mavjud emas!");
       return;
     }
-
-    if (!window.confirm(
-      `⚠️ YAKUNLANGAN ZAKAZLARNI O'CHIRISH!\n\n` +
-      `📌 ${completed.length} ta zakaz o'chiriladi\n` +
-      `📌 Status: ready / delivered\n` +
-      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
-      `Davom etasizmi?`
-    )) return;
+    if (!window.confirm(`⚠️ YAKUNLANGAN ZAKAZLARNI O'CHIRISH!\n\n📌 ${completed.length} ta zakaz o'chiriladi\n📌 Status: ready / delivered\n📌 Bu amalni qaytarib bo'lmaydi!\n\nDavom etasizmi?`)) return;
 
     setDeletingCompletedOrders(true);
     try {
@@ -156,14 +140,7 @@ const Admin = () => {
       alert("O'chirish uchun zakazlar mavjud emas!");
       return;
     }
-
-    if (!window.confirm(
-      `⚠️ BARCHA ZAKAZLARNI BUTUNLAY O'CHIRISH!\n\n` +
-      `📌 ${orders.length} ta zakaz butunlay o'chiriladi\n` +
-      `📌 Status: barcha (pending, confirmed, preparing, ready, cancelled)\n` +
-      `📌 Bu amalni qaytarib bo'lmaydi!\n\n` +
-      `Davom etasizmi?`
-    )) return;
+    if (!window.confirm(`⚠️ BARCHA ZAKAZLARNI BUTUNLAY O'CHIRISH!\n\n📌 ${orders.length} ta zakaz butunlay o'chiriladi\n📌 Status: barcha (pending, confirmed, preparing, ready, cancelled)\n📌 Bu amalni qaytarib bo'lmaydi!\n\nDavom etasizmi?`)) return;
 
     setDeletingAllOrders(true);
     try {
@@ -184,17 +161,16 @@ const Admin = () => {
     getOrders();
   }, []);
 
-// ✅ Auto-refresh optimallashtirildi
-useEffect(() => {
-  const interval = setInterval(() => {
-    if (document.visibilityState === 'visible' && document.hasFocus()) {
-      getReservations();
-      getOrders();
-      getTables();
-    }
-  }, 30000); // 15 soniya → 30 soniya
-  return () => clearInterval(interval);
-}, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible' && document.hasFocus()) {
+        getReservations();
+        getOrders();
+        getTables();
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth");
@@ -331,45 +307,38 @@ useEffect(() => {
     orange: "text-orange-400",
   };
 
+  if (loading) {
+    return (
+      <div className="relative min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" alt="Restaurant" className="w-full h-full object-cover opacity-30" />
+          <div className="absolute inset-0 bg-black/80"></div>
+        </div>
+        <div className="relative z-10 text-center">
+          <div className="w-20 h-20 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-yellow-400 text-xl font-bold">Yuklanmoqda...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-12">
-
-      {/* BACKGROUND */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[#0a0a0a]" />
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: "50px 50px",
-          }}
-        />
-        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-yellow-500/15 blur-[200px] animate-pulse" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-amber-400/15 blur-[200px] animate-pulse delay-700" />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" alt="Restaurant background" className="w-full h-full object-cover opacity-20" />
+        <div className="absolute inset-0 bg-[#0a0a0a]/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-amber-500/5" />
       </div>
 
       <div className="relative z-10">
-
-        {/* HEADER */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-12 border-b border-yellow-500/20 pb-8">
           <div>
-            <h2 className="mt-3 text-5xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
-              ADMIN PANEL
-            </h2>
+            <h2 className="mt-3 text-5xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">ADMIN PANEL</h2>
             <p className="text-gray-500 mt-2 text-sm tracking-widest">Restoran boshqaruv tizimi</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="px-8 py-4 rounded-2xl border border-red-500/40 text-red-400 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]"
-          >
-            🚪 Chiqish
-          </button>
+          <button onClick={handleLogout} className="px-8 py-4 rounded-2xl border border-red-500/40 text-red-400 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]">🚪 Chiqish</button>
         </div>
 
-        {/* QUICK STATS */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-10">
           {[
             { label: "Menyu", value: menus.length, color: "yellow" },
@@ -385,69 +354,30 @@ useEffect(() => {
           ))}
         </div>
 
-        {/* TABS */}
         <div className="flex gap-2 mb-10 flex-wrap">
           {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${
-                activeTab === tab
-                  ? "bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black shadow-[0_0_40px_rgba(255,215,0,0.3)]"
-                  : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-yellow-500/30 hover:text-white"
-              }`}
-            >
-              {tab}
-            </button>
+            <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${activeTab === tab ? "bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black shadow-[0_0_40px_rgba(255,215,0,0.3)]" : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-yellow-500/30 hover:text-white"}`}>{tab}</button>
           ))}
         </div>
 
-        {/* TAB: MENU */}
         {activeTab === "Menu" && (
           <div>
             <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-yellow-500/20 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 mb-12">
-              <h3 className="text-yellow-400 font-black text-2xl mb-8">
-                {editingId ? "📝 Tahrirlash" : "➕ Yangi Taom"}
-              </h3>
+              <h3 className="text-yellow-400 font-black text-2xl mb-8">{editingId ? "📝 Tahrirlash" : "➕ Yangi Taom"}</h3>
 
               <div className="mb-5">
                 <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Rasm</label>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setForm({ ...form, image: e.target.files[0], imageUrl: "" })}
-                    className="text-gray-400 text-sm flex-1"
-                  />
+                  <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files[0], imageUrl: "" })} className="text-gray-400 text-sm flex-1" />
                   <div className="flex items-center gap-2 flex-1">
-                    <input
-                      type="text"
-                      value={form.imageUrl || ""}
-                      placeholder="Yoki rasm URL manzilini joylashtiring..."
-                      onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                      className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(255,215,0,0.05)] transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!form.imageUrl?.trim()) return;
-                        setForm({ ...form, image: form.imageUrl.trim() });
-                      }}
-                      className="px-4 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all whitespace-nowrap"
-                    >
-                      Biriktirish
-                    </button>
+                    <input type="text" value={form.imageUrl || ""} placeholder="Yoki rasm URL manzilini joylashtiring..." onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(255,215,0,0.05)] transition-all" />
+                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; setForm({ ...form, image: form.imageUrl.trim() }); }} className="px-4 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
                   </div>
                 </div>
 
                 {form.image && (
                   <div className="mt-3 flex items-center gap-3">
-                    <img
-                      src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)}
-                      alt="preview"
-                      className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20"
-                      onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }}
-                    />
+                    <img src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} alt="preview" className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20" onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }} />
                     <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
                   </div>
                 )}
@@ -456,47 +386,24 @@ useEffect(() => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {["name", "price", "retsept", "category"].map((key) => (
                   <div key={key}>
-                    <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">
-                      {key === "name" ? "Nomi" : key === "price" ? "Narxi (so'm)" : key === "retsept" ? "Retsept" : "Kategoriya"}
-                    </label>
-                    <input
-                      value={typeof form[key] === "string" ? form[key] : ""}
-                      onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                      type={key === "price" ? "number" : "text"}
-                      min={key === "price" ? "0" : undefined}
-                      required
-                      className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all"
-                    />
+                    <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">{key === "name" ? "Nomi" : key === "price" ? "Narxi (so'm)" : key === "retsept" ? "Retsept" : "Kategoriya"}</label>
+                    <input value={typeof form[key] === "string" ? form[key] : ""} onChange={(e) => setForm({ ...form, [key]: e.target.value })} type={key === "price" ? "number" : "text"} min={key === "price" ? "0" : undefined} required className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all" />
                   </div>
                 ))}
               </div>
 
               <div className="flex gap-4 mt-8">
-                <button type="submit" className="px-10 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] transition-all">
-                  {editingId ? "Yangilash" : "Saqlash"}
-                </button>
-                {editingId && (
-                  <button type="button" onClick={() => { setEditingId(null); setForm({ name: "", price: "", retsept: "", image: "", category: "" }); }}
-                    className="px-10 py-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-                    Bekor
-                  </button>
-                )}
+                <button type="submit" className="px-10 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] transition-all">{editingId ? "Yangilash" : "Saqlash"}</button>
+                {editingId && (<button type="button" onClick={() => { setEditingId(null); setForm({ name: "", price: "", retsept: "", image: "", category: "" }); }} className="px-10 py-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">Bekor</button>)}
               </div>
             </form>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
                 <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-yellow-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-yellow-400/50 hover:shadow-[0_0_40px_rgba(255,215,0,0.05)]">
-                  <div className="h-52 overflow-hidden">
-                    <img src={getImageUrl(menu.image)} alt={menu.name} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                      onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }}
-                    />
-                  </div>
+                  <div className="h-52 overflow-hidden"><img src={getImageUrl(menu.image)} alt={menu.name} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }} /></div>
                   <div className="p-5">
-                    <div className="flex justify-between">
-                      <h3 className="font-black text-xl">{menu.name}</h3>
-                      <span className="text-yellow-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span>
-                    </div>
+                    <div className="flex justify-between"><h3 className="font-black text-xl">{menu.name}</h3><span className="text-yellow-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span></div>
                     <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
                     <div className="flex gap-3 mt-4">
                       <button onClick={() => handleEdit(menu)} className="flex-1 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all">Tahrirlash</button>
@@ -509,7 +416,6 @@ useEffect(() => {
           </div>
         )}
 
-        {/* TAB: STOLLAR */}
         {activeTab === "Stollar" && (
           <div>
             <div className="grid grid-cols-3 gap-4 mb-10">
@@ -528,18 +434,9 @@ useEffect(() => {
             <form onSubmit={handleTableSubmit} className="bg-white/[0.03] border border-yellow-500/20 rounded-[24px] p-6 mb-10">
               <h3 className="text-yellow-400 font-black text-xl mb-6">➕ Yangi Stol</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Stol raqami</label>
-                  <input value={tableForm.number} onChange={(e) => setTableForm({ ...tableForm, number: e.target.value })} type="number" required placeholder="1" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Sig'im (kishi)</label>
-                  <input value={tableForm.capacity} onChange={(e) => setTableForm({ ...tableForm, capacity: e.target.value })} type="number" required placeholder="4" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Joylashuv</label>
-                  <input value={tableForm.location} onChange={(e) => setTableForm({ ...tableForm, location: e.target.value })} placeholder="Ichki zal" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" />
-                </div>
+                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Stol raqami</label><input value={tableForm.number} onChange={(e) => setTableForm({ ...tableForm, number: e.target.value })} type="number" required placeholder="1" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" /></div>
+                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Sig'im (kishi)</label><input value={tableForm.capacity} onChange={(e) => setTableForm({ ...tableForm, capacity: e.target.value })} type="number" required placeholder="4" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" /></div>
+                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Joylashuv</label><input value={tableForm.location} onChange={(e) => setTableForm({ ...tableForm, location: e.target.value })} placeholder="Ichki zal" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" /></div>
               </div>
               <button type="submit" className="mt-6 px-10 py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all">Stol Qo'shish</button>
             </form>
@@ -548,17 +445,11 @@ useEffect(() => {
               {tables.map((table) => (
                 <div key={table._id} className={`relative rounded-2xl border p-5 transition-all ${table.isAvailable ? "border-green-500/20 bg-green-500/5" : "border-red-500/20 bg-red-500/5"}`}>
                   <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-3xl font-black">#{table.number}</p>
-                      <p className="text-gray-400 text-sm mt-1">{table.capacity} kishi</p>
-                      {table.location && <p className="text-gray-500 text-xs">{table.location}</p>}
-                    </div>
+                    <div><p className="text-3xl font-black">#{table.number}</p><p className="text-gray-400 text-sm mt-1">{table.capacity} kishi</p>{table.location && <p className="text-gray-500 text-xs">{table.location}</p>}</div>
                     <span className={`w-3 h-3 rounded-full mt-1 ${table.isAvailable ? "bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.3)]" : "bg-red-500 shadow-[0_0_10px_rgba(248,113,113,0.3)]"}`} />
                   </div>
                   <div className="flex gap-2 mt-4">
-                    <button onClick={() => toggleTableAvailability(table)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold border transition-all ${table.isAvailable ? "border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white" : "border-green-500/30 text-green-400 hover:bg-green-500 hover:text-black"}`}>
-                      {table.isAvailable ? "Band qilish" : "Bo'shatish"}
-                    </button>
+                    <button onClick={() => toggleTableAvailability(table)} className={`flex-1 py-2.5 rounded-xl text-xs font-bold border transition-all ${table.isAvailable ? "border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white" : "border-green-500/30 text-green-400 hover:bg-green-500 hover:text-black"}`}>{table.isAvailable ? "Band qilish" : "Bo'shatish"}</button>
                     <button onClick={() => handleTableDelete(table._id)} className="px-3 py-2.5 rounded-xl border border-red-500/20 text-red-400 text-xs hover:bg-red-500 hover:text-white transition-all">✕</button>
                   </div>
                 </div>
@@ -567,26 +458,13 @@ useEffect(() => {
           </div>
         )}
 
-        {/* TAB: BRONLAR */}
         {activeTab === "Bronlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
               <h3 className="text-yellow-400 font-black text-xl">📋 Bronlar</h3>
               <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={handleDeleteCompletedReservations}
-                  disabled={deletingCompleted}
-                  className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
-                >
-                  {deletingCompleted ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}
-                </button>
-                <button
-                  onClick={handleDeleteAllReservations}
-                  disabled={deletingAllReservations}
-                  className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
-                >
-                  {deletingAllReservations ? "⏳..." : "🔥 Barchasini o'chirish"}
-                </button>
+                <button onClick={handleDeleteCompletedReservations} disabled={deletingCompleted} className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50">{deletingCompleted ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}</button>
+                <button onClick={handleDeleteAllReservations} disabled={deletingAllReservations} className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50">{deletingAllReservations ? "⏳..." : "🔥 Barchasini o'chirish"}</button>
               </div>
             </div>
 
@@ -600,9 +478,7 @@ useEffect(() => {
                       <div className="space-y-1">
                         <div className="flex items-center gap-3 flex-wrap">
                           <h3 className="font-black text-xl">{r.customerName}</h3>
-                          <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>
-                            {statusLabel[r.status]}
-                          </span>
+                          <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>{statusLabel[r.status]}</span>
                         </div>
                         <p className="text-gray-400 text-sm">📞 {r.phone}</p>
                         <p className="text-gray-400 text-sm">🪑 Stol #{r.tableId?.number} &nbsp;|&nbsp; 👥 {r.guestCount} kishi</p>
@@ -624,26 +500,13 @@ useEffect(() => {
           </div>
         )}
 
-        {/* TAB: ZAKAZLAR */}
         {activeTab === "Zakazlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
               <h3 className="text-yellow-400 font-black text-xl">📦 Zakazlar</h3>
               <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={handleDeleteCompletedOrders}
-                  disabled={deletingCompletedOrders}
-                  className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50"
-                >
-                  {deletingCompletedOrders ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}
-                </button>
-                <button
-                  onClick={handleDeleteAllOrders}
-                  disabled={deletingAllOrders}
-                  className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
-                >
-                  {deletingAllOrders ? "⏳..." : "🔥 Barchasini o'chirish"}
-                </button>
+                <button onClick={handleDeleteCompletedOrders} disabled={deletingCompletedOrders} className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50">{deletingCompletedOrders ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}</button>
+                <button onClick={handleDeleteAllOrders} disabled={deletingAllOrders} className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50">{deletingAllOrders ? "⏳..." : "🔥 Barchasini o'chirish"}</button>
               </div>
             </div>
 
@@ -657,68 +520,33 @@ useEffect(() => {
                       <div className="space-y-1">
                         <div className="flex items-center gap-3 flex-wrap">
                           <h3 className="font-black text-xl">{o.customerName}</h3>
-                          <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>
-                            {statusLabel[o.status]}
-                          </span>
-                          <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/20 text-yellow-400 bg-yellow-500/10 font-bold">
-                            {deliveryTypeMap[o.deliveryType] || o.deliveryType}
-                          </span>
-                          {o.deliveryStatus && o.deliveryStatus !== 'pending' && (
-                            <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 font-bold">
-                              {deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}
-                            </span>
-                          )}
+                          <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>{statusLabel[o.status]}</span>
+                          <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/20 text-yellow-400 bg-yellow-500/10 font-bold">{deliveryTypeMap[o.deliveryType] || o.deliveryType}</span>
+                          {o.deliveryStatus && o.deliveryStatus !== 'pending' && (<span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 font-bold">{deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}</span>)}
                         </div>
                         <p className="text-gray-400 text-sm">📞 {o.phone}</p>
                         {o.deliveryType === "dine-in" && o.tableNumber && <p className="text-yellow-400 text-sm">🪑 Stol #{o.tableNumber}</p>}
                         {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
                         {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
-                          <a
-                            href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block text-yellow-400 text-xs underline hover:text-yellow-300"
-                          >
-                            🗺 Xaritada ko'rish
-                          </a>
+                          <a href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`} target="_blank" rel="noopener noreferrer" className="inline-block text-yellow-400 text-xs underline hover:text-yellow-300">🗺 Xaritada ko'rish</a>
                         )}
                         {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
                         <div className="mt-2 space-y-1">
-                          {o.items?.map((item, idx) => (
-                            <p key={idx} className="text-gray-300 text-sm">
-                              • {item.name} x{item.quantity} — {(item.price * item.quantity).toLocaleString()} so'm
-                            </p>
-                          ))}
+                          {o.items?.map((item, idx) => (<p key={idx} className="text-gray-300 text-sm">• {item.name} x{item.quantity} — {(item.price * item.quantity).toLocaleString()} so'm</p>))}
                         </div>
                         <p className="text-yellow-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
                         {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
-                        {o.courierName && (
-                          <p className="text-green-400 text-xs font-bold">👤 Kuryer: {o.courierName}</p>
-                        )}
+                        {o.courierName && <p className="text-green-400 text-xs font-bold">👤 Kuryer: {o.courierName}</p>}
                       </div>
                       <div className="flex flex-col gap-2 items-start">
-                        {o.status === "pending" && (
-                          <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
-                        )}
-                        {o.status === "confirmed" && (
-                          <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-6 py-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
-                        )}
-                        {o.status === "preparing" && (
-                          <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
-                        )}
+                        {o.status === "pending" && (<button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>)}
+                        {o.status === "confirmed" && (<button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-6 py-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>)}
+                        {o.status === "preparing" && (<button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>)}
                         {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
-                          <button onClick={() => {
-                            const courierName = prompt("Kuryer ismi:");
-                            const courierPhone = prompt("Kuryer telefon raqami:");
-                            if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone);
-                          }} className="px-6 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
+                          <button onClick={() => { const courierName = prompt("Kuryer ismi:"); const courierPhone = prompt("Kuryer telefon raqami:"); if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone); }} className="px-6 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
                         )}
-                        {o.deliveryStatus === "on_the_way" && (
-                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
-                        )}
-                        {o.status !== "cancelled" && o.status !== "ready" && (
-                          <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
-                        )}
+                        {o.deliveryStatus === "on_the_way" && (<button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>)}
+                        {o.status !== "cancelled" && o.status !== "ready" && (<button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>)}
                       </div>
                     </div>
                   </div>
@@ -728,10 +556,7 @@ useEffect(() => {
           </div>
         )}
 
-        {/* TAB: HISOBOTLAR */}
-        {activeTab === "Hisobotlar" && (
-          <Reports />
-        )}
+        {activeTab === "Hisobotlar" && <Reports />}
       </div>
     </div>
   );

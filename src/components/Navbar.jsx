@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Typography, IconButton, Collapse } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
 export function NavbarDefault() {
@@ -41,7 +40,6 @@ export function NavbarDefault() {
       backdrop-blur-[40px] backdrop-saturate-200
       shadow-[0_8px_50px_rgba(0,0,0,0.8)]
     ">
-
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-120px] left-[10%] w-[300px] h-[300px] bg-yellow-500/15 rounded-full blur-[150px]"></div>
         <div className="absolute top-[-120px] right-[10%] w-[300px] h-[300px] bg-orange-500/15 rounded-full blur-[150px]"></div>
@@ -60,13 +58,12 @@ export function NavbarDefault() {
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10 py-4">
         <div className="flex items-center justify-between">
 
-          <Typography
-            as={Link}
+          <Link
             to="/"
             className="group flex items-center gap-3 cursor-pointer transition-all duration-300 hover:scale-105"
           >
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 flex items-center justify-center text-black text-2xl shadow-[0_0_40px_rgba(255,215,0,0.3)]">
-              <img className="rounded-2xl" src="sazanchik.jpg" alt="Sazanchik logo" />
+              <img className="rounded-2xl" src="/sazanchik.jpg" alt="Sazanchik logo" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
@@ -76,7 +73,7 @@ export function NavbarDefault() {
                 Milliy Taom & Baliq
               </span>
             </div>
-          </Typography>
+          </Link>
 
           <div className="hidden lg:flex items-center gap-12 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((item) => (
@@ -103,18 +100,16 @@ export function NavbarDefault() {
             </Link>
           </div>
 
-          <IconButton
-            variant="text"
-            ripple={false}
-            className="lg:hidden text-yellow-400 hover:bg-white/5 transition-all duration-300 pb-6"
+          <button
+            className="lg:hidden text-yellow-400 hover:bg-white/5 transition-all duration-300 pb-6 text-3xl"
             onClick={() => setOpenNav(!openNav)}
           >
-            {openNav ? <span className="text-3xl">✕</span> : <span className="text-3xl">☰</span>}
-          </IconButton>
+            {openNav ? "✕" : "☰"}
+          </button>
 
         </div>
 
-        <Collapse open={openNav}>
+        {openNav && (
           <div className="lg:hidden mt-6 rounded-3xl border border-yellow-500/15 bg-black/95 backdrop-blur-3xl overflow-hidden shadow-[0_0_60px_rgba(255,215,0,0.06)]">
             <div className="flex flex-col p-4">
               {navLinks.map((item) => (
@@ -147,7 +142,7 @@ export function NavbarDefault() {
               </Link>
             </div>
           </div>
-        </Collapse>
+        )}
 
       </div>
     </div>

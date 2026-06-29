@@ -4,54 +4,92 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
+  // ✅ Login qilingan bo'lsa admin panelga o'tkazish
   useEffect(() => {
+    const auth = localStorage.getItem("auth");
+    if (auth === "true") {
+      navigate("/admin", { replace: true });
+    }
+    // ✅ Formani tozalash (sahifa yuklanganda)
     setForm({ email: "", password: "" });
-  }, []);
+    setError("");
+    setSuccess(false);
+  }, [navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (error) setError("");
+    if (success) setSuccess(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess(false);
 
+    // 🔑 Login ma'lumotlari
     const ADMIN_EMAIL = "admin@gmail.com";
     const ADMIN_PASSWORD = "123456";
 
-    if (
-      form.email === ADMIN_EMAIL &&
-      form.password === ADMIN_PASSWORD
-    ) {
-      localStorage.setItem("auth", "true");
-      setForm({ email: "", password: "" });
-      navigate("/admin", { replace: true });
-    } else {
-      setError("Email yoki parol noto‘g‘ri!");
+    // 📝 Debug uchun
+    console.log("📝 Kiritilgan email:", form.email);
+    console.log("📝 Kiritilgan password:", form.password);
+
+    // ✅ BO'SHLIGINI TEKSHIRISH
+    if (!form.email.trim() || !form.password.trim()) {
+      setError("⚠️ Iltimos, email va parolni kiriting!");
+      setLoading(false);
+      return;
     }
+
+    // ✅ Asosiy tekshirish
+    if (form.email === ADMIN_EMAIL && form.password === ADMIN_PASSWORD) {
+      // ✅ Muvaffaqiyatli login
+      localStorage.setItem("auth", "true");
+      setSuccess(true);
+      
+      // ✅ Formani tozalash
+      setForm({ email: "", password: "" });
+      setLoading(false);
+      
+      // ✅ Admin panelga o'tish
+      setTimeout(() => {
+        navigate("/admin", { replace: true });
+      }, 500);
+    } else {
+      setError("❌ Email yoki parol noto'g'ri!");
+      setLoading(false);
+    }
+  };
+
+  // 🔄 Formani tozalash
+  const clearForm = () => {
+    setForm({ email: "", password: "" });
+    setError("");
+    setSuccess(false);
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden flex flex-col text-white p-4 sm:p-10 font-serif">
 
       {/* 🌟 FULL RESTAURANT BACKGROUND IMAGE */}
-      <div className="absolute inset-0 z-0">
+      <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80"
           alt="Restaurant interior"
           className="w-full h-full object-cover"
         />
-        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/70 to-black/80"></div>
-        {/* Gold Glow Overlay */}
         <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/5 via-transparent to-amber-500/5"></div>
-        {/* Gold Pattern */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `
             repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px),
@@ -213,6 +251,27 @@ export default function Login() {
                 Secure Golden Access
               </p>
 
+              {/* SUCCESS */}
+              {success && (
+                <div
+                  className="
+                    mb-6
+                    p-5
+                    rounded-2xl
+                    bg-green-500/15
+                    border border-green-500/30
+                    text-green-400
+                    text-sm
+                    text-center
+                    font-bold
+                    backdrop-blur-xl
+                    animate-fadeInUp
+                  "
+                >
+                  ✅ Login muvaffaqiyatli! Admin panelga o'tilmoqda...
+                </div>
+              )}
+
               {/* ERROR */}
               {error && (
                 <div
@@ -303,10 +362,11 @@ export default function Login() {
 
                 <button
                   type="submit"
+                  disabled={loading}
                   className="
                     relative overflow-hidden
                     w-full
-                    mt-6
+                    mt-2
                     py-5
                     rounded-2xl
                     bg-gradient-to-r
@@ -324,11 +384,13 @@ export default function Login() {
                     hover:shadow-[0_0_60px_rgba(255,215,0,0.5)]
                     active:scale-[0.97]
                     group
+                    disabled:opacity-50
+                    disabled:cursor-not-allowed
                   "
                 >
                   <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-500"></span>
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-                  Kirish
+                  {loading ? "⏳ Kutilmoqda..." : "Kirish"}
                 </button>
 
               </div>

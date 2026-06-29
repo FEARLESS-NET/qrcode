@@ -1,4 +1,4 @@
-import { Typography } from "@material-tailwind/react";
+import React from "react";
 
 export function SimpleFooter() {
   return (
@@ -17,7 +17,6 @@ export function SimpleFooter() {
         shadow-[0_-10px_70px_rgba(0,0,0,0.8)]
       "
     >
-
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -45,8 +44,7 @@ export function SimpleFooter() {
           gap-8
         "
       >
-
-        <Typography
+        <p
           className="
             text-sm
             text-gray-400
@@ -57,7 +55,7 @@ export function SimpleFooter() {
           "
         >
           © {new Date().getFullYear()} 🐟 Sazanchik. Barcha huquqlar himoyalangan.
-        </Typography>
+        </p>
 
         <ul
           className="
@@ -94,9 +92,7 @@ export function SimpleFooter() {
             </li>
           ))}
         </ul>
-
       </div>
-
     </footer>
   );
 }
