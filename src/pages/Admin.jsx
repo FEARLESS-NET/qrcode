@@ -370,8 +370,8 @@ const Admin = () => {
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files[0], imageUrl: "" })} className="text-gray-400 text-sm flex-1" />
                   <div className="flex items-center gap-2 flex-1">
-                    <input type="text" value={form.imageUrl || ""} placeholder="Yoki rasm URL manzilini joylashtiring..." onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(255,215,0,0.05)] transition-all" />
-                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; setForm({ ...form, image: form.imageUrl.trim() }); }} className="px-4 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
+                    <input type="text" value={form.imageUrl || ""} placeholder="Yoki rasm URL manzilini joylashtiring..." onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-2 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(255,215,0,0.05)] transition-all" />
+                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; setForm({ ...form, image: form.imageUrl.trim() }); }} className="px-3 py-3 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
                   </div>
                 </div>
 
