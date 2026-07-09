@@ -325,9 +325,9 @@ const Order = () => {
                           <img
                             src={getImageUrl(menu.image)}
                             alt={menu.name}
+                            crossOrigin="anonymous"
                             className="w-full h-44 object-cover transition-all duration-700 group-hover:scale-105"
                             onError={(e) => {
-                              console.log("❌ Rasm yuklanmadi:", e.target.src);
                               e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
                             }}
                           />
