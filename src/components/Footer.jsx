@@ -54,7 +54,7 @@ export function SimpleFooter() {
             font-bold
           "
         >
-          © {new Date().getFullYear()} 🐟 Sazanchik. Barcha huquqlar himoyalangan.
+          © {new Date().getFullYear()} SHARQ GAVHARI. Barcha huquqlar himoyalangan.
         </p>
 
         <ul

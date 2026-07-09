@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from "../api/axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3005';
+// ✅ Avtomatik aniqlash: localhost yoki production
+const BASE_URL = import.meta.env.DEV 
+  ? 'http://localhost:3005' 
+  : import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
-// ✅ GET MENUS FUNKSIYASI (React Query uchun)
+console.log("🌐 BASE_URL:", BASE_URL);
+
 const getMenus = async () => {
   const res = await axiosInstance.get("/menus");
   return res.data;
@@ -14,19 +18,18 @@ const getMenus = async () => {
 const Menu = () => {
   const navigate = useNavigate();
 
-  // ✅ React Query orqali ma'lumot olish
   const { data, isLoading, error } = useQuery({
     queryKey: ['menus'],
     queryFn: getMenus,
-    staleTime: 5 * 60 * 1000, // 5 daqiqa cache
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1,
   });
 
-  // ✅ Ma'lumotlarni olish
   const menus = data?.menus || [];
 
-  // ✅ Kategoriyalar bo'yicha guruhlash
+  console.log("📦 Menular:", menus);
+
   const groupedMenus = useMemo(() => {
     return menus.reduce((acc, menu) => {
       const category = menu.category || "Boshqa";
@@ -36,14 +39,24 @@ const Menu = () => {
     }, {});
   }, [menus]);
 
-  // ✅ Rasm URL ni olish
   const getImageUrl = (imagePath) => {
-    if (!imagePath) return "https://via.placeholder.com/400x300?text=No+Image";
-    if (imagePath.startsWith("http")) return imagePath;
-    return `${BASE_URL}${imagePath}`;
+    console.log("📸 1. DB dan kelgan rasm manzili:", imagePath);
+    
+    if (!imagePath) {
+      console.log("📸 2. Rasm manzili YO'Q -> placeholder");
+      return "https://via.placeholder.com/400x300?text=No+Image";
+    }
+    
+    if (imagePath.startsWith("http")) {
+      console.log("📸 2. HTTP link -> to'g'ridan-to'g'ri:", imagePath);
+      return imagePath;
+    }
+    
+    const url = `${BASE_URL}${imagePath}`;
+    console.log("📸 3. Tuzilgan to'liq URL:", url);
+    return url;
   };
 
-  // ✅ Skeleton (yuklanayotganda)
   const SkeletonCard = () => (
     <div className="relative overflow-hidden bg-black/40 border border-yellow-500/20 rounded-[30px] h-[420px] animate-pulse backdrop-blur-2xl">
       <div className="h-56 bg-gradient-to-br from-yellow-500/10 via-transparent to-amber-500/10"></div>
@@ -54,7 +67,6 @@ const Menu = () => {
     </div>
   );
 
-  // ✅ Xatolik bo'lsa
   if (error) {
     return (
       <div className="relative min-h-screen bg-[#0a0a0a] text-white px-4 py-28">
@@ -75,7 +87,6 @@ const Menu = () => {
   return (
     <div className="relative w-full overflow-hidden text-white font-serif">
 
-      {/* 🌟 FULL RESTAURANT BACKGROUND IMAGE */}
       <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80"
@@ -94,17 +105,16 @@ const Menu = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-28">
 
-        {/* MENU BANNER */}
         <div className="relative h-80 sm:h-96 rounded-[40px] overflow-hidden border border-yellow-500/20 mb-16 shadow-[0_0_80px_rgba(255,215,0,0.05)]">
           <img
             src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80"
-            alt="Sazanchik milliy taomlari"
+            alt="Sharq Gavhari milliy taomlari"
             className="absolute inset-0 w-full h-full object-cover scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
             <span className="text-yellow-400 uppercase tracking-[0.5em] text-xs font-bold mb-4">
-              🐟 Sazanchik · Premium
+              🌙 Sharq Gavhari · Premium
             </span>
             <h2 className="text-5xl sm:text-7xl font-serif font-bold text-white drop-shadow-[0_0_50px_rgba(255,215,0,0.2)]">
               ASOSIY <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">MENU</span>
@@ -151,11 +161,15 @@ const Menu = () => {
                   <div key={menu._id} className="group bg-black/50 backdrop-blur-3xl border border-yellow-500/20 rounded-2xl overflow-hidden transition-all hover:scale-[1.04] hover:border-yellow-400/50 hover:shadow-[0_0_50px_rgba(255,215,0,0.08)]">
                     <div className="relative h-56 overflow-hidden">
                       <img
-                        src={getImageUrl(menu.image)}
-                        alt={menu.name}
-                        className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
-                        onError={(e) => { e.target.src = "https://via.placeholder.com/400x300?text=No+Image"; }}
-                      />
+                          src={getImageUrl(menu.image)}
+                          alt={menu.name}
+                          crossOrigin="anonymous"
+                          className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
+                          onError={(e) => {
+                            console.log("❌ Rasm yuklanmadi:", e.target.src);
+                            e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                          }}
+                        />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                       {menu.category && (
                         <span className="absolute top-4 right-4 bg-black/70 border border-yellow-400/30 px-4 py-1.5 rounded-xl text-yellow-400 text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">

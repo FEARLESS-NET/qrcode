@@ -4,12 +4,17 @@ import { useNavigate } from "react-router-dom";
 import Reports from "../components/Reports.jsx";
 
 const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Hisobotlar"];
+// ✅ TUZATILDI
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
+// ✅ TUZATILDI: Rasm URL
 const getImageUrl = (imagePath) => {
   if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
   if (imagePath.startsWith("http")) return imagePath;
-  return `${BASE_URL}${imagePath}`;
+  if (imagePath.startsWith("/uploads/")) {
+    return `${BASE_URL}${imagePath}`;
+  }
+  return `${BASE_URL}/uploads/${imagePath}`;
 };
 
 const Admin = () => {
@@ -401,7 +406,16 @@ const Admin = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
                 <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-yellow-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-yellow-400/50 hover:shadow-[0_0_40px_rgba(255,215,0,0.05)]">
-                  <div className="h-52 overflow-hidden"><img src={getImageUrl(menu.image)} alt={menu.name} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }} /></div>
+                  <div className="h-52 overflow-hidden"><img
+                          src={getImageUrl(menu.image)}
+                          alt={menu.name}
+                          crossOrigin="anonymous"
+                          className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
+                          onError={(e) => {
+                            console.log("❌ Rasm yuklanmadi:", e.target.src);
+                            e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                          }}
+                        /></div>
                   <div className="p-5">
                     <div className="flex justify-between"><h3 className="font-black text-xl">{menu.name}</h3><span className="text-yellow-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span></div>
                     <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
@@ -525,7 +539,11 @@ const Admin = () => {
                           {o.deliveryStatus && o.deliveryStatus !== 'pending' && (<span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 font-bold">{deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}</span>)}
                         </div>
                         <p className="text-gray-400 text-sm">📞 {o.phone}</p>
-                        {o.deliveryType === "dine-in" && o.tableNumber && <p className="text-yellow-400 text-sm">🪑 Stol #{o.tableNumber}</p>}
+                        {o.deliveryType === "dine-in" && o.tableNumber && (
+                          <p className="text-yellow-400 text-sm">
+                            🪑 Stol #{o.tableNumber} {o.tableLocation ? `📍 ${o.tableLocation}` : ''}
+                          </p>
+                        )}
                         {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
                         {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
                           <a href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`} target="_blank" rel="noopener noreferrer" className="inline-block text-yellow-400 text-xs underline hover:text-yellow-300">🗺 Xaritada ko'rish</a>

@@ -8,6 +8,8 @@ const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https:
 const Order = () => {
   const navigate = useNavigate();
   const [menus, setMenus] = useState([]);
+  const [tables, setTables] = useState([]);
+  const [loadingTables, setLoadingTables] = useState(true);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -30,15 +32,28 @@ const Order = () => {
     deliveryType: "dine-in",
     address: "",
     tableNumber: "",
+    tableLocation: "",
     note: "",
   });
 
   useEffect(() => {
-    axiosInstance.get("/menus")
-      .then((res) => {
-        setMenus(Array.isArray(res.data.menus) ? res.data.menus : []);
-      })
-      .catch(err => console.error("Menu yuklash xatosi:", err));
+    const fetchData = async () => {
+      try {
+        setLoadingTables(true);
+        const [menusRes, tablesRes] = await Promise.all([
+          axiosInstance.get("/menus"),
+          axiosInstance.get("/tables")
+        ]);
+        setMenus(Array.isArray(menusRes.data.menus) ? menusRes.data.menus : []);
+        setTables(Array.isArray(tablesRes.data.tables) ? tablesRes.data.tables : []);
+      } catch (err) {
+        console.error("❌ Ma'lumotlarni yuklash xatosi:", err);
+        setError("Ma'lumotlarni yuklashda xatolik yuz berdi");
+      } finally {
+        setLoadingTables(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const detectLocation = () => {
@@ -80,7 +95,10 @@ const Order = () => {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
     if (imagePath.startsWith('http')) return imagePath;
-    return `${BASE_URL}${imagePath}`;
+    if (imagePath.startsWith('/uploads/')) {
+      return `${BASE_URL}${imagePath}`;
+    }
+    return `${BASE_URL}/uploads/${imagePath}`;
   };
 
   const connectTelegram = async () => {
@@ -167,12 +185,22 @@ const Order = () => {
     }, {});
   }, [menus]);
 
+  const handleTableChange = (e) => {
+    const selectedNumber = e.target.value;
+    const selectedTable = tables.find(t => t.number === parseInt(selectedNumber));
+    setForm({
+      ...form,
+      tableNumber: selectedNumber,
+      tableLocation: selectedTable?.location || "",
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
 
     if (form.deliveryType === "dine-in" && !form.tableNumber) {
-      return setError("Dine-in uchun stol raqamini kiriting!");
+      return setError("Dine-in uchun stol raqamini tanlang!");
     }
 
     if (form.deliveryType === "delivery" && !form.address.trim()) {
@@ -189,6 +217,7 @@ const Order = () => {
         items: cart,
         totalPrice,
         tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
+        tableLocation: form.tableLocation || null,
         location: locationData,
         paymentStatus: 'pending',
         deliveryStatus: 'pending',
@@ -202,7 +231,7 @@ const Order = () => {
       setShowPayment(true);
       
       setCart([]);
-      setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", note: "" });
+      setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", tableLocation: "", note: "" });
       
     } catch (err) {
       setError(err.response?.data?.message || "Xatolik yuz berdi");
@@ -216,6 +245,8 @@ const Order = () => {
     setSuccess(true);
     setTimeout(() => setSuccess(false), 5000);
   };
+
+  const availableTables = tables.filter(table => table.isAvailable);
 
   return (
     <div className="relative min-h-screen overflow-hidden text-white px-4 sm:px-6 lg:px-10 py-28">
@@ -235,7 +266,6 @@ const Order = () => {
             repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px)
           `
         }}></div>
-        {/* Gold Glow */}
         <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-amber-500/15 blur-[200px] animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-yellow-400/15 blur-[200px] animate-pulse delay-700" />
       </div>
@@ -289,15 +319,19 @@ const Order = () => {
                               : "border-white/10 bg-white/[0.03] hover:border-yellow-500/30 hover:bg-yellow-500/5 hover:shadow-[0_0_30px_rgba(255,215,0,0.05)]"
                           }`}
                         >
-                          {/* Hover Glow */}
                           <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                           
-                          <img 
-                            src={getImageUrl(menu.image)} 
-                            alt={menu.name} 
-                            className="w-full h-44 object-cover transition-all duration-700 group-hover:scale-105" 
-                            onError={(e) => { e.target.src = "https://via.placeholder.com/400x200?text=No+Image"; }} 
+                          {/* ✅ RASM - TUZATILGAN */}
+                          <img
+                            src={getImageUrl(menu.image)}
+                            alt={menu.name}
+                            className="w-full h-44 object-cover transition-all duration-700 group-hover:scale-105"
+                            onError={(e) => {
+                              console.log("❌ Rasm yuklanmadi:", e.target.src);
+                              e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
+                            }}
                           />
+                          
                           <div className="relative p-4 z-10">
                             <div className="flex justify-between items-start gap-2">
                               <div>
@@ -424,7 +458,7 @@ const Order = () => {
                       <button 
                         key={opt.val} 
                         type="button" 
-                        onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "" })} 
+                        onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "", tableLocation: "" })} 
                         className={`py-2.5 rounded-xl text-xs font-bold border transition-all duration-300 ${form.deliveryType === opt.val ? "border-yellow-400 bg-yellow-500/15 text-yellow-400 shadow-[0_0_20px_rgba(255,215,0,0.05)]" : "border-white/10 bg-white/[0.03] text-gray-500 hover:border-yellow-500/30 hover:text-white"}`}
                       >
                         {opt.label}
@@ -433,19 +467,56 @@ const Order = () => {
                   </div>
                 </div>
 
+                {/* STOL SELECT */}
                 {form.deliveryType === "dine-in" && (
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Stol raqami *</label>
-                    <input 
-                      name="tableNumber" 
-                      type="number" 
-                      value={form.tableNumber} 
-                      onChange={(e) => setForm({ ...form, tableNumber: e.target.value })} 
-                      placeholder="12" 
-                      required 
-                      min={1} 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all duration-300 hover:border-yellow-500/40" 
-                    />
+                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">
+                      🪑 Stol raqami *
+                    </label>
+                    {loadingTables ? (
+                      <div className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 text-gray-500 text-sm">
+                        ⏳ Stollar yuklanmoqda...
+                      </div>
+                    ) : (
+                      <>
+                        <select
+                          name="tableNumber"
+                          value={form.tableNumber}
+                          onChange={handleTableChange}
+                          required
+                          className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] hover:border-yellow-500/40 appearance-none cursor-pointer"
+                        >
+                          <option value="" className="bg-black text-gray-400">🔍 Stol tanlang...</option>
+                          {availableTables.length > 0 ? (
+                            availableTables.map((table) => (
+                              <option 
+                                key={table._id} 
+                                value={table.number}
+                                className="bg-black text-white py-2"
+                              >
+                                🪑 #{table.number} — {table.capacity} kishi {table.location ? `📍 ${table.location}` : ''}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled className="bg-black text-red-400">
+                              ⚠️ Hozircha bo'sh stol yo'q
+                            </option>
+                          )}
+                        </select>
+                        
+                        {form.tableNumber && (
+                          <div className="mt-2 flex items-center gap-2 p-2 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs">
+                            <span>✅</span>
+                            <span>Stol #{form.tableNumber} tanlandi</span>
+                            {form.tableLocation && (
+                              <span className="text-gray-400">
+                                📍 {form.tableLocation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
 

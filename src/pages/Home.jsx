@@ -31,18 +31,18 @@ const Home = () => {
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-yellow-500/20 bg-yellow-500/10 backdrop-blur-xl mb-8">
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse"></div>
               <span className="text-yellow-400 uppercase tracking-[0.4em] text-[11px] font-black">
-                🐟 Milliy Taom & Yangi Baliq
+                XORAZM | EVROPA MILLIY TAOMLARI
               </span>
             </div>
 
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tight uppercase">
               <span className="block text-white">Xush kelibsiz</span>
-              <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">Sazanchik</span>
+              <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">sharq gavhari</span>
               <span className="block text-white mt-3 text-3xl sm:text-4xl lg:text-5xl normal-case tracking-normal text-gray-300">dasturxoniga</span>
             </h1>
 
             <p className="mt-8 text-gray-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              Tabiiy daryo baliqlaridan tayyorlangan taomlar va Xorazm milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
+              evropa va Xorazm milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5 mt-10 justify-center lg:justify-start">

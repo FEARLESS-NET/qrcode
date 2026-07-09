@@ -55,7 +55,7 @@ export function NavbarDefault() {
         ></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 py-4">
+      <div className="relative max-w-7xl mx-auto px-4  py-2">
         <div className="flex items-center justify-between">
 
           <Link
@@ -63,14 +63,14 @@ export function NavbarDefault() {
             className="group flex items-center gap-3 cursor-pointer transition-all duration-300 hover:scale-105"
           >
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 flex items-center justify-center text-black text-2xl shadow-[0_0_40px_rgba(255,215,0,0.3)]">
-              <img className="rounded-2xl" src="/sazanchik.jpg" alt="Sazanchik logo" />
+              <img className="rounded-2xl" src="/image.png" alt="sharq gavhari logo" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
               <span className="text-xl font-black uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
-                SAZANCHIK
+                SHARQ GAVHARI
               </span>
-              <span className="text-[10px] text-gray-500 uppercase tracking-[0.4em] font-bold">
-                Milliy Taom & Baliq
+              <span className="text-[7px] text-gray-500 uppercase tracking-[0.4em] font-bold">
+                XORAZM | EVROPA MILLIY TAOMLARI
               </span>
             </div>
           </Link>
