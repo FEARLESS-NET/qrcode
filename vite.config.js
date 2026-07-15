@@ -12,29 +12,22 @@ export default defineConfig({
     target: 'esnext',
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
+    cssCodeSplit: false,
+    cssMinify: false,
+    reportCompressedSize: false,
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
-        // ✅ TO'G'RI manualChunks - circular xatosiz
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'query-vendor': ['@tanstack/react-query'],
           'axios-vendor': ['axios'],
         },
-        entryFileNames: 'assets/[name].[hash].js',
-        chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash].[ext]',
       },
+      maxParallelFileOps: 20,
     },
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query', 'axios'],
-    exclude: [],
-  },
-  esbuild: {
-    logOverride: { 'this-is-undefined-in-esm': 'silent' },
-    treeShaking: true,
-  },
-  css: {
-    devSourcemap: false,
   },
 })

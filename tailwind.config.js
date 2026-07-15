@@ -6,16 +6,21 @@ export default {
   ],
   theme: {
     extend: {
-      animation: {
-        slowZoom: 'slowZoom 20s ease-in-out infinite alternate',
+      colors: {
+        'qozon-gold': '#FBBF24',
+        'qozon-amber': '#F59E0B',
+        'qozon-orange': '#F97316',
+        'qozon-dark': '#0a0a0a',
       },
-      keyframes: {
-        slowZoom: {
-          '0%': { transform: 'scale(1.1)' },
-          '100%': { transform: 'scale(1.2)' },
-        },
+      fontFamily: {
+        'sans': ['Inter', 'sans-serif'],
+      },
+      animation: {
+        'fadeInUp': 'fadeInUp 0.6s ease-out',
+        'shake': 'shake 0.5s ease-in-out',
+        'slowZoom': 'slowZoom 20s ease-in-out infinite alternate',
       },
     },
   },
   plugins: [],
-};
+}
