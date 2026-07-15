@@ -316,7 +316,12 @@ const Admin = () => {
     return (
       <div className="relative min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" alt="Restaurant" className="w-full h-full object-cover opacity-30" />
+          <img 
+            loading="lazy"  // ✅ QO'SHILDI
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" 
+            alt="Restaurant" 
+            className="w-full h-full object-cover opacity-30" 
+          />
           <div className="absolute inset-0 bg-black/80"></div>
         </div>
         <div className="relative z-10 text-center">
@@ -330,7 +335,12 @@ const Admin = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-12">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" alt="Restaurant background" className="w-full h-full object-cover opacity-20" />
+        <img 
+          loading="lazy"  // ✅ QO'SHILDI
+          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" 
+          alt="Restaurant background" 
+          className="w-full h-full object-cover opacity-20" 
+        />
         <div className="absolute inset-0 bg-[#0a0a0a]/80" />
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-amber-500/5" />
       </div>
@@ -382,7 +392,13 @@ const Admin = () => {
 
                 {form.image && (
                   <div className="mt-3 flex items-center gap-3">
-                    <img src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} alt="preview" className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20" onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }} />
+                    <img 
+                      loading="lazy"  // ✅ QO'SHILDI
+                      src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} 
+                      alt="preview" 
+                      className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20" 
+                      onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }} 
+                    />
                     <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
                   </div>
                 )}
@@ -406,16 +422,19 @@ const Admin = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
                 <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-yellow-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-yellow-400/50 hover:shadow-[0_0_40px_rgba(255,215,0,0.05)]">
-                  <div className="h-52 overflow-hidden"><img
-                          src={getImageUrl(menu.image)}
-                          alt={menu.name}
-                          crossOrigin="anonymous"
-                          className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
-                          onError={(e) => {
-                            console.log("❌ Rasm yuklanmadi:", e.target.src);
-                            e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
-                          }}
-                        /></div>
+                  <div className="h-52 overflow-hidden">
+                    <img
+                      loading="lazy"  // ✅ QO'SHILDI
+                      src={getImageUrl(menu.image)}
+                      alt={menu.name}
+                      crossOrigin="anonymous"
+                      className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
+                      onError={(e) => {
+                        console.log("❌ Rasm yuklanmadi:", e.target.src);
+                        e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                      }}
+                    />
+                  </div>
                   <div className="p-5">
                     <div className="flex justify-between"><h3 className="font-black text-xl">{menu.name}</h3><span className="text-yellow-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span></div>
                     <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>

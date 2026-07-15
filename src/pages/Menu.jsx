@@ -89,6 +89,7 @@ const Menu = () => {
 
       <div className="fixed inset-0 z-0">
         <img
+          loading="lazy"  // ✅ QO'SHILDI
           src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80"
           alt="Restaurant background"
           className="w-full h-full object-cover"
@@ -107,6 +108,7 @@ const Menu = () => {
 
         <div className="relative h-80 sm:h-96 rounded-[40px] overflow-hidden border border-yellow-500/20 mb-16 shadow-[0_0_80px_rgba(255,215,0,0.05)]">
           <img
+            loading="lazy"  // ✅ QO'SHILDI
             src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80"
             alt="QOZONDA | MILLIY TAOMLARI"
             className="absolute inset-0 w-full h-full object-cover scale-110"
@@ -161,6 +163,7 @@ const Menu = () => {
                   <div key={menu._id} className="group bg-black/50 backdrop-blur-3xl border border-yellow-500/20 rounded-2xl overflow-hidden transition-all hover:scale-[1.04] hover:border-yellow-400/50 hover:shadow-[0_0_50px_rgba(255,215,0,0.08)]">
                     <div className="relative h-56 overflow-hidden">
                       <img
+                          loading="lazy"  // ✅ QO'SHILDI
                           src={getImageUrl(menu.image)}
                           alt={menu.name}
                           crossOrigin="anonymous"

@@ -254,6 +254,7 @@ const Order = () => {
       {/* ===== BACKGROUND IMAGE ===== */}
       <div className="fixed inset-0 z-0">
         <img
+          loading="lazy"  // ✅ QO'SHILDI
           src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80"
           alt="Restaurant background"
           className="w-full h-full object-cover"
@@ -321,8 +322,9 @@ const Order = () => {
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                           
-                          {/* ✅ RASM - TUZATILGAN */}
+                          {/* ✅ RASM - LAZY LOADING QO'SHILDI */}
                           <img
+                            loading="lazy"  // ✅ QO'SHILDI
                             src={getImageUrl(menu.image)}
                             alt={menu.name}
                             crossOrigin="anonymous"
