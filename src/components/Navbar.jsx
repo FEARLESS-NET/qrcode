@@ -63,14 +63,14 @@ export function NavbarDefault() {
             className="group flex items-center gap-3 cursor-pointer transition-all duration-300 hover:scale-105"
           >
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 flex items-center justify-center text-black text-2xl shadow-[0_0_40px_rgba(255,215,0,0.3)]">
-              <img className="rounded-2xl" src="/image.png" alt="sharq gavhari logo" />
+              <img className="rounded-2xl" src="/QOZONDA.jpg" alt="QOZONDA LOGO" />
             </div>
             <div className="flex flex-col ">
               <span className="text-xl font-black uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">
-                SHARQ GAVHARI
+                Q O Z O N D A
               </span>
               <span className="text-[7px] text-gray-500 uppercase tracking-[0.4em] font-bold">
-                XORAZM | EVROPA MILLIY TAOMLARI
+                MILLIY TAOMLAR
               </span>
             </div>
           </Link>
@@ -101,7 +101,7 @@ export function NavbarDefault() {
           </div>
 
           <button
-            className="lg:hidden text-yellow-400 hover:bg-white/5 transition-all duration-300 pb-6 text-3xl"
+            className="lg:hidden text-yellow-400 hover:bg-white/5 transition-all duration-300 p-2 text-3xl"
             onClick={() => setOpenNav(!openNav)}
           >
             {openNav ? "✕" : "☰"}

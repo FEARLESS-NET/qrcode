@@ -31,18 +31,18 @@ const Home = () => {
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-yellow-500/20 bg-yellow-500/10 backdrop-blur-xl mb-8">
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse"></div>
               <span className="text-yellow-400 uppercase tracking-[0.4em] text-[11px] font-black">
-                XORAZM | EVROPA MILLIY TAOMLARI
+                 MILLIY TAOMLAR
               </span>
             </div>
 
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tight uppercase">
               <span className="block text-white">Xush kelibsiz</span>
-              <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">sharq gavhari</span>
+              <span className="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">QOZONDA</span>
               <span className="block text-white mt-3 text-3xl sm:text-4xl lg:text-5xl normal-case tracking-normal text-gray-300">dasturxoniga</span>
             </h1>
 
             <p className="mt-8 text-gray-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              evropa va Xorazm milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
+               milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5 mt-10 justify-center lg:justify-start">
@@ -87,8 +87,8 @@ const Home = () => {
       <section className="relative z-10 py-28 border-t border-yellow-500/15">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-20">
-            <span className="text-yellow-500 uppercase tracking-[0.5em] text-xs font-black">Nega Sazanchik</span>
-            <h2 className="mt-5 text-5xl sm:text-7xl font-black uppercase">Daryodan <span className="text-yellow-500">Dasturxonga</span></h2>
+            <span className="text-yellow-500 uppercase tracking-[0.5em] text-xs font-black">Nega qozonda</span>
+            <h2 className="mt-5 text-5xl sm:text-7xl font-black uppercase">yangi massaliqlardan <span className="text-yellow-500">Dasturxonga</span></h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -117,7 +117,7 @@ export default function Login() {
               transform hover:scale-110 transition-all duration-500
             "
           >
-            🐟
+            <img className="rounded-2xl" src="/QOZONDA.jpg"/>
           </div>
 
           <div className="flex flex-col">
@@ -137,7 +137,7 @@ export default function Login() {
                 drop-shadow-[0_0_40px_rgba(255,215,0,0.3)]
               "
             >
-              SAZANCHIK
+              QOZONDA
             </span>
 
             <span className="text-[10px] tracking-[0.5em] text-yellow-500/60 uppercase font-light">
@@ -218,7 +218,7 @@ export default function Login() {
                     transform hover:scale-110 hover:rotate-6 transition-all duration-500
                   "
                 >
-                  👑
+                   <img className="rounded-3xl" src="/QOZONDA.jpg"/>
 
                   <div className="absolute inset-0 rounded-3xl border-2 border-white/30"></div>
                   <div className="absolute -inset-4 rounded-3xl border border-yellow-500/20 animate-ping opacity-30"></div>
@@ -244,11 +244,11 @@ export default function Login() {
                   drop-shadow-[0_0_40px_rgba(255,215,0,0.2)]
                 "
               >
-                Staff Login
+                QOZONDA LOGIN
               </h2>
 
               <p className="text-center text-sm text-yellow-500/60 mt-4 mb-10 tracking-[0.3em] uppercase font-light">
-                Secure Golden Access
+                XIMOYA TIZIMI BOLIMII
               </p>
 
               {/* SUCCESS */}
@@ -400,7 +400,7 @@ export default function Login() {
           </div>
 
           <p className="text-center text-gray-700/60 text-[10px] mt-12 uppercase tracking-[0.5em] font-light">
-            © 2026 SAZANCHIK · PREMIUM RESTAURANT
+            © 2026 QOZONDA | MILLIY TAOMLAR
           </p>
 
         </div>

@@ -276,7 +276,7 @@ const Order = () => {
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-yellow-500/20 bg-yellow-500/10 backdrop-blur-xl mb-6">
             <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse"></div>
             <span className="text-yellow-400 uppercase tracking-[0.4em] text-[11px] font-black">
-              🐟 Online Xizmat
+               Online Xizmat
             </span>
           </div>
           <h1 className="text-5xl sm:text-7xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 drop-shadow-[0_0_50px_rgba(255,215,0,0.15)]">

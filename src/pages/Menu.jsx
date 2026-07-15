@@ -108,13 +108,13 @@ const Menu = () => {
         <div className="relative h-80 sm:h-96 rounded-[40px] overflow-hidden border border-yellow-500/20 mb-16 shadow-[0_0_80px_rgba(255,215,0,0.05)]">
           <img
             src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80"
-            alt="Sharq Gavhari milliy taomlari"
+            alt="QOZONDA | MILLIY TAOMLARI"
             className="absolute inset-0 w-full h-full object-cover scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
             <span className="text-yellow-400 uppercase tracking-[0.5em] text-xs font-bold mb-4">
-              🌙 Sharq Gavhari · Premium
+              🌙 QOZONDA · Premium
             </span>
             <h2 className="text-5xl sm:text-7xl font-serif font-bold text-white drop-shadow-[0_0_50px_rgba(255,215,0,0.2)]">
               ASOSIY <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">MENU</span>
