@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -15,27 +14,11 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        // ✅ manualChunks ni soddalashtirish - circular xatoni tuzatish
-        manualChunks: (id) => {
-          // React va uning ekotizimi
-          if (id.includes('node_modules/react/') || 
-              id.includes('node_modules/react-dom/') || 
-              id.includes('node_modules/react-router-dom/') ||
-              id.includes('node_modules/scheduler/')) {
-            return 'react-vendor'
-          }
-          // Query client
-          if (id.includes('node_modules/@tanstack/react-query/')) {
-            return 'query-vendor'
-          }
-          // Axios
-          if (id.includes('node_modules/axios/')) {
-            return 'axios-vendor'
-          }
-          // ✅ Qolgan barcha vendorlar - react bilan bog'lanmaslik uchun
-          if (id.includes('node_modules/')) {
-            return 'vendor'
-          }
+        // ✅ TO'G'RI manualChunks - circular xatosiz
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'query-vendor': ['@tanstack/react-query'],
+          'axios-vendor': ['axios'],
         },
         entryFileNames: 'assets/[name].[hash].js',
         chunkFileNames: 'assets/[name].[hash].js',
@@ -44,13 +27,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: [
-      'react', 
-      'react-dom', 
-      'react-router-dom', 
-      '@tanstack/react-query', 
-      'axios'
-    ],
+    include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query', 'axios'],
     exclude: [],
   },
   esbuild: {
