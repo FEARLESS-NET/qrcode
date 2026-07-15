@@ -88,7 +88,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-20">
             <span className="text-yellow-500 uppercase tracking-[0.5em] text-xs font-black">Nega qozonda</span>
-            <h2 className="mt-5 text-5xl sm:text-7xl font-black uppercase">yangi massaliqlardan <span className="text-yellow-500">Dasturxonga</span></h2>
+            <h2 className="mt-5 text-5xl sm:text-5xl font-black uppercase">yangi massaliqlardan <span className="text-yellow-500">Dasturxonga</span></h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
