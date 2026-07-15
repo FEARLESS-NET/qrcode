@@ -13,30 +13,30 @@ export default defineConfig({
     target: 'esnext',
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
-    // ✅ KESIN O'ZGARISH: rollupOptions ni to'g'rilash
     rollupOptions: {
       output: {
+        // ✅ manualChunks ni soddalashtirish - circular xatoni tuzatish
         manualChunks: (id) => {
-          // ✅ React va uning ekotizimi
+          // React va uning ekotizimi
           if (id.includes('node_modules/react/') || 
               id.includes('node_modules/react-dom/') || 
-              id.includes('node_modules/react-router-dom/')) {
+              id.includes('node_modules/react-router-dom/') ||
+              id.includes('node_modules/scheduler/')) {
             return 'react-vendor'
           }
-          // ✅ Query client
+          // Query client
           if (id.includes('node_modules/@tanstack/react-query/')) {
             return 'query-vendor'
           }
-          // ✅ Axios
+          // Axios
           if (id.includes('node_modules/axios/')) {
             return 'axios-vendor'
           }
-          // ✅ Boshqa vendorlar (ixtiyoriy)
+          // ✅ Qolgan barcha vendorlar - react bilan bog'lanmaslik uchun
           if (id.includes('node_modules/')) {
             return 'vendor'
           }
         },
-        // ✅ Fayl nomlarini qisqartirish
         entryFileNames: 'assets/[name].[hash].js',
         chunkFileNames: 'assets/[name].[hash].js',
         assetFileNames: 'assets/[name].[hash].[ext]',
@@ -55,10 +55,8 @@ export default defineConfig({
   },
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' },
-    // ✅ Qo'shimcha: tree shaking yaxshilash
     treeShaking: true,
   },
-  // ✅ Qo'shimcha: CSS optimallashtirish
   css: {
     devSourcemap: false,
   },
