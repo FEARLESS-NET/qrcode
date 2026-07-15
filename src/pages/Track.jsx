@@ -3,7 +3,7 @@ import OrderTracker from '../components/OrderTracker';
 
 const Track = () => {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-28">
+    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-24 sm:py-28">
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[#0a0a0a]" />
         <div
@@ -27,4 +27,4 @@ const Track = () => {
   );
 };
 
-export default Track; 
+export default Track;
