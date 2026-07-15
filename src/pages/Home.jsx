@@ -85,7 +85,7 @@ const Home = () => {
       </section>
 
       <section className="relative z-10 py-28 border-t border-yellow-500/15">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-20">
             <span className="text-yellow-500 uppercase tracking-[0.5em] text-xs font-black">Nega qozonda</span>
             <h2 className="mt-5 text-5xl sm:text-3xl font-black uppercase">yangi massaliqlardan <span className="text-yellow-500">Dasturxonga</span></h2>
