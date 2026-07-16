@@ -7,12 +7,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // ✅ LAZY IMPORT - Sahifalar kechiktirilgan yuklanadi
 const App = lazy(() => import('./App.jsx'));
 
-// ✅ QueryClient yaratish
+// ✅ QueryClient yaratish - CACHE VAQTLARI OSHIRILDI
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
+      staleTime: 10 * 60 * 1000, // ✅ 5 → 10 daqiqa
+      gcTime: 20 * 60 * 1000,    // ✅ 10 → 20 daqiqa
       refetchOnWindowFocus: false,
       retry: 1,
     },

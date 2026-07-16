@@ -8,7 +8,7 @@ const BASE_URL = import.meta.env.DEV
 export const axiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: { 'Content-Type': 'application/json' },
-    timeout: 30000,
+    timeout: 8000, // ✅ 30000 → 8000 (tezroq)
 });
 
 axiosInstance.interceptors.request.use(

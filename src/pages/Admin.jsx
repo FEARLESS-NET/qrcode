@@ -7,10 +7,13 @@ const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Hisobotlar"];
 // ✅ TUZATILDI
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
-// ✅ TUZATILDI: Rasm URL
+// ✅ TUZATILDI: Rasm URL + WebP QO'SHILDI
 const getImageUrl = (imagePath) => {
   if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
-  if (imagePath.startsWith("http")) return imagePath;
+  if (imagePath.startsWith("http")) {
+    // ✅ WebP qo'shish
+    return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
+  }
   if (imagePath.startsWith("/uploads/")) {
     return `${BASE_URL}${imagePath}`;
   }
@@ -317,8 +320,8 @@ const Admin = () => {
       <div className="relative min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <img 
-            loading="lazy"  // ✅ QO'SHILDI
-            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" 
+            loading="lazy"
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp" 
             alt="Restaurant" 
             className="w-full h-full object-cover opacity-30" 
           />
@@ -336,8 +339,8 @@ const Admin = () => {
     <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-12">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img 
-          loading="lazy"  // ✅ QO'SHILDI
-          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80" 
+          loading="lazy"
+          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp" 
           alt="Restaurant background" 
           className="w-full h-full object-cover opacity-20" 
         />
@@ -393,7 +396,7 @@ const Admin = () => {
                 {form.image && (
                   <div className="mt-3 flex items-center gap-3">
                     <img 
-                      loading="lazy"  // ✅ QO'SHILDI
+                      loading="lazy"
                       src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} 
                       alt="preview" 
                       className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20" 
@@ -424,7 +427,7 @@ const Admin = () => {
                 <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-yellow-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-yellow-400/50 hover:shadow-[0_0_40px_rgba(255,215,0,0.05)]">
                   <div className="h-52 overflow-hidden">
                     <img
-                      loading="lazy"  // ✅ QO'SHILDI
+                      loading="lazy"
                       src={getImageUrl(menu.image)}
                       alt={menu.name}
                       crossOrigin="anonymous"
