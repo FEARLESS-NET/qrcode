@@ -79,7 +79,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex flex-col text-white p-4 sm:p-10 font-serif">
+    <div className="relative min-h-screen overflow-hidden flex flex-col text-white p-4 sm:p-10 font-display">
 
       {/* 🌟 FULL RESTAURANT BACKGROUND IMAGE */}
       <div className="fixed inset-0 z-0">
@@ -89,17 +89,17 @@ export default function Login() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/70 to-black/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/5 via-transparent to-amber-500/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FFC93C]/5 via-transparent to-[#E08A3C]/5"></div>
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `
-            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px),
-            repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px)
+            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px),
+            repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px)
           `
         }}></div>
       </div>
 
       {/* HEADER */}
-      <div className="relative z-10 w-full py-6 border-b border-yellow-500/30 backdrop-blur-3xl flex justify-center px-4 bg-black/40 rounded-2xl">
+      <div className="relative z-10 w-full py-6 border-b border-[#FFC93C]/30 backdrop-blur-3xl flex justify-center px-4 bg-black/40 rounded-2xl">
 
         <div className="flex items-center gap-5">
 
@@ -108,12 +108,12 @@ export default function Login() {
               w-16 h-16
               rounded-2xl
               bg-gradient-to-br
-              from-yellow-400
-              via-amber-500
-              to-orange-500
+              from-[#FFDD73]
+              via-[#E08A3C]
+              to-[#FF5A1F]
               flex items-center justify-center
               text-4xl
-              shadow-[0_0_60px_rgba(255,215,0,0.4)]
+              shadow-[0_0_60px_rgba(255,180,40,0.4)]
               transform hover:scale-110 transition-all duration-500
             "
           >
@@ -125,22 +125,22 @@ export default function Login() {
             <span
               className="
                 text-2xl sm:text-3xl
-                font-serif
+                font-display
                 font-bold
                 tracking-[0.35em]
                 text-transparent
                 bg-clip-text
                 bg-gradient-to-r
-                from-yellow-200
-                via-amber-300
-                to-orange-400
-                drop-shadow-[0_0_40px_rgba(255,215,0,0.3)]
+                from-[#FFEBB0]
+                via-[#FFDD73]
+                to-[#FF7A3D]
+                drop-shadow-[0_0_40px_rgba(255,180,40,0.3)]
               "
             >
               QOZONDA
             </span>
 
-            <span className="text-[10px] tracking-[0.5em] text-yellow-500/60 uppercase font-light">
+            <span className="text-[10px] tracking-[0.5em] text-[#FFC93C]/60 uppercase font-light">
               PREMIUM RESTAURANT
             </span>
 
@@ -163,9 +163,9 @@ export default function Login() {
                 absolute -inset-[3px]
                 rounded-[3rem]
                 bg-gradient-to-r
-                from-yellow-400
-                via-amber-400
-                to-orange-500
+                from-[#FFDD73]
+                via-[#FFA23D]
+                to-[#FF5A1F]
                 opacity-30
                 blur-2xl
                 group-hover:opacity-60
@@ -181,24 +181,24 @@ export default function Login() {
                 relative
                 bg-black/60
                 backdrop-blur-4xl
-                border border-yellow-500/20
+                border border-[#FFC93C]/20
                 rounded-[3rem]
                 p-8 sm:p-14
                 overflow-hidden
-                shadow-[0_0_100px_rgba(255,215,0,0.05)]
-                hover:shadow-[0_0_120px_rgba(255,215,0,0.1)]
+                shadow-[0_0_100px_rgba(255,180,40,0.05)]
+                hover:shadow-[0_0_120px_rgba(255,180,40,0.1)]
                 transition-all duration-700
               "
             >
 
               {/* Card Inner Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 pointer-events-none"></div>
 
               {/* Decorative Corners */}
-              <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-yellow-500/20 rounded-tl-3xl"></div>
-              <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-yellow-500/20 rounded-tr-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-yellow-500/20 rounded-bl-3xl"></div>
-              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-yellow-500/20 rounded-br-3xl"></div>
+              <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-[#FFC93C]/20 rounded-tl-3xl"></div>
+              <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#FFC93C]/20 rounded-tr-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-[#FFC93C]/20 rounded-bl-3xl"></div>
+              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-[#FFC93C]/20 rounded-br-3xl"></div>
 
               {/* Icon */}
               <div className="flex justify-center mb-10">
@@ -209,19 +209,19 @@ export default function Login() {
                     w-28 h-28
                     rounded-3xl
                     bg-gradient-to-br
-                    from-yellow-400
-                    via-amber-500
-                    to-orange-500
+                    from-[#FFDD73]
+                    via-[#E08A3C]
+                    to-[#FF5A1F]
                     flex items-center justify-center
                     text-6xl
-                    shadow-[0_0_70px_rgba(255,215,0,0.5)]
+                    shadow-[0_0_70px_rgba(255,180,40,0.5)]
                     transform hover:scale-110 hover:rotate-6 transition-all duration-500
                   "
                 >
                    <img className="rounded-3xl" src="/QOZONDA.jpg"/>
 
                   <div className="absolute inset-0 rounded-3xl border-2 border-white/30"></div>
-                  <div className="absolute -inset-4 rounded-3xl border border-yellow-500/20 animate-ping opacity-30"></div>
+                  <div className="absolute -inset-4 rounded-3xl border border-[#FFC93C]/20 animate-ping opacity-30"></div>
 
                 </div>
 
@@ -232,22 +232,22 @@ export default function Login() {
                 className="
                   text-center
                   text-5xl sm:text-6xl
-                  font-serif
+                  font-display
                   font-bold
                   tracking-wide
                   text-transparent
                   bg-clip-text
                   bg-gradient-to-r
-                  from-yellow-200
-                  via-amber-300
-                  to-orange-400
-                  drop-shadow-[0_0_40px_rgba(255,215,0,0.2)]
+                  from-[#FFEBB0]
+                  via-[#FFDD73]
+                  to-[#FF7A3D]
+                  drop-shadow-[0_0_40px_rgba(255,180,40,0.2)]
                 "
               >
                 QOZONDA LOGIN
               </h2>
 
-              <p className="text-center text-sm text-yellow-500/60 mt-4 mb-10 tracking-[0.3em] uppercase font-light">
+              <p className="text-center text-sm text-[#FFC93C]/60 mt-4 mb-10 tracking-[0.3em] uppercase font-light">
                 XIMOYA TIZIMI BOLIMII
               </p>
 
@@ -297,11 +297,11 @@ export default function Login() {
               <div className="space-y-7">
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-[0.4em] text-yellow-500/80 font-bold ml-1 mb-2 block">
+                  <label className="text-[10px] uppercase tracking-[0.4em] text-[#FFC93C]/80 font-bold ml-1 mb-2 block">
                     Admin Email
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500/40 text-lg">✉</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FFC93C]/40 text-lg">✉</span>
                     <input
                       name="email"
                       required
@@ -312,28 +312,28 @@ export default function Login() {
                       className="
                         w-full
                         bg-black/60
-                        border border-yellow-500/15
+                        border border-[#FFC93C]/15
                         rounded-2xl
                         pl-12 pr-5 py-4
                         outline-none
                         text-white text-sm
                         placeholder:text-gray-700
                         transition-all duration-300
-                        focus:border-yellow-400
-                        focus:shadow-[0_0_40px_rgba(255,215,0,0.15)]
-                        hover:border-yellow-500/40
-                        font-serif
+                        focus:border-[#FFDD73]
+                        focus:shadow-[0_0_40px_rgba(255,180,40,0.15)]
+                        hover:border-[#FFC93C]/40
+                        font-display
                       "
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-[0.4em] text-yellow-500/80 font-bold ml-1 mb-2 block">
+                  <label className="text-[10px] uppercase tracking-[0.4em] text-[#FFC93C]/80 font-bold ml-1 mb-2 block">
                     Password
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500/40 text-lg">🔒</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FFC93C]/40 text-lg">🔒</span>
                     <input
                       name="password"
                       required
@@ -344,17 +344,17 @@ export default function Login() {
                       className="
                         w-full
                         bg-black/60
-                        border border-yellow-500/15
+                        border border-[#FFC93C]/15
                         rounded-2xl
                         pl-12 pr-5 py-4
                         outline-none
                         text-white text-sm
                         placeholder:text-gray-700
                         transition-all duration-300
-                        focus:border-yellow-400
-                        focus:shadow-[0_0_40px_rgba(255,215,0,0.15)]
-                        hover:border-yellow-500/40
-                        font-serif
+                        focus:border-[#FFDD73]
+                        focus:shadow-[0_0_40px_rgba(255,180,40,0.15)]
+                        hover:border-[#FFC93C]/40
+                        font-display
                       "
                     />
                   </div>
@@ -370,18 +370,18 @@ export default function Login() {
                     py-5
                     rounded-2xl
                     bg-gradient-to-r
-                    from-yellow-400
-                    via-amber-500
-                    to-orange-500
+                    from-[#FFDD73]
+                    via-[#E08A3C]
+                    to-[#FF5A1F]
                     text-black
-                    font-serif
+                    font-display
                     font-bold
                     text-base
                     uppercase
                     tracking-[0.35em]
                     transition-all duration-500
                     hover:scale-[1.03]
-                    hover:shadow-[0_0_60px_rgba(255,215,0,0.5)]
+                    hover:shadow-[0_0_60px_rgba(255,180,40,0.5)]
                     active:scale-[0.97]
                     group
                     disabled:opacity-50

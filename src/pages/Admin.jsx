@@ -272,7 +272,7 @@ const Admin = () => {
   };
 
   const statusColor = {
-    pending: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10",
+    pending: "text-[#FFDD73] border-[#FFC93C]/30 bg-[#FFC93C]/10",
     confirmed: "text-green-400 border-green-500/30 bg-green-500/10",
     cancelled: "text-red-400 border-red-500/30 bg-red-500/10",
     preparing: "text-blue-400 border-blue-500/30 bg-blue-500/10",
@@ -310,14 +310,14 @@ const Admin = () => {
   const colorMap = {
     cyan: "text-cyan-400",
     blue: "text-blue-400",
-    yellow: "text-yellow-400",
+    yellow: "text-[#FFDD73]",
     purple: "text-purple-400",
-    orange: "text-orange-400",
+    orange: "text-[#FF7A3D]",
   };
 
   if (loading) {
     return (
-      <div className="relative min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="relative min-h-screen bg-[#130e0a] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <img 
             loading="lazy"
@@ -328,30 +328,65 @@ const Admin = () => {
           <div className="absolute inset-0 bg-black/80"></div>
         </div>
         <div className="relative z-10 text-center">
-          <div className="w-20 h-20 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-yellow-400 text-xl font-bold">Yuklanmoqda...</p>
+          <div className="w-20 h-20 border-4 border-[#FFC93C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#FFDD73] text-xl font-bold">Yuklanmoqda...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white px-4 sm:px-6 lg:px-10 py-12">
-      <div className="fixed inset-0 z-0 pointer-events-none">
+    <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white px-4 sm:px-6 lg:px-10 py-12">
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <img 
           loading="lazy"
           src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp" 
           alt="Restaurant background" 
           className="w-full h-full object-cover opacity-20" 
         />
-        <div className="absolute inset-0 bg-[#0a0a0a]/80" />
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-amber-500/5" />
+        <div className="absolute inset-0 bg-[#130e0a]/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/5 via-transparent to-[#E08A3C]/5" />
+        <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#E08A3C]/10 blur-[200px] animate-pulse" />
+        <div className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-[#FFDD73]/10 blur-[200px] animate-pulse delay-700" />
+        {/* Signature: embers drifting up, as if rising off a qozon — layered for depth */}
+        {[...Array(16)].map((_, i) => (
+          <span
+            key={`far-${i}`}
+            className="ember-particle"
+            style={{
+              left: `${(i * 6.2 + 2) % 100}%`,
+              "--size": `${2 + (i % 3)}px`,
+              filter: "blur(0.5px)",
+              opacity: 0.45,
+              animationDuration: `${9 + (i % 6) * 1.4}s`,
+              animationDelay: `${i * 0.6}s`,
+              "--drift": `${((i % 5) - 2) * 30}px`,
+            }}
+          />
+        ))}
+        {[...Array(12)].map((_, i) => (
+          <span
+            key={`near-${i}`}
+            className="ember-particle"
+            style={{
+              left: `${(i * 8.1 + 6) % 100}%`,
+              "--size": `${4 + (i % 4)}px`,
+              animationDuration: `${6 + (i % 4) * 1.2}s`,
+              animationDelay: `${i * 0.5}s`,
+              "--drift": `${((i % 3) - 1) * 55}px`,
+            }}
+          />
+        ))}
       </div>
 
       <div className="relative z-10">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-12 border-b border-yellow-500/20 pb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-12 border-b border-[#FFC93C]/20 pb-8">
           <div>
-            <h2 className="mt-3 text-5xl sm:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500">ADMIN PANEL</h2>
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-3">
+              <div className="w-2 h-2 rounded-full bg-[#FFDD73] animate-pulse"></div>
+              <span className="text-[#FFDD73] uppercase tracking-[0.3em] text-[10px] font-black">Boshqaruv</span>
+            </div>
+            <h2 className="font-display text-5xl sm:text-6xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F]">Admin Panel</h2>
             <p className="text-gray-500 mt-2 text-sm tracking-widest">Restoran boshqaruv tizimi</p>
           </div>
           <button onClick={handleLogout} className="px-8 py-4 rounded-2xl border border-red-500/40 text-red-400 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]">🚪 Chiqish</button>
@@ -365,8 +400,8 @@ const Admin = () => {
             { label: "Zakazlar", value: orders.filter(o => o.status === "pending").length, color: "purple", suffix: " yangi" },
             { label: "Yo'lda", value: orders.filter(o => o.deliveryStatus === "on_the_way").length, color: "orange", suffix: " ta" },
           ].map((s, i) => (
-            <div key={i} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 text-center">
-              <p className={`text-3xl font-black ${colorMap[s.color]}`}>{s.value}{s.suffix || ""}</p>
+            <div key={i} className="card-luxe p-5 text-center hover:scale-[1.03] transition-transform">
+              <p className={`font-display text-4xl font-bold ${colorMap[s.color]}`}>{s.value}{s.suffix || ""}</p>
               <p className="text-gray-500 text-xs uppercase tracking-widest mt-1 font-bold">{s.label}</p>
             </div>
           ))}
@@ -374,22 +409,22 @@ const Admin = () => {
 
         <div className="flex gap-2 mb-10 flex-wrap">
           {TABS.map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${activeTab === tab ? "bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black shadow-[0_0_40px_rgba(255,215,0,0.3)]" : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-yellow-500/30 hover:text-white"}`}>{tab}</button>
+            <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${activeTab === tab ? "bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black shadow-[0_0_40px_rgba(255,180,40,0.4)] animate-glowPulse" : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-[#FFC93C]/30 hover:text-white"}`}>{tab}</button>
           ))}
         </div>
 
         {activeTab === "Menu" && (
           <div>
-            <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-yellow-500/20 backdrop-blur-3xl rounded-[32px] p-8 sm:p-10 mb-12">
-              <h3 className="text-yellow-400 font-black text-2xl mb-8">{editingId ? "📝 Tahrirlash" : "➕ Yangi Taom"}</h3>
+            <form onSubmit={handleSubmit} className="card-luxe p-8 sm:p-10 mb-12">
+              <h3 className="font-display text-[#FFDD73] font-bold text-3xl mb-8">{editingId ? "📝 Tahrirlash" : "➕ Yangi Taom"}</h3>
 
               <div className="mb-5">
                 <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Rasm</label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files[0], imageUrl: "" })} className="text-gray-400 text-sm flex-1" />
                   <div className="flex items-center gap-2 flex-1">
-                    <input type="text" value={form.imageUrl || ""} placeholder="Yoki rasm URL manzilini joylashtiring..." onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-2 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(255,215,0,0.05)] transition-all" />
-                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; setForm({ ...form, image: form.imageUrl.trim() }); }} className="px-3 py-3 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
+                    <input type="text" value={form.imageUrl || ""} placeholder="Yoki rasm URL manzilini joylashtiring..." onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-2 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_20px_rgba(255,180,40,0.05)] transition-all" />
+                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; setForm({ ...form, image: form.imageUrl.trim() }); }} className="px-3 py-3 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
                   </div>
                 </div>
 
@@ -399,7 +434,7 @@ const Admin = () => {
                       loading="lazy"
                       src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} 
                       alt="preview" 
-                      className="w-24 h-24 object-cover rounded-xl border border-yellow-500/20" 
+                      className="w-24 h-24 object-cover rounded-xl border border-[#FFC93C]/20" 
                       onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }} 
                     />
                     <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
@@ -411,20 +446,20 @@ const Admin = () => {
                 {["name", "price", "retsept", "category"].map((key) => (
                   <div key={key}>
                     <label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">{key === "name" ? "Nomi" : key === "price" ? "Narxi (so'm)" : key === "retsept" ? "Retsept" : "Kategoriya"}</label>
-                    <input value={typeof form[key] === "string" ? form[key] : ""} onChange={(e) => setForm({ ...form, [key]: e.target.value })} type={key === "price" ? "number" : "text"} min={key === "price" ? "0" : undefined} required className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all" />
+                    <input value={typeof form[key] === "string" ? form[key] : ""} onChange={(e) => setForm({ ...form, [key]: e.target.value })} type={key === "price" ? "number" : "text"} min={key === "price" ? "0" : undefined} required className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.05)] transition-all" />
                   </div>
                 ))}
               </div>
 
               <div className="flex gap-4 mt-8">
-                <button type="submit" className="px-10 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] transition-all">{editingId ? "Yangilash" : "Saqlash"}</button>
+                <button type="submit" className="px-10 py-4 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,180,40,0.3)] transition-all">{editingId ? "Yangilash" : "Saqlash"}</button>
                 {editingId && (<button type="button" onClick={() => { setEditingId(null); setForm({ name: "", price: "", retsept: "", image: "", category: "" }); }} className="px-10 py-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">Bekor</button>)}
               </div>
             </form>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
-                <div key={menu._id} className="group relative overflow-hidden rounded-[24px] border border-yellow-500/20 bg-white/[0.03] backdrop-blur-3xl transition-all hover:scale-[1.02] hover:border-yellow-400/50 hover:shadow-[0_0_40px_rgba(255,215,0,0.05)]">
+                <div key={menu._id} className="card-luxe group overflow-hidden hover:scale-[1.015] transition-transform">
                   <div className="h-52 overflow-hidden">
                     <img
                       loading="lazy"
@@ -439,10 +474,10 @@ const Admin = () => {
                     />
                   </div>
                   <div className="p-5">
-                    <div className="flex justify-between"><h3 className="font-black text-xl">{menu.name}</h3><span className="text-yellow-400 font-bold">{Number(menu.price).toLocaleString()} so'm</span></div>
+                    <div className="flex justify-between"><h3 className="font-display font-bold text-2xl">{menu.name}</h3><span className="text-[#FFDD73] font-bold">{Number(menu.price).toLocaleString()} so'm</span></div>
                     <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
                     <div className="flex gap-3 mt-4">
-                      <button onClick={() => handleEdit(menu)} className="flex-1 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-400 hover:text-black transition-all">Tahrirlash</button>
+                      <button onClick={() => handleEdit(menu)} className="flex-1 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all">Tahrirlash</button>
                       <button onClick={() => handleDelete(menu._id)} className="flex-1 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">O'chirish</button>
                     </div>
                   </div>
@@ -460,28 +495,28 @@ const Admin = () => {
                 { label: "Bo'sh", value: tableStats.available, color: "text-green-400" },
                 { label: "Band", value: tableStats.booked, color: "text-red-400" },
               ].map((s, i) => (
-                <div key={i} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 text-center">
-                  <p className={`text-4xl font-black ${s.color}`}>{s.value}</p>
+                <div key={i} className="card-luxe p-5 text-center hover:scale-[1.03] transition-transform">
+                  <p className={`font-display text-4xl font-bold ${s.color}`}>{s.value}</p>
                   <p className="text-gray-500 text-xs uppercase tracking-widest mt-2 font-bold">{s.label}</p>
                 </div>
               ))}
             </div>
 
-            <form onSubmit={handleTableSubmit} className="bg-white/[0.03] border border-yellow-500/20 rounded-[24px] p-6 mb-10">
-              <h3 className="text-yellow-400 font-black text-xl mb-6">➕ Yangi Stol</h3>
+            <form onSubmit={handleTableSubmit} className="card-luxe p-6 mb-10">
+              <h3 className="font-display text-[#FFDD73] font-bold text-2xl mb-6">➕ Yangi Stol</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Stol raqami</label><input value={tableForm.number} onChange={(e) => setTableForm({ ...tableForm, number: e.target.value })} type="number" required placeholder="1" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" /></div>
-                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Sig'im (kishi)</label><input value={tableForm.capacity} onChange={(e) => setTableForm({ ...tableForm, capacity: e.target.value })} type="number" required placeholder="4" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" /></div>
-                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Joylashuv</label><input value={tableForm.location} onChange={(e) => setTableForm({ ...tableForm, location: e.target.value })} placeholder="Ichki zal" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-yellow-400 transition-all" /></div>
+                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Stol raqami</label><input value={tableForm.number} onChange={(e) => setTableForm({ ...tableForm, number: e.target.value })} type="number" required placeholder="1" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-[#FFDD73] transition-all" /></div>
+                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Sig'im (kishi)</label><input value={tableForm.capacity} onChange={(e) => setTableForm({ ...tableForm, capacity: e.target.value })} type="number" required placeholder="4" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-[#FFDD73] transition-all" /></div>
+                <div><label className="text-xs uppercase tracking-[0.3em] text-gray-500 block mb-2 font-bold">Joylashuv</label><input value={tableForm.location} onChange={(e) => setTableForm({ ...tableForm, location: e.target.value })} placeholder="Ichki zal" className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 outline-none text-white focus:border-[#FFDD73] transition-all" /></div>
               </div>
-              <button type="submit" className="mt-6 px-10 py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black hover:scale-105 hover:shadow-[0_0_30px_rgba(255,215,0,0.2)] transition-all">Stol Qo'shish</button>
+              <button type="submit" className="mt-6 px-10 py-3.5 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black hover:scale-105 hover:shadow-[0_0_30px_rgba(255,180,40,0.2)] transition-all">Stol Qo'shish</button>
             </form>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {tables.map((table) => (
                 <div key={table._id} className={`relative rounded-2xl border p-5 transition-all ${table.isAvailable ? "border-green-500/20 bg-green-500/5" : "border-red-500/20 bg-red-500/5"}`}>
                   <div className="flex justify-between items-start">
-                    <div><p className="text-3xl font-black">#{table.number}</p><p className="text-gray-400 text-sm mt-1">{table.capacity} kishi</p>{table.location && <p className="text-gray-500 text-xs">{table.location}</p>}</div>
+                    <div><p className="font-display text-3xl font-bold text-[#FFDD73]">#{table.number}</p><p className="text-gray-400 text-sm mt-1">{table.capacity} kishi</p>{table.location && <p className="text-gray-500 text-xs">{table.location}</p>}</div>
                     <span className={`w-3 h-3 rounded-full mt-1 ${table.isAvailable ? "bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.3)]" : "bg-red-500 shadow-[0_0_10px_rgba(248,113,113,0.3)]"}`} />
                   </div>
                   <div className="flex gap-2 mt-4">
@@ -497,9 +532,9 @@ const Admin = () => {
         {activeTab === "Bronlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
-              <h3 className="text-yellow-400 font-black text-xl">📋 Bronlar</h3>
+              <h3 className="font-display text-[#FFDD73] font-bold text-2xl">📋 Bronlar</h3>
               <div className="flex flex-wrap gap-2">
-                <button onClick={handleDeleteCompletedReservations} disabled={deletingCompleted} className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50">{deletingCompleted ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}</button>
+                <button onClick={handleDeleteCompletedReservations} disabled={deletingCompleted} className="px-5 py-2.5 rounded-xl bg-[#FF5A1F]/20 border border-[#FF5A1F]/40 text-[#FF7A3D] text-sm font-bold hover:bg-[#FF5A1F] hover:text-white transition-all disabled:opacity-50">{deletingCompleted ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}</button>
                 <button onClick={handleDeleteAllReservations} disabled={deletingAllReservations} className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50">{deletingAllReservations ? "⏳..." : "🔥 Barchasini o'chirish"}</button>
               </div>
             </div>
@@ -509,17 +544,17 @@ const Admin = () => {
                 <p className="text-gray-500 text-center py-20 text-xl">Hali bron yo'q</p>
               ) : (
                 reservations.map((r) => (
-                  <div key={r._id} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 hover:border-yellow-500/30 transition-all">
+                  <div key={r._id} className="card-luxe p-5">
                     <div className="flex flex-col sm:flex-row justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <h3 className="font-black text-xl">{r.customerName}</h3>
+                          <h3 className="font-display font-bold text-2xl">{r.customerName}</h3>
                           <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[r.status]}`}>{statusLabel[r.status]}</span>
                         </div>
                         <p className="text-gray-400 text-sm">📞 {r.phone}</p>
                         <p className="text-gray-400 text-sm">🪑 Stol #{r.tableId?.number} &nbsp;|&nbsp; 👥 {r.guestCount} kishi</p>
                         <p className="text-gray-400 text-sm">📆 {r.date} &nbsp;⏰ {r.time}</p>
-                        {r.diningArea && <p className="text-yellow-400 text-sm">📍 {diningAreaMap[r.diningArea] || r.diningArea}</p>}
+                        {r.diningArea && <p className="text-[#FFDD73] text-sm">📍 {diningAreaMap[r.diningArea] || r.diningArea}</p>}
                         {r.note && <p className="text-gray-500 text-xs">📝 {r.note}</p>}
                       </div>
                       {r.status === "pending" && (
@@ -539,9 +574,9 @@ const Admin = () => {
         {activeTab === "Zakazlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
-              <h3 className="text-yellow-400 font-black text-xl">📦 Zakazlar</h3>
+              <h3 className="font-display text-[#FFDD73] font-bold text-2xl">📦 Zakazlar</h3>
               <div className="flex flex-wrap gap-2">
-                <button onClick={handleDeleteCompletedOrders} disabled={deletingCompletedOrders} className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50">{deletingCompletedOrders ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}</button>
+                <button onClick={handleDeleteCompletedOrders} disabled={deletingCompletedOrders} className="px-5 py-2.5 rounded-xl bg-[#FF5A1F]/20 border border-[#FF5A1F]/40 text-[#FF7A3D] text-sm font-bold hover:bg-[#FF5A1F] hover:text-white transition-all disabled:opacity-50">{deletingCompletedOrders ? "⏳..." : "🗑 Yakunlanganlarni o'chirish"}</button>
                 <button onClick={handleDeleteAllOrders} disabled={deletingAllOrders} className="px-5 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all disabled:opacity-50">{deletingAllOrders ? "⏳..." : "🔥 Barchasini o'chirish"}</button>
               </div>
             </div>
@@ -551,30 +586,30 @@ const Admin = () => {
                 <p className="text-gray-500 text-center py-20 text-xl">Hali zakaz yo'q</p>
               ) : (
                 orders.map((o) => (
-                  <div key={o._id} className="bg-white/[0.03] border border-yellow-500/10 rounded-2xl p-5 hover:border-yellow-500/30 transition-all">
+                  <div key={o._id} className="card-luxe p-5">
                     <div className="flex flex-col sm:flex-row justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <h3 className="font-black text-xl">{o.customerName}</h3>
+                          <h3 className="font-display font-bold text-2xl">{o.customerName}</h3>
                           <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>{statusLabel[o.status]}</span>
-                          <span className="text-xs px-3 py-1 rounded-full border border-yellow-500/20 text-yellow-400 bg-yellow-500/10 font-bold">{deliveryTypeMap[o.deliveryType] || o.deliveryType}</span>
-                          {o.deliveryStatus && o.deliveryStatus !== 'pending' && (<span className="text-xs px-3 py-1 rounded-full border border-yellow-500/30 text-yellow-400 bg-yellow-500/10 font-bold">{deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}</span>)}
+                          <span className="text-xs px-3 py-1 rounded-full border border-[#FFC93C]/20 text-[#FFDD73] bg-[#FFC93C]/10 font-bold">{deliveryTypeMap[o.deliveryType] || o.deliveryType}</span>
+                          {o.deliveryStatus && o.deliveryStatus !== 'pending' && (<span className="text-xs px-3 py-1 rounded-full border border-[#FFC93C]/30 text-[#FFDD73] bg-[#FFC93C]/10 font-bold">{deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}</span>)}
                         </div>
                         <p className="text-gray-400 text-sm">📞 {o.phone}</p>
                         {o.deliveryType === "dine-in" && o.tableNumber && (
-                          <p className="text-yellow-400 text-sm">
+                          <p className="text-[#FFDD73] text-sm">
                             🪑 Stol #{o.tableNumber} {o.tableLocation ? `📍 ${o.tableLocation}` : ''}
                           </p>
                         )}
                         {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
                         {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
-                          <a href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`} target="_blank" rel="noopener noreferrer" className="inline-block text-yellow-400 text-xs underline hover:text-yellow-300">🗺 Xaritada ko'rish</a>
+                          <a href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`} target="_blank" rel="noopener noreferrer" className="inline-block text-[#FFDD73] text-xs underline hover:text-[#FFEBB0]">🗺 Xaritada ko'rish</a>
                         )}
                         {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
                         <div className="mt-2 space-y-1">
                           {o.items?.map((item, idx) => (<p key={idx} className="text-gray-300 text-sm">• {item.name} x{item.quantity} — {(item.price * item.quantity).toLocaleString()} so'm</p>))}
                         </div>
-                        <p className="text-yellow-400 font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
+                        <p className="text-[#FFDD73] font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
                         {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
                         {o.courierName && <p className="text-green-400 text-xs font-bold">👤 Kuryer: {o.courierName}</p>}
                       </div>
@@ -583,7 +618,7 @@ const Admin = () => {
                         {o.status === "confirmed" && (<button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-6 py-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>)}
                         {o.status === "preparing" && (<button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>)}
                         {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
-                          <button onClick={() => { const courierName = prompt("Kuryer ismi:"); const courierPhone = prompt("Kuryer telefon raqami:"); if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone); }} className="px-6 py-2.5 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-sm font-bold hover:bg-yellow-500 hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
+                          <button onClick={() => { const courierName = prompt("Kuryer ismi:"); const courierPhone = prompt("Kuryer telefon raqami:"); if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone); }} className="px-6 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFC93C] hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
                         )}
                         {o.deliveryStatus === "on_the_way" && (<button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>)}
                         {o.status !== "cancelled" && o.status !== "ready" && (<button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>)}

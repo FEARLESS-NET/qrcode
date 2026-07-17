@@ -109,7 +109,7 @@ const Reports = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h3 className="text-yellow-400 font-black text-2xl">📊 Kunlik Hisobot</h3>
+          <h3 className="text-[#FFDD73] font-black text-2xl">📊 Kunlik Hisobot</h3>
           <p className="text-gray-500 text-sm mt-1 font-bold">
             Jami: {totalReports} ta hisobot
           </p>
@@ -124,7 +124,7 @@ const Reports = () => {
           <button
             onClick={handleReset}
             disabled={resetting}
-            className="px-5 py-2.5 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 text-sm font-bold hover:bg-orange-500 hover:text-black transition-all disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-[#FF5A1F]/20 border border-[#FF5A1F]/40 text-[#FF7A3D] text-sm font-bold hover:bg-[#FF5A1F] hover:text-black transition-all disabled:opacity-50"
           >
             {resetting ? "⏳..." : "🔄 Kunlik 0"}
           </button>
@@ -160,14 +160,14 @@ const Reports = () => {
         {reports.map((report) => (
           <div
             key={report._id}
-            className="bg-white/[0.03] border border-yellow-500/15 rounded-2xl p-6 hover:border-yellow-500/30 hover:shadow-[0_0_40px_rgba(255,215,0,0.03)] transition-all"
+            className="bg-white/[0.03] border border-[#FFC93C]/15 rounded-2xl p-6 hover:border-[#FFC93C]/30 hover:shadow-[0_0_40px_rgba(255,180,40,0.03)] transition-all"
           >
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-lg">📅</span>
                   <h4 className="font-black text-white text-lg">Kunlik</h4>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold">
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#FFC93C]/20 text-[#FFDD73] border border-[#FFC93C]/30 font-bold">
                     №{report.reportNumber}
                   </span>
                 </div>
@@ -189,19 +189,19 @@ const Reports = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
               <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-yellow-400">
+                <p className="text-2xl font-black text-[#FFDD73]">
                   {report.data.totalOrders}
                 </p>
                 <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Zakazlar</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-yellow-400">
+                <p className="text-2xl font-black text-[#FFDD73]">
                   {report.data.totalRevenue?.toLocaleString()}
                 </p>
                 <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Daromad</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-2xl font-black text-orange-400">
+                <p className="text-2xl font-black text-[#FF7A3D]">
                   {report.data.totalReservations}
                 </p>
                 <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">Bronlar</p>

@@ -6,7 +6,7 @@ export function SimpleFooter() {
       className="
         relative
         overflow-hidden
-        border-t border-yellow-500/15
+        border-t border-[#FFC93C]/15
         bg-gradient-to-r
         from-black/60
         via-black/40
@@ -22,17 +22,17 @@ export function SimpleFooter() {
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(255,215,0,0.12) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,215,0,0.12) 1px, transparent 1px)
+              linear-gradient(rgba(255,180,40,0.12) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,180,40,0.12) 1px, transparent 1px)
             `,
             backgroundSize: "50px 50px",
           }}
         />
-        <div className="absolute -top-20 left-0 w-[300px] h-[300px] bg-yellow-500/15 rounded-full blur-[150px]" />
-        <div className="absolute -bottom-20 right-0 w-[300px] h-[300px] bg-orange-500/15 rounded-full blur-[150px]" />
+        <div className="absolute -top-20 left-0 w-[300px] h-[300px] bg-[#FFC93C]/15 rounded-full blur-[150px]" />
+        <div className="absolute -bottom-20 right-0 w-[300px] h-[300px] bg-[#FF5A1F]/15 rounded-full blur-[150px]" />
       </div>
 
-      <div className="relative h-[1px] w-full bg-gradient-to-r from-transparent via-yellow-500 to-transparent shadow-[0_0_30px_rgba(255,215,0,0.3)]" />
+      <div className="relative h-[1px] w-full bg-gradient-to-r from-transparent via-[#FFC93C] to-transparent shadow-[0_0_30px_rgba(255,180,40,0.3)]" />
 
       <div
         className="
@@ -74,14 +74,14 @@ export function SimpleFooter() {
                   relative
                   text-gray-400
                   transition-all duration-300
-                  hover:text-yellow-400
+                  hover:text-[#FFDD73]
                   font-bold
                   after:absolute
                   after:left-0
                   after:-bottom-1
                   after:h-[1px]
                   after:w-0
-                  after:bg-yellow-400
+                  after:bg-[#FFDD73]
                   hover:after:w-full
                   after:transition-all
                 "

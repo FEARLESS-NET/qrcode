@@ -255,7 +255,7 @@ const Order = () => {
     <div className="relative min-h-screen overflow-hidden text-white px-4 sm:px-6 lg:px-10 py-28">
 
       {/* ===== BACKGROUND IMAGE ===== */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <img
           loading="lazy"
           src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp"
@@ -263,34 +263,66 @@ const Order = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/70 to-black/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-yellow-500/5 via-transparent to-amber-500/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FFC93C]/5 via-transparent to-[#E08A3C]/5"></div>
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `
-            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px),
-            repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,215,0,0.03) 50px, rgba(255,215,0,0.03) 51px)
+            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px),
+            repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px)
           `
         }}></div>
-        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-amber-500/15 blur-[200px] animate-pulse" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-yellow-400/15 blur-[200px] animate-pulse delay-700" />
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#E08A3C]/15 blur-[200px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#FFDD73]/15 blur-[200px] animate-pulse delay-700" />
+        {/* Signature: embers drifting up, as if rising off a qozon — layered for depth */}
+        {[...Array(18)].map((_, i) => (
+          <span
+            key={`far-${i}`}
+            className="ember-particle"
+            style={{
+              left: `${(i * 5.5 + 2) % 100}%`,
+              "--size": `${2 + (i % 3)}px`,
+              filter: "blur(0.5px)",
+              opacity: 0.5,
+              animationDuration: `${8 + (i % 6) * 1.4}s`,
+              animationDelay: `${i * 0.55}s`,
+              "--drift": `${((i % 5) - 2) * 30}px`,
+            }}
+          />
+        ))}
+        {[...Array(16)].map((_, i) => (
+          <span
+            key={`near-${i}`}
+            className="ember-particle"
+            style={{
+              left: `${(i * 6.3 + 5) % 100}%`,
+              "--size": `${4 + (i % 4)}px`,
+              animationDuration: `${5 + (i % 4) * 1.2}s`,
+              animationDelay: `${i * 0.4}s`,
+              "--drift": `${((i % 3) - 1) * 55}px`,
+            }}
+          />
+        ))}
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* HEADER */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-yellow-500/20 bg-yellow-500/10 backdrop-blur-xl mb-6">
-            <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse"></div>
-            <span className="text-yellow-400 uppercase tracking-[0.4em] text-[11px] font-black">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
+            <span className="text-[#FFDD73] uppercase tracking-[0.4em] text-[11px] font-black">
                Online Xizmat
             </span>
           </div>
-          <h1 className="text-5xl sm:text-7xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 drop-shadow-[0_0_50px_rgba(255,215,0,0.15)]">
+          <h1 className="font-display text-5xl sm:text-7xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] drop-shadow-[0_0_50px_rgba(255,180,40,0.15)]">
             Online Zakaz
           </h1>
+          <div className="divider-ikat mt-5">
+            <span className="ikat-node"></span>
+          </div>
           <p className="mt-4 text-gray-400 text-lg font-light tracking-wider">Taomlarni tanlang va buyurtma bering</p>
           <div className="flex justify-center gap-4 mt-6">
-            <button onClick={() => navigate("/track")} className="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm font-bold hover:border-yellow-500/30 hover:text-white transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.05)]">🚚 Zakaz holati</button>
+            <button onClick={() => navigate("/track")} className="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm font-bold hover:border-[#FFC93C]/30 hover:text-white transition-all hover:shadow-[0_0_20px_rgba(255,180,40,0.05)]">🚚 Zakaz holati</button>
           </div>
-          {locationError && <p className="text-yellow-400 text-xs mt-3">⚠️ {locationError}</p>}
+          {locationError && <p className="text-[#FFDD73] text-xs mt-3">⚠️ {locationError}</p>}
           {location && !locationError && <p className="text-green-400 text-xs mt-3">✅ Lokatsiya aniqlandi</p>}
         </div>
 
@@ -298,18 +330,18 @@ const Order = () => {
           {/* MENU */}
           <div className="lg:col-span-2 space-y-10">
             {Object.keys(groupedMenus).length === 0 ? (
-              <div className="text-center text-gray-500 py-20 bg-black/20 backdrop-blur-xl rounded-3xl border border-yellow-500/10 p-12">
-                <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-xl font-bold text-yellow-400">Menu yuklanmoqda...</p>
+              <div className="text-center text-gray-500 py-20 bg-black/20 backdrop-blur-xl rounded-3xl border border-[#FFC93C]/10 p-12">
+                <div className="w-16 h-16 border-4 border-[#FFC93C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-xl font-bold text-[#FFDD73]">Menu yuklanmoqda...</p>
                 <p className="text-sm mt-2 text-gray-500">Iltimos, biroz kuting</p>
               </div>
             ) : (
               Object.keys(groupedMenus).map((cat) => (
                 <div key={cat}>
-                  <div className="flex items-center gap-4 mb-5 border-b border-yellow-500/15 pb-4">
+                  <div className="flex items-center gap-4 mb-5 border-b border-[#FFC93C]/15 pb-4">
                     <span className="text-2xl">🍽</span>
-                    <h3 className="text-yellow-400 font-black uppercase tracking-widest text-sm">{cat}</h3>
-                    <div className="flex-1 h-[1px] bg-gradient-to-r from-yellow-500/30 to-transparent"></div>
+                    <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">{cat}</h3>
+                    <div className="flex-1 h-[1px] bg-gradient-to-r from-[#FFC93C]/30 to-transparent"></div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {groupedMenus[cat].map((menu) => {
@@ -319,11 +351,11 @@ const Order = () => {
                           key={menu._id} 
                           className={`group relative overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-xl ${
                             qty > 0 
-                              ? "border-yellow-400/50 bg-yellow-500/10 shadow-[0_0_40px_rgba(255,215,0,0.08)]" 
-                              : "border-white/10 bg-white/[0.03] hover:border-yellow-500/30 hover:bg-yellow-500/5 hover:shadow-[0_0_30px_rgba(255,215,0,0.05)]"
+                              ? "border-[#FFDD73]/60 bg-[#FFC93C]/10 shadow-[0_0_40px_rgba(255,180,40,0.15)] animate-glowPulse" 
+                              : "border-white/10 bg-white/[0.03] hover:border-[#FFC93C]/30 hover:bg-[#FFC93C]/5 hover:shadow-[0_0_30px_rgba(255,180,40,0.08)]"
                           }`}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                           
                           <img
                             loading="lazy"
@@ -339,17 +371,17 @@ const Order = () => {
                           <div className="relative p-4 z-10">
                             <div className="flex justify-between items-start gap-2">
                               <div>
-                                <h4 className="font-bold text-white text-lg group-hover:text-yellow-400 transition-colors">{menu.name}</h4>
+                                <h4 className="font-display text-white text-lg font-bold group-hover:text-[#FFDD73] transition-colors">{menu.name}</h4>
                                 <p className="text-gray-500 text-xs mt-1 line-clamp-2">{menu.retsept}</p>
                               </div>
-                              <span className="text-yellow-400 font-black text-sm whitespace-nowrap bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                              <span className="text-[#FFDD73] font-black text-sm whitespace-nowrap bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
                                 {Number(menu.price).toLocaleString()} so'm
                               </span>
                             </div>
                             {qty === 0 ? (
                               <button 
                                 onClick={() => addToCart(menu)} 
-                                className="mt-4 w-full py-3 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 font-bold text-sm transition-all hover:bg-yellow-400 hover:text-black hover:scale-105 hover:shadow-[0_0_25px_rgba(255,215,0,0.2)]"
+                                className="mt-4 w-full py-3 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] font-bold text-sm transition-all hover:bg-[#FFDD73] hover:text-black hover:scale-105 hover:shadow-[0_0_25px_rgba(255,180,40,0.2)]"
                               >
                                 + Qo'shish
                               </button>
@@ -364,7 +396,7 @@ const Order = () => {
                                 <span className="text-white font-black text-xl bg-black/30 px-6 py-1 rounded-full backdrop-blur-sm">{qty}</span>
                                 <button 
                                   onClick={() => addToCart(menu)} 
-                                  className="w-10 h-10 rounded-xl bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 font-black text-lg hover:bg-yellow-400 hover:text-black transition-all hover:scale-110"
+                                  className="w-10 h-10 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] font-black text-lg hover:bg-[#FFDD73] hover:text-black transition-all hover:scale-110"
                                 >
                                   +
                                 </button>
@@ -383,11 +415,11 @@ const Order = () => {
           {/* CART */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
-              <div className="bg-white/[0.03] border border-yellow-500/15 backdrop-blur-3xl rounded-[24px] p-6 hover:border-yellow-500/30 transition-all duration-500">
+              <div className="card-luxe p-6">
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-yellow-400 font-black uppercase tracking-widest text-sm">🛒 Savat</h3>
+                  <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">🛒 Savat</h3>
                   {cart.length > 0 && (
-                    <span className="text-xs px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold">
+                    <span className="text-xs px-3 py-1 rounded-full bg-[#FFC93C]/20 text-[#FFDD73] border border-[#FFC93C]/30 font-bold">
                       {cart.length} xil
                     </span>
                   )}
@@ -402,12 +434,12 @@ const Order = () => {
                     {cart.map((item) => (
                       <div key={item.menuItem} className="flex justify-between items-center text-sm py-2 border-b border-white/5">
                         <span className="text-gray-300">{item.name} <span className="text-gray-600">x{item.quantity}</span></span>
-                        <span className="text-yellow-400 font-bold">{(item.price * item.quantity).toLocaleString()}</span>
+                        <span className="text-[#FFDD73] font-bold">{(item.price * item.quantity).toLocaleString()}</span>
                       </div>
                     ))}
                     <div className="pt-3 flex justify-between font-black text-lg">
                       <span className="text-gray-400">Jami:</span>
-                      <span className="text-yellow-400 text-xl">{totalPrice.toLocaleString()} so'm</span>
+                      <span className="text-[#FFDD73] text-xl">{totalPrice.toLocaleString()} so'm</span>
                     </div>
                   </div>
                 )}
@@ -425,10 +457,10 @@ const Order = () => {
               )}
 
               {/* FORM */}
-              <form onSubmit={handleSubmit} className="bg-white/[0.03] border border-yellow-500/15 backdrop-blur-3xl rounded-[24px] p-6 space-y-5 hover:border-yellow-500/30 transition-all duration-500">
+              <form onSubmit={handleSubmit} className="card-luxe p-6 space-y-5">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-lg">📋</span>
-                  <h3 className="text-yellow-400 font-black uppercase tracking-widest text-sm">Ma'lumotlar</h3>
+                  <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">Ma'lumotlar</h3>
                 </div>
 
                 <div>
@@ -439,7 +471,7 @@ const Order = () => {
                     onChange={(e) => setForm({ ...form, customerName: e.target.value })} 
                     placeholder="Sardor Alimov" 
                     required 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all duration-300 hover:border-yellow-500/40" 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
                   />
                 </div>
 
@@ -451,7 +483,7 @@ const Order = () => {
                     onChange={(e) => setForm({ ...form, phone: e.target.value })} 
                     placeholder="+998 90 000 00 00" 
                     required 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all duration-300 hover:border-yellow-500/40" 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
                   />
                 </div>
 
@@ -463,7 +495,7 @@ const Order = () => {
                         key={opt.val} 
                         type="button" 
                         onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "", tableLocation: "" })} 
-                        className={`py-2.5 rounded-xl text-xs font-bold border transition-all duration-300 ${form.deliveryType === opt.val ? "border-yellow-400 bg-yellow-500/15 text-yellow-400 shadow-[0_0_20px_rgba(255,215,0,0.05)]" : "border-white/10 bg-white/[0.03] text-gray-500 hover:border-yellow-500/30 hover:text-white"}`}
+                        className={`py-2.5 rounded-xl text-xs font-bold border transition-all duration-300 ${form.deliveryType === opt.val ? "border-[#FFDD73] bg-[#FFC93C]/15 text-[#FFDD73] shadow-[0_0_20px_rgba(255,180,40,0.05)]" : "border-white/10 bg-white/[0.03] text-gray-500 hover:border-[#FFC93C]/30 hover:text-white"}`}
                       >
                         {opt.label}
                       </button>
@@ -488,7 +520,7 @@ const Order = () => {
                           value={form.tableNumber}
                           onChange={handleTableChange}
                           required
-                          className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm transition-all duration-300 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] hover:border-yellow-500/40 appearance-none cursor-pointer"
+                          className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm transition-all duration-300 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] hover:border-[#FFC93C]/40 appearance-none cursor-pointer"
                         >
                           <option value="" className="bg-black text-gray-400">🔍 Stol tanlang...</option>
                           {availableTables.length > 0 ? (
@@ -532,7 +564,7 @@ const Order = () => {
                         type="button" 
                         onClick={detectLocation} 
                         disabled={locationLoading} 
-                        className="text-[10px] font-bold text-yellow-400 hover:text-yellow-300 transition-all disabled:opacity-50 whitespace-nowrap hover:scale-105"
+                        className="text-[10px] font-bold text-[#FFDD73] hover:text-[#FFEBB0] transition-all disabled:opacity-50 whitespace-nowrap hover:scale-105"
                       >
                         {locationLoading ? "⏳ Aniqlanmoqda..." : "📍 Joylashuvimni aniqlash"}
                       </button>
@@ -543,9 +575,9 @@ const Order = () => {
                       onChange={(e) => setForm({ ...form, address: e.target.value })} 
                       placeholder="Ko'cha, uy raqami... yoki tugma orqali aniqlang" 
                       required 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all duration-300 hover:border-yellow-500/40" 
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
                     />
-                    {locationError && <p className="text-yellow-400 text-[10px] mt-1">⚠️ {locationError}</p>}
+                    {locationError && <p className="text-[#FFDD73] text-[10px] mt-1">⚠️ {locationError}</p>}
                     {location && !locationError && <p className="text-green-400 text-[10px] mt-1">✅ Aniq joylashuv olindi — kuryer xaritada ko'radi</p>}
                   </div>
                 )}
@@ -557,12 +589,12 @@ const Order = () => {
                     value={form.note} 
                     onChange={(e) => setForm({ ...form, note: e.target.value })} 
                     placeholder="Qo'shimcha izoh..." 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.1)] transition-all duration-300 hover:border-yellow-500/40" 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
                   />
                 </div>
 
                 {/* Telegram */}
-                <div className="p-3 rounded-xl border border-yellow-500/15 bg-yellow-500/5 hover:border-yellow-500/30 transition-all duration-300">
+                <div className="p-3 rounded-xl border border-[#FFC93C]/15 bg-[#FFC93C]/5 hover:border-[#FFC93C]/30 transition-all duration-300">
                   {telegramLinked ? (
                     <p className="text-green-400 text-xs font-bold text-center flex items-center justify-center gap-2">
                       <span className="text-lg">✅</span> Telegram ulangan — zakaz holati haqida shu yerga xabar olasiz
@@ -573,7 +605,7 @@ const Order = () => {
                         type="button" 
                         onClick={connectTelegram} 
                         disabled={telegramLinking} 
-                        className="w-full py-2.5 rounded-xl border border-yellow-500/30 text-yellow-400 text-xs font-bold hover:bg-yellow-500/10 transition-all disabled:opacity-50 hover:scale-[1.02]"
+                        className="w-full py-2.5 rounded-xl border border-[#FFC93C]/30 text-[#FFDD73] text-xs font-bold hover:bg-[#FFC93C]/10 transition-all disabled:opacity-50 hover:scale-[1.02]"
                       >
                         {telegramLinking ? "⏳ Kutilmoqda... (botda Start bosing)" : "📲 Telegram orqali ulanish"}
                       </button>
@@ -586,7 +618,7 @@ const Order = () => {
                 <button 
                   type="submit" 
                   disabled={loading || cart.length === 0} 
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black uppercase tracking-[0.25em] text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,215,0,0.4)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group"
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black uppercase tracking-[0.25em] text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,180,40,0.4)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group"
                 >
                   <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-500"></span>
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
@@ -596,7 +628,7 @@ const Order = () => {
 
               <button 
                 onClick={() => navigate("/track")} 
-                className="w-full py-3.5 rounded-xl border border-yellow-500/20 text-yellow-400 text-sm font-bold hover:bg-yellow-500/10 hover:border-yellow-500/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3.5 rounded-xl border border-[#FFC93C]/20 text-[#FFDD73] text-sm font-bold hover:bg-[#FFC93C]/10 hover:border-[#FFC93C]/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 🚚 Zakaz holatini kuzatish
               </button>

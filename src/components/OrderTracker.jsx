@@ -11,7 +11,7 @@ const OrderTracker = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deletedOrderIds, setDeletedOrderIds] = useState([]);
-
+ 
   useEffect(() => {
     const saved = localStorage.getItem('deletedOrderIds');
     if (saved) {
@@ -158,7 +158,7 @@ const OrderTracker = () => {
           onChange={(e) => setPhone(e.target.value)}
           placeholder="+998 90 000 00 00"
           required
-          className="flex-1 bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all"
+          className="flex-1 bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.05)] transition-all"
         />
         <input
           type="text"
@@ -166,12 +166,12 @@ const OrderTracker = () => {
           onChange={(e) => setName(e.target.value)}
           placeholder="Ismingiz"
           required
-          className="flex-1 bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-yellow-400 focus:shadow-[0_0_25px_rgba(255,215,0,0.05)] transition-all"
+          className="flex-1 bg-black/50 border border-white/10 rounded-2xl px-5 py-4 outline-none text-white placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.05)] transition-all"
         />
         <button
           type="submit"
           disabled={loading}
-          className="px-10 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-black uppercase tracking-[0.25em] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,215,0,0.3)] disabled:opacity-50"
+          className="px-10 py-4 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black uppercase tracking-[0.25em] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,180,40,0.3)] disabled:opacity-50"
         >
           {loading ? '⏳...' : '🔍 Qidirish'}
         </button>
@@ -214,8 +214,8 @@ const OrderTracker = () => {
                 onClick={() => setSelectedOrder(order)}
                 className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   selectedOrder?._id === order._id
-                    ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black'
-                    : 'bg-white/5 border border-white/10 text-gray-400 hover:border-yellow-500/30'
+                    ? 'bg-gradient-to-r from-[#FFDD73] to-[#E08A3C] text-black'
+                    : 'bg-white/5 border border-white/10 text-gray-400 hover:border-[#FFC93C]/30'
                 }`}
               >
                 #{idx + 1} - {new Date(order.createdAt).toLocaleDateString()}

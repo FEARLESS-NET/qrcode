@@ -12,7 +12,7 @@ const DeliveryTracker = ({ order }) => {
         { key: 'confirmed', label: '✅ Tasdiqlandi', icon: '✅', bg: 'bg-green-500' },
         { key: 'preparing', label: '👨‍🍳 Tayyorlanmoqda', icon: '👨‍🍳', bg: 'bg-blue-500' },
         { key: 'ready', label: '🎉 Tayyor', icon: '🎉', bg: 'bg-teal-500' },
-        { key: 'on_the_way', label: "🚚 Yo'lda", icon: '🚚', bg: 'bg-yellow-500' },
+        { key: 'on_the_way', label: "🚚 Yo'lda", icon: '🚚', bg: 'bg-[#FFC93C]' },
         { key: 'delivered', label: '✅ Yetkazildi', icon: '🏁', bg: 'bg-green-500' },
       ]
     : [
@@ -61,12 +61,12 @@ const DeliveryTracker = ({ order }) => {
   };
 
   return (
-    <div className="bg-white/[0.03] border border-yellow-500/15 rounded-2xl p-4 sm:p-6 hover:border-yellow-500/30 transition-all">
+    <div className="bg-white/[0.03] border border-[#FFC93C]/15 rounded-2xl p-4 sm:p-6 hover:border-[#FFC93C]/30 transition-all">
       <div className="flex flex-wrap justify-between items-center gap-2 mb-6">
-        <h3 className="text-yellow-400 font-bold text-xs sm:text-sm uppercase tracking-widest">
+        <h3 className="text-[#FFDD73] font-bold text-xs sm:text-sm uppercase tracking-widest">
           🚚 Yetkazib berish holati
         </h3>
-        <span className="text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-yellow-500/15 text-yellow-400 border border-yellow-500/20 font-bold">
+        <span className="text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-[#FFC93C]/15 text-[#FFDD73] border border-[#FFC93C]/20 font-bold">
           #{order._id?.slice(-6)}
         </span>
       </div>
@@ -86,20 +86,20 @@ const DeliveryTracker = ({ order }) => {
         </div>
         <div>
           <p className="text-gray-500 text-[8px] sm:text-[10px] uppercase tracking-widest font-bold">Jami</p>
-          <p className="text-yellow-400 font-bold text-xs sm:text-sm">{order.totalPrice?.toLocaleString()} so'm</p>
+          <p className="text-[#FFDD73] font-bold text-xs sm:text-sm">{order.totalPrice?.toLocaleString()} so'm</p>
         </div>
       </div>
 
       {/* ✅ STOL JOYLASHUVI - YANGI QO'SHILDI */}
       {order.deliveryType === 'dine-in' && (
-        <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+        <div className="mb-4 p-3 bg-[#FFC93C]/10 border border-[#FFC93C]/20 rounded-xl">
           <div className="flex flex-wrap items-center gap-2 sm:gap-4">
             <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">🪑 Stol</p>
             <p className="text-white font-bold text-sm">
               #{order.tableNumber || 'Belgilanmagan'}
             </p>
             {order.tableLocation && (
-              <span className="text-yellow-400 text-xs font-bold">
+              <span className="text-[#FFDD73] text-xs font-bold">
                 📍 {order.tableLocation}
               </span>
             )}
@@ -136,8 +136,8 @@ const DeliveryTracker = ({ order }) => {
                 <div className={`
                   w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-base sm:text-lg font-bold
                   transition-all duration-500
-                  ${isActive ? step.bg + ' text-white shadow-[0_0_25px_rgba(255,215,0,0.15)]' : 'bg-gray-800 text-gray-500'}
-                  ${isCurrent ? 'ring-4 ring-yellow-400/50 animate-pulse' : ''}
+                  ${isActive ? step.bg + ' text-white shadow-[0_0_25px_rgba(255,180,40,0.15)]' : 'bg-gray-800 text-gray-500'}
+                  ${isCurrent ? 'ring-4 ring-[#FFDD73]/50 animate-pulse' : ''}
                 `}>
                   {step.icon}
                 </div>
@@ -145,7 +145,7 @@ const DeliveryTracker = ({ order }) => {
                   <div className={`
                     absolute top-1/2 left-full w-full h-[2px] -translate-y-1/2
                     transition-all duration-500
-                    ${isActive && idx < currentIndex ? 'bg-yellow-500' : 'bg-gray-700'}
+                    ${isActive && idx < currentIndex ? 'bg-[#FFC93C]' : 'bg-gray-700'}
                   `} />
                 )}
               </div>
@@ -160,7 +160,7 @@ const DeliveryTracker = ({ order }) => {
       <div className="flex flex-wrap justify-between items-center p-3 bg-white/5 rounded-xl gap-2">
         <div>
           <p className="text-gray-500 text-[8px] sm:text-[10px] uppercase tracking-widest font-bold">Hozirgi bosqich</p>
-          <p className="text-yellow-400 font-bold text-xs sm:text-sm">
+          <p className="text-[#FFDD73] font-bold text-xs sm:text-sm">
             {isCancelled ? '❌ Bekor qilingan' : (steps[currentIndex]?.label || statusLabels[order.status])}
           </p>
         </div>
@@ -203,7 +203,7 @@ const DeliveryTracker = ({ order }) => {
           {order.items?.map((item, idx) => (
             <div key={idx} className="flex flex-wrap justify-between text-xs sm:text-sm">
               <span className="text-gray-300">{item.name} x{item.quantity}</span>
-              <span className="text-yellow-400 font-bold">{(item.price * item.quantity).toLocaleString()} so'm</span>
+              <span className="text-[#FFDD73] font-bold">{(item.price * item.quantity).toLocaleString()} so'm</span>
             </div>
           ))}
         </div>
