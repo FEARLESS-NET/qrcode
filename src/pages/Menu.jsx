@@ -8,7 +8,8 @@ const BASE_URL = import.meta.env.DEV
   ? 'http://localhost:3005' 
   : import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
-console.log("🌐 BASE_URL:", BASE_URL); // ✅ QOLDIRILDI
+// ✅ YANGI: via.placeholder.com o'chib qolgani uchun olib tashlandi (tashqi so'rov yubormaydi)
+const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
 
 const getMenus = async () => {
   const res = await axiosInstance.get("/menus");
@@ -45,7 +46,7 @@ const Menu = () => {
     
     if (!imagePath) {
       console.log("📸 2. Rasm manzili YO'Q -> placeholder"); // ✅ QOLDIRILDI
-      return "https://via.placeholder.com/400x300?text=No+Image";
+      return NO_IMAGE_URL;
     }
     
     if (imagePath.startsWith("http")) {
@@ -207,7 +208,7 @@ const Menu = () => {
                         className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
                         onError={(e) => {
                           console.log("❌ Rasm yuklanmadi:", e.target.src); // ✅ QOLDIRILDI
-                          e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                          e.target.src = NO_IMAGE_URL;
                         }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>

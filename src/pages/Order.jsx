@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
+// ✅ YANGI: via.placeholder.com o'chib qolgani uchun olib tashlandi (tashqi so'rov yubormaydi)
+const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
+
 const Order = () => {
   const navigate = useNavigate();
   const [menus, setMenus] = useState([]);
@@ -94,7 +97,7 @@ const Order = () => {
 
   // ✅ WebP QO'SHILDI - Rasmlar 40% tezroq yuklanadi!
   const getImageUrl = (imagePath) => {
-    if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
+    if (!imagePath) return NO_IMAGE_URL;
     if (imagePath.startsWith('http')) {
       return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
     }
@@ -364,7 +367,7 @@ const Order = () => {
                             crossOrigin="anonymous"
                             className="w-full h-44 object-cover transition-all duration-700 group-hover:scale-105"
                             onError={(e) => {
-                              e.target.src = "https://via.placeholder.com/400x200?text=No+Image";
+                              e.target.src = NO_IMAGE_URL;
                             }}
                           />
                           

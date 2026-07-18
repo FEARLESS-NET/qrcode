@@ -1,10 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// ℹ️ vite-plugin-compression OLIB TASHLANDI:
-// Render Static Site so'rov kelganda o'zi avtomatik Brotli/Gzip bilan siqib beradi.
-// Oldindan .br/.gz fayl tayyorlashning keragi yo'q — Render baribir ularni ishlatmaydi,
-// build vaqtini behuda yeyayotgan edi. Foydalanuvchi tezligiga ta'siri YO'Q edi.
 
 export default defineConfig({
   plugins: [
