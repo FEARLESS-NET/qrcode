@@ -29,6 +29,22 @@ const getImageUrl = (imagePath) => {
   return `${BASE_URL}/uploads/${imagePath}`;
 };
 
+// Google qidiruv/redirect havolalari rasm emas, veb-sahifa — <img> ularni ko'rsata olmaydi.
+// google imgres havolasidan haqiqiy rasm (imgurl parametri) ajratib olinadi, qolganlari rad etiladi.
+const normalizeImageUrl = (raw) => {
+  const url = (raw || "").trim();
+  if (!url) return { url: "" };
+  try {
+    const u = new URL(url);
+    if (u.hostname === "www.google.com" || u.hostname === "google.com" || u.hostname.startsWith("www.google.")) {
+      const imgurl = u.searchParams.get("imgurl");
+      if (imgurl) return { url: imgurl };
+      return { error: "Bu Google qidiruv havolasi — rasm emas!\n\nRasmning o'zini oching, ustiga o'ng tugmani bosing va \"Rasm manzilini nusxalash\" (Copy Image Address) ni tanlang." };
+    }
+  } catch { /* to'liq URL bo'lmasa — tegmaymiz */ }
+  return { url };
+};
+
 const Admin = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Menu");
@@ -197,26 +213,48 @@ const Admin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("price", form.price);
-      formData.append("retsept", form.retsept);
-      formData.append("category", form.category);
-      if (form.image instanceof File) {
-        formData.append("image", form.image);
-      } else if (typeof form.image === "string" && form.image.trim()) {
-        formData.append("image", form.image.trim());
+      // URL yozilib, "Biriktirish" bosilmagan bo'lsa ham URL ishlatiladi
+      let image = form.image instanceof File
+        ? form.image
+        : (typeof form.image === "string" && form.image.trim()) || form.imageUrl?.trim() || "";
+
+      if (typeof image === "string" && image) {
+        const checked = normalizeImageUrl(image);
+        if (checked.error) {
+          alert("❌ " + checked.error);
+          return;
+        }
+        image = checked.url;
+      }
+
+      let payload, config;
+      if (image instanceof File) {
+        // Fayl yuklash — backendda multer buni qabul qiladi
+        payload = new FormData();
+        payload.append("name", form.name);
+        payload.append("price", form.price);
+        payload.append("retsept", form.retsept);
+        payload.append("category", form.category);
+        payload.append("image", image);
+        config = { headers: { "Content-Type": "multipart/form-data" } };
+      } else {
+        // URL yoki rasmsiz — oddiy JSON (express.json() buni to'g'ri o'qiydi)
+        payload = { name: form.name, price: form.price, retsept: form.retsept, category: form.category, image };
+        config = {};
       }
 
       if (editingId) {
-        await axiosInstance.put(`/menus/${editingId}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+        await axiosInstance.put(`/menus/${editingId}`, payload, config);
         setEditingId(null);
       } else {
-        await axiosInstance.post("/menus", formData, { headers: { "Content-Type": "multipart/form-data" } });
+        await axiosInstance.post("/menus", payload, config);
       }
       setForm({ name: "", price: "", retsept: "", image: "", category: "" });
       getMenus();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Saqlashda xatolik: " + (err.response?.data?.message || err.message));
+    }
   };
 
   const handleDelete = async (id) => {
@@ -433,18 +471,18 @@ const Admin = () => {
                   <input type="file" accept="image/*" onChange={(e) => setForm({ ...form, image: e.target.files[0], imageUrl: "" })} className="text-gray-400 text-sm flex-1" />
                   <div className="flex items-center gap-2 flex-1">
                     <input type="text" value={form.imageUrl || ""} placeholder="Yoki rasm URL manzilini joylashtiring..." onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="flex-1 bg-black/50 border border-white/10 rounded-xl px-2 py-3 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_20px_rgba(255,180,40,0.05)] transition-all" />
-                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; setForm({ ...form, image: form.imageUrl.trim() }); }} className="px-3 py-3 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
+                    <button type="button" onClick={() => { if (!form.imageUrl?.trim()) return; const checked = normalizeImageUrl(form.imageUrl); if (checked.error) { alert("❌ " + checked.error); return; } setForm({ ...form, image: checked.url, imageUrl: checked.url }); }} className="px-3 py-3 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all whitespace-nowrap">Biriktirish</button>
                   </div>
                 </div>
 
-                {form.image && (
+                {(form.image || form.imageUrl?.trim()) && (
                   <div className="mt-3 flex items-center gap-3">
-                    <img 
+                    <img
                       loading="lazy"
-                      src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} 
-                      alt="preview" 
-                      className="w-24 h-24 object-cover rounded-xl border border-[#FFC93C]/20" 
-                      onError={(e) => { e.target.src = NO_IMAGE_URL; }} 
+                      src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(typeof form.image === "string" && form.image.trim() ? form.image : form.imageUrl?.trim())}
+                      alt="preview"
+                      className="w-24 h-24 object-cover rounded-xl border border-[#FFC93C]/20"
+                      onError={(e) => { e.target.src = NO_IMAGE_URL; }}
                     />
                     <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
                   </div>
