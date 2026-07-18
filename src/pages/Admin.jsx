@@ -440,7 +440,7 @@ const Admin = () => {
                       src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} 
                       alt="preview" 
                       className="w-24 h-24 object-cover rounded-xl border border-[#FFC93C]/20" 
-                      onError={(e) => { e.target.src = NO_IMAGE_URL; }} 
+                      
                     />
                     <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
                   </div>
