@@ -16,8 +16,12 @@ const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.
 const getImageUrl = (imagePath) => {
   if (!imagePath) return NO_IMAGE_URL;
   if (imagePath.startsWith("http")) {
-    // ✅ WebP qo'shish
-    return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
+    // ✅ TUZATILDI: fm=webp faqat Unsplash havolalariga qo'shiladi (boshqa
+    // saytlardan qo'yilgan silkalar bu parametrni tushunmasligi mumkin edi)
+    if (imagePath.includes('images.unsplash.com')) {
+      return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
+    }
+    return imagePath;
   }
   if (imagePath.startsWith("/uploads/")) {
     return `${BASE_URL}${imagePath}`;
@@ -470,7 +474,6 @@ const Admin = () => {
                       loading="lazy"
                       src={getImageUrl(menu.image)}
                       alt={menu.name}
-                      crossOrigin="anonymous"
                       className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
                       onError={(e) => {
                         console.log("❌ Rasm yuklanmadi:", e.target.src);

@@ -50,13 +50,16 @@ const Menu = () => {
     }
     
     if (imagePath.startsWith("http")) {
-      console.log("📸 2. HTTP link -> to'g'ridan-to'g'ri:", imagePath); // ✅ QOLDIRILDI
-      // ✅ FAQAT QO'SHILDI - WebP
-      return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
+      // ✅ TUZATILDI: fm=webp faqat Unsplash havolalariga qo'shiladi.
+      // Boshqa saytlardan (Pinterest, Google, boshqa CDN) qo'yilgan silkalar
+      // bu parametrni tushunmay, rasmni butunlay bermay qo'yishi mumkin edi.
+      if (imagePath.includes('images.unsplash.com')) {
+        return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
+      }
+      return imagePath;
     }
     
     const url = `${BASE_URL}${imagePath}`;
-    console.log("📸 3. Tuzilgan to'liq URL:", url); // ✅ QOLDIRILDI
     return url;
   };
 
@@ -204,7 +207,6 @@ const Menu = () => {
                         loading="lazy"  // ✅ QO'SHILDI
                         src={getImageUrl(menu.image)}
                         alt={menu.name}
-                        crossOrigin="anonymous"
                         className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
                         onError={(e) => {
                           console.log("❌ Rasm yuklanmadi:", e.target.src); // ✅ QOLDIRILDI
