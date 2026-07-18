@@ -7,9 +7,14 @@ const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Hisobotlar"];
 // ✅ TUZATILDI
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
+// ✅ YANGI: via.placeholder.com o'chib qolgani uchun olib tashlandi.
+// Bu — brauzer ichida chiziladigan SVG rasm, hech qanday tashqi so'rov yubormaydi,
+// hech qachon "ishlamay qolmaydi", va hattoki internet uzilsa ham ko'rinaveradi.
+const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
+
 // ✅ TUZATILDI: Rasm URL + WebP QO'SHILDI
 const getImageUrl = (imagePath) => {
-  if (!imagePath) return "https://via.placeholder.com/400x200?text=No+Image";
+  if (!imagePath) return NO_IMAGE_URL;
   if (imagePath.startsWith("http")) {
     // ✅ WebP qo'shish
     return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
@@ -435,7 +440,7 @@ const Admin = () => {
                       src={form.image instanceof File ? URL.createObjectURL(form.image) : getImageUrl(form.image)} 
                       alt="preview" 
                       className="w-24 h-24 object-cover rounded-xl border border-[#FFC93C]/20" 
-                      onError={(e) => { e.target.src = "https://via.placeholder.com/100x100?text=No+Image"; }} 
+                      onError={(e) => { e.target.src = NO_IMAGE_URL; }} 
                     />
                     <span className="text-green-400 text-xs font-bold">✅ Rasm tanlandi</span>
                   </div>
@@ -469,7 +474,7 @@ const Admin = () => {
                       className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
                       onError={(e) => {
                         console.log("❌ Rasm yuklanmadi:", e.target.src);
-                        e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                        e.target.src = NO_IMAGE_URL;
                       }}
                     />
                   </div>
