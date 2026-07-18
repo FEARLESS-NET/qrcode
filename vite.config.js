@@ -1,8 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// ℹ️ vite-plugin-compression OLIB TASHLANDI:
+// Render Static Site so'rov kelganda o'zi avtomatik Brotli/Gzip bilan siqib beradi.
+// Oldindan .br/.gz fayl tayyorlashning keragi yo'q — Render baribir ularni ishlatmaydi,
+// build vaqtini behuda yeyayotgan edi. Foydalanuvchi tezligiga ta'siri YO'Q edi.
 
 export default defineConfig({
+  // ✅ TUZATILDI: esbuild sozlamasi endi ROOT darajada (build ichida emas).
+  // Vite buni faqat shu yerda tan oladi — build ichida bo'lsa e'tiborsiz qoldiriladi.
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   plugins: [
     react(),
   ],
@@ -19,11 +28,6 @@ export default defineConfig({
     cssMinify: true,    // ✅ true qildik: CSS ham minify bo'lsin (avval false edi — bekorga katta fayl)
     reportCompressedSize: false,
     assetsInlineLimit: 4096,
-    // ✅ YANGI: production build'da console.log/debugger avtomatik o'chib ketadi
-    // (shu bilan axios.js dagi console.log'larni qo'lda o'chirish shart emas, lekin baribir tavsiya qilaman)
-    esbuild: {
-      drop: ['console', 'debugger'],
-    },
     rollupOptions: {
       output: {
         manualChunks: {
