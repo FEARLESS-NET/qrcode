@@ -4,17 +4,11 @@ export function SimpleFooter() {
   return (
     <footer
       className="
+        premium-bar
         relative
         overflow-hidden
-        border-t border-[#FFC93C]/15
-        bg-gradient-to-r
-        from-black/60
-        via-black/40
-        to-black/60
-        backdrop-blur-[40px]
-        backdrop-saturate-[200%]
         text-white
-        shadow-[0_-10px_70px_rgba(0,0,0,0.8)]
+        shadow-[0_-14px_80px_rgba(0,0,0,0.85)]
       "
     >
       <div className="absolute inset-0 pointer-events-none">

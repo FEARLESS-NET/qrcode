@@ -154,7 +154,7 @@ const Menu = () => {
               🌙 QOZONDA · Premium
             </span>
             <h2 className="text-5xl sm:text-7xl font-display font-bold text-white drop-shadow-[0_0_50px_rgba(255,180,40,0.2)]">
-              ASOSIY <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F]">MENU</span>
+              ASOSIY <span className="text-gold-gradient">MENU</span>
             </h2>
             <div className="divider-ikat mt-5">
               <span className="ikat-node"></span>
@@ -191,10 +191,11 @@ const Menu = () => {
         ) : menus.length === 0 ? (
           <div className="text-center text-gray-500 text-2xl py-20 font-display">Menu yo'q</div>
         ) : (
-          Object.keys(groupedMenus).map((category) => (
+          Object.keys(groupedMenus).map((category, catIdx) => (
             <section key={category} className="mb-20">
               <div className="flex items-center gap-5 mb-8 pb-5 border-b border-[#FFC93C]/15">
-                <h3 className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] tracking-wide drop-shadow-[0_0_30px_rgba(255,180,40,0.1)]">
+                <span className="category-mark">{String(catIdx + 1).padStart(2, "0")}</span>
+                <h3 className="text-4xl font-display font-bold text-gold-gradient tracking-wide">
                   {category}
                 </h3>
                 <span className="ikat-node hidden sm:block"></span>
@@ -202,7 +203,7 @@ const Menu = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {groupedMenus[category].map((menu) => (
                   <div key={menu._id} className="card-luxe group overflow-hidden transition-transform hover:scale-[1.02]">
-                    <div className="relative h-56 overflow-hidden">
+                    <div className="corner-plaque relative h-56 overflow-hidden">
                       <img
                         loading="lazy"  // ✅ QO'SHILDI
                         src={getImageUrl(menu.image)}
@@ -221,17 +222,18 @@ const Menu = () => {
                       )}
                     </div>
                     <div className="p-6">
-                      <h4 className="text-xl font-display font-bold text-white group-hover:text-[#FFDD73] transition-colors">{menu.name}</h4>
-                      <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
-                      <div className="flex items-center justify-between mt-5">
-                        <p className="text-[#FFDD73] font-display font-bold text-xl">{Number(menu.price).toLocaleString()} so'm</p>
-                        <button
-                          onClick={() => navigate("/order")}
-                          className="px-6 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-xs font-bold hover:bg-[#FFDD73] hover:text-black transition-all hover:shadow-[0_0_25px_rgba(255,180,40,0.2)]"
-                        >
-                          Buyurtma
-                        </button>
+                      <div className="menu-leader">
+                        <h4 className="text-xl font-display font-bold text-white group-hover:text-[#FFDD73] transition-colors whitespace-nowrap">{menu.name}</h4>
+                        <span className="leader-fill"></span>
+                        <p className="text-gold-gradient font-display font-bold text-xl whitespace-nowrap">{Number(menu.price).toLocaleString()} so'm</p>
                       </div>
+                      <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
+                      <button
+                        onClick={() => navigate("/order")}
+                        className="btn-gold w-full mt-5 !py-2.5 !px-6 !text-xs"
+                      >
+                        Buyurtma
+                      </button>
                     </div>
                   </div>
                 ))}

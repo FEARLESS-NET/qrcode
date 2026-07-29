@@ -4,20 +4,12 @@ import { useNavigate } from "react-router-dom";
 import Reports from "../components/Reports.jsx";
 
 const TABS = ["Menu", "Stollar", "Bronlar", "Zakazlar", "Hisobotlar"];
-// ✅ TUZATILDI
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
-
-// ✅ YANGI: via.placeholder.com o'chib qolgani uchun olib tashlandi.
-// Bu — brauzer ichida chiziladigan SVG rasm, hech qanday tashqi so'rov yubormaydi,
-// hech qachon "ishlamay qolmaydi", va hattoki internet uzilsa ham ko'rinaveradi.
 const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
 
-// ✅ TUZATILDI: Rasm URL + WebP QO'SHILDI
 const getImageUrl = (imagePath) => {
   if (!imagePath) return NO_IMAGE_URL;
   if (imagePath.startsWith("http")) {
-    // ✅ TUZATILDI: fm=webp faqat Unsplash havolalariga qo'shiladi (boshqa
-    // saytlardan qo'yilgan silkalar bu parametrni tushunmasligi mumkin edi)
     if (imagePath.includes('images.unsplash.com')) {
       return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
     }
@@ -29,8 +21,6 @@ const getImageUrl = (imagePath) => {
   return `${BASE_URL}/uploads/${imagePath}`;
 };
 
-// Google qidiruv/redirect havolalari rasm emas, veb-sahifa — <img> ularni ko'rsata olmaydi.
-// google imgres havolasidan haqiqiy rasm (imgurl parametri) ajratib olinadi, qolganlari rad etiladi.
 const normalizeImageUrl = (raw) => {
   const url = (raw || "").trim();
   if (!url) return { url: "" };
@@ -41,7 +31,7 @@ const normalizeImageUrl = (raw) => {
       if (imgurl) return { url: imgurl };
       return { error: "Bu Google qidiruv havolasi — rasm emas!\n\nRasmning o'zini oching, ustiga o'ng tugmani bosing va \"Rasm manzilini nusxalash\" (Copy Image Address) ni tanlang." };
     }
-  } catch { /* to'liq URL bo'lmasa — tegmaymiz */ }
+  } catch { }
   return { url };
 };
 
@@ -213,7 +203,6 @@ const Admin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // URL yozilib, "Biriktirish" bosilmagan bo'lsa ham URL ishlatiladi
       let image = form.image instanceof File
         ? form.image
         : (typeof form.image === "string" && form.image.trim()) || form.imageUrl?.trim() || "";
@@ -229,7 +218,6 @@ const Admin = () => {
 
       let payload, config;
       if (image instanceof File) {
-        // Fayl yuklash — backendda multer buni qabul qiladi
         payload = new FormData();
         payload.append("name", form.name);
         payload.append("price", form.price);
@@ -238,7 +226,6 @@ const Admin = () => {
         payload.append("image", image);
         config = { headers: { "Content-Type": "multipart/form-data" } };
       } else {
-        // URL yoki rasmsiz — oddiy JSON (express.json() buni to'g'ri o'qiydi)
         payload = { name: form.name, price: form.price, retsept: form.retsept, category: form.category, image };
         config = {};
       }
@@ -368,7 +355,7 @@ const Admin = () => {
         <div className="absolute inset-0 z-0">
           <img 
             loading="lazy"
-            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp" 
+            src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80&fm=webp" 
             alt="Restaurant" 
             className="w-full h-full object-cover opacity-30" 
           />
@@ -384,10 +371,12 @@ const Admin = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white px-4 sm:px-6 lg:px-10 py-12">
+
+      {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <img 
           loading="lazy"
-          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp" 
+          src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80&fm=webp" 
           alt="Restaurant background" 
           className="w-full h-full object-cover opacity-20" 
         />
@@ -395,34 +384,26 @@ const Admin = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/5 via-transparent to-[#E08A3C]/5" />
         <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#E08A3C]/10 blur-[200px] animate-pulse" />
         <div className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-[#FFDD73]/10 blur-[200px] animate-pulse delay-700" />
-        {/* Signature: embers drifting up, as if rising off a qozon — layered for depth */}
+        
         {[...Array(16)].map((_, i) => (
-          <span
-            key={`far-${i}`}
-            className="ember-particle"
-            style={{
-              left: `${(i * 6.2 + 2) % 100}%`,
-              "--size": `${2 + (i % 3)}px`,
-              filter: "blur(0.5px)",
-              opacity: 0.45,
-              animationDuration: `${9 + (i % 6) * 1.4}s`,
-              animationDelay: `${i * 0.6}s`,
-              "--drift": `${((i % 5) - 2) * 30}px`,
-            }}
-          />
+          <span key={`far-${i}`} className="ember-particle" style={{
+            left: `${(i * 6.2 + 2) % 100}%`,
+            "--size": `${2 + (i % 3)}px`,
+            filter: "blur(0.5px)",
+            opacity: 0.45,
+            animationDuration: `${9 + (i % 6) * 1.4}s`,
+            animationDelay: `${i * 0.6}s`,
+            "--drift": `${((i % 5) - 2) * 30}px`,
+          }} />
         ))}
         {[...Array(12)].map((_, i) => (
-          <span
-            key={`near-${i}`}
-            className="ember-particle"
-            style={{
-              left: `${(i * 8.1 + 6) % 100}%`,
-              "--size": `${4 + (i % 4)}px`,
-              animationDuration: `${6 + (i % 4) * 1.2}s`,
-              animationDelay: `${i * 0.5}s`,
-              "--drift": `${((i % 3) - 1) * 55}px`,
-            }}
-          />
+          <span key={`near-${i}`} className="ember-particle" style={{
+            left: `${(i * 8.1 + 6) % 100}%`,
+            "--size": `${4 + (i % 4)}px`,
+            animationDuration: `${6 + (i % 4) * 1.2}s`,
+            animationDelay: `${i * 0.5}s`,
+            "--drift": `${((i % 3) - 1) * 55}px`,
+          }} />
         ))}
       </div>
 
@@ -504,27 +485,57 @@ const Admin = () => {
               </div>
             </form>
 
+            {/* ── KARTOCHKALAR (Menu.jsx dagi 1:1 shrift va button) ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
                 <div key={menu._id} className="card-luxe group overflow-hidden hover:scale-[1.015] transition-transform">
-                  <div className="h-52 overflow-hidden">
+                  
+                  {/* ── Rasm ── */}
+                  <div className="relative h-56 overflow-hidden">
                     <img
                       loading="lazy"
                       src={getImageUrl(menu.image)}
                       alt={menu.name}
                       className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
-                      onError={(e) => {
-                        console.log("❌ Rasm yuklanmadi:", e.target.src);
-                        e.target.src = NO_IMAGE_URL;
-                      }}
+                      onError={(e) => { e.target.src = NO_IMAGE_URL; }}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    
+                    {/* ── Kategoriya (Menu.jsx dagi kabi) ── */}
+                    {menu.category && (
+                      <span className="absolute top-4 right-4 bg-black/70 border border-[#FFDD73]/30 px-4 py-1.5 rounded-xl text-[#FFDD73] text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">
+                        {menu.category}
+                      </span>
+                    )}
                   </div>
+
+                  {/* ── Content (Menu.jsx dagi 1:1 shrift) ── */}
                   <div className="p-5">
-                    <div className="flex justify-between"><h3 className="font-display font-bold text-2xl">{menu.name}</h3><span className="text-[#FFDD73] font-bold">{Number(menu.price).toLocaleString()} so'm</span></div>
-                    <p className="text-gray-400 text-sm mt-2 line-clamp-2">{menu.retsept}</p>
+                    <div className="menu-leader">
+                      <h3 className="font-display font-bold text-2xl text-white group-hover:text-[#FFDD73] transition-colors">
+                        {menu.name}
+                      </h3>
+                      <span className="leader-fill"></span>
+                      <span className="text-gold-gradient font-display font-bold text-xl whitespace-nowrap">
+                        {Number(menu.price).toLocaleString()} so'm
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
+
+                    {/* ── Tugmalar (Menu.jsx dagi btn-gold 1:1) ── */}
                     <div className="flex gap-3 mt-4">
-                      <button onClick={() => handleEdit(menu)} className="flex-1 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all">Tahrirlash</button>
-                      <button onClick={() => handleDelete(menu._id)} className="flex-1 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">O'chirish</button>
+                      <button 
+                        onClick={() => handleEdit(menu)} 
+                        className="flex-1 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all"
+                      >
+                        Tahrirlash
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(menu._id)} 
+                        className="flex-1 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all"
+                      >
+                        O'chirish
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -643,14 +654,9 @@ const Admin = () => {
                         </div>
                         <p className="text-gray-400 text-sm">📞 {o.phone}</p>
                         {o.deliveryType === "dine-in" && o.tableNumber && (
-                          <p className="text-[#FFDD73] text-sm">
-                            🪑 Stol #{o.tableNumber} {o.tableLocation ? `📍 ${o.tableLocation}` : ''}
-                          </p>
+                          <p className="text-[#FFDD73] text-sm">🪑 Stol #{o.tableNumber} {o.tableLocation ? `📍 ${o.tableLocation}` : ''}</p>
                         )}
                         {o.deliveryType === "delivery" && o.address && <p className="text-gray-400 text-sm">📍 {o.address}</p>}
-                        {o.deliveryType === "delivery" && o.location?.coordinates?.length === 2 && !(o.location.coordinates[0] === 0 && o.location.coordinates[1] === 0) && (
-                          <a href={`https://www.google.com/maps?q=${o.location.coordinates[1]},${o.location.coordinates[0]}`} target="_blank" rel="noopener noreferrer" className="inline-block text-[#FFDD73] text-xs underline hover:text-[#FFEBB0]">🗺 Xaritada ko'rish</a>
-                        )}
                         {o.deliveryType === "takeaway" && <p className="text-gray-400 text-sm">🥡 Olib ketish</p>}
                         <div className="mt-2 space-y-1">
                           {o.items?.map((item, idx) => (<p key={idx} className="text-gray-300 text-sm">• {item.name} x{item.quantity} — {(item.price * item.quantity).toLocaleString()} so'm</p>))}

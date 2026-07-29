@@ -4,8 +4,6 @@ import PaymentModal from "../components/PaymentModal";
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
-
-// ✅ YANGI: via.placeholder.com o'chib qolgani uchun olib tashlandi (tashqi so'rov yubormaydi)
 const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
 
 const Order = () => {
@@ -59,21 +57,32 @@ const Order = () => {
     fetchData();
   }, []);
 
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return NO_IMAGE_URL;
+    if (imagePath.startsWith('http')) {
+      if (imagePath.includes('images.unsplash.com')) {
+        return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
+      }
+      return imagePath;
+    }
+    if (imagePath.startsWith('/uploads/')) {
+      return `${BASE_URL}${imagePath}`;
+    }
+    return `${BASE_URL}/uploads/${imagePath}`;
+  };
+
   const detectLocation = () => {
     if (!navigator.geolocation) {
       setLocationError("Brauzeringiz geolokatsiyani qo'llab-quvvatlamaydi");
       return;
     }
-
     setLocationLoading(true);
     setLocationError("");
-
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         const geo = { type: "Point", coordinates: [longitude, latitude] };
         setLocation(geo);
-
         try {
           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=uz`);
           const data = await res.json();
@@ -95,23 +104,6 @@ const Order = () => {
     );
   };
 
-  // ✅ WebP QO'SHILDI - Rasmlar 40% tezroq yuklanadi!
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return NO_IMAGE_URL;
-    if (imagePath.startsWith('http')) {
-      // ✅ TUZATILDI: fm=webp faqat Unsplash havolalariga qo'shiladi (boshqa
-      // saytlardan qo'yilgan silkalar bu parametrni tushunmasligi mumkin edi)
-      if (imagePath.includes('images.unsplash.com')) {
-        return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
-      }
-      return imagePath;
-    }
-    if (imagePath.startsWith('/uploads/')) {
-      return `${BASE_URL}${imagePath}`;
-    }
-    return `${BASE_URL}/uploads/${imagePath}`;
-  };
-
   const connectTelegram = async () => {
     setTelegramLinking(true);
     setTelegramError("");
@@ -120,15 +112,11 @@ const Order = () => {
         axiosInstance.post("/telegram/link"),
         axiosInstance.get("/telegram/bot-info"),
       ]);
-
       const token = linkData.token;
       const botUsername = botData.username;
-
       window.open(`https://t.me/${botUsername}?start=${token}`, "_blank");
-
       let attempts = 0;
       const maxAttempts = 40;
-
       const intervalId = setInterval(async () => {
         attempts++;
         try {
@@ -181,11 +169,7 @@ const Order = () => {
   };
 
   const getQty = (menuId) => cart.find((i) => i.menuItem === menuId)?.quantity || 0;
-
-  const totalPrice = useMemo(
-    () => cart.reduce((sum, i) => sum + i.price * i.quantity, 0),
-    [cart]
-  );
+  const totalPrice = useMemo(() => cart.reduce((sum, i) => sum + i.price * i.quantity, 0), [cart]);
 
   const groupedMenus = useMemo(() => {
     return menus.reduce((acc, menu) => {
@@ -209,20 +193,16 @@ const Order = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (cart.length === 0) return setError("Kamida bitta taom tanlang!");
-
     if (form.deliveryType === "dine-in" && !form.tableNumber) {
       return setError("Dine-in uchun stol raqamini tanlang!");
     }
-
     if (form.deliveryType === "delivery" && !form.address.trim()) {
       return setError("Yetkazish uchun manzil kiritilishi shart!");
     }
-
     setLoading(true);
     setError("");
     try {
       let locationData = location || { type: "Point", coordinates: [0, 0] };
-      
       const orderData = {
         ...form,
         items: cart,
@@ -234,16 +214,12 @@ const Order = () => {
         deliveryStatus: 'pending',
         telegramId: localStorage.getItem('telegramId') || null,
       };
-
       const res = await axiosInstance.post("/orders", orderData);
-      
       setCurrentOrderId(res.data.order._id);
       setLastOrder(res.data.order);
       setShowPayment(true);
-      
       setCart([]);
       setForm({ customerName: "", phone: "", deliveryType: "dine-in", address: "", tableNumber: "", tableLocation: "", note: "" });
-      
     } catch (err) {
       setError(err.response?.data?.message || "Xatolik yuz berdi");
     } finally {
@@ -262,11 +238,11 @@ const Order = () => {
   return (
     <div className="relative min-h-screen overflow-hidden text-white px-4 sm:px-6 lg:px-10 py-28">
 
-      {/* ===== BACKGROUND IMAGE ===== */}
+      {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         <img
           loading="lazy"
-          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp"
+          src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80&fm=webp"
           alt="Restaurant background"
           className="w-full h-full object-cover"
         />
@@ -280,7 +256,7 @@ const Order = () => {
         }}></div>
         <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#E08A3C]/15 blur-[200px] animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#FFDD73]/15 blur-[200px] animate-pulse delay-700" />
-        {/* Signature: embers drifting up, as if rising off a qozon — layered for depth */}
+        
         {[...Array(18)].map((_, i) => (
           <span
             key={`far-${i}`}
@@ -311,13 +287,15 @@ const Order = () => {
         ))}
       </div>
 
+      {/* ── CONTENT ── */}
       <div className="relative z-10 max-w-7xl mx-auto">
+        
         {/* HEADER */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
             <div className="w-2.5 h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
             <span className="text-[#FFDD73] uppercase tracking-[0.4em] text-[11px] font-black">
-               Online Xizmat
+              Online Xizmat
             </span>
           </div>
           <h1 className="font-display text-5xl sm:text-7xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] drop-shadow-[0_0_50px_rgba(255,180,40,0.15)]">
@@ -335,7 +313,8 @@ const Order = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          {/* MENU */}
+          
+          {/* ── MENU ── */}
           <div className="lg:col-span-2 space-y-10">
             {Object.keys(groupedMenus).length === 0 ? (
               <div className="text-center text-gray-500 py-20 bg-black/20 backdrop-blur-xl rounded-3xl border border-[#FFC93C]/10 p-12">
@@ -351,46 +330,65 @@ const Order = () => {
                     <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">{cat}</h3>
                     <div className="flex-1 h-[1px] bg-gradient-to-r from-[#FFC93C]/30 to-transparent"></div>
                   </div>
+                  
+                  {/* ── KARTOCHKALAR (Menu.jsx dagi 1:1 shrift va button) ── */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {groupedMenus[cat].map((menu) => {
                       const qty = getQty(menu._id);
                       return (
                         <div 
                           key={menu._id} 
-                          className={`group relative overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-xl ${
-                            qty > 0 
+                          className={`
+                            group relative overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-xl
+                            ${qty > 0 
                               ? "border-[#FFDD73]/60 bg-[#FFC93C]/10 shadow-[0_0_40px_rgba(255,180,40,0.15)] animate-glowPulse" 
                               : "border-white/10 bg-white/[0.03] hover:border-[#FFC93C]/30 hover:bg-[#FFC93C]/5 hover:shadow-[0_0_30px_rgba(255,180,40,0.08)]"
-                          }`}
+                            }
+                          `}
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                           
-                          <img
-                            loading="lazy"
-                            src={getImageUrl(menu.image)}
-                            alt={menu.name}
-                            className="w-full h-44 object-cover transition-all duration-700 group-hover:scale-105"
-                            onError={(e) => {
-                              e.target.src = NO_IMAGE_URL;
-                            }}
-                          />
-                          
-                          <div className="relative p-4 z-10">
-                            <div className="flex justify-between items-start gap-2">
-                              <div>
-                                <h4 className="font-display text-white text-lg font-bold group-hover:text-[#FFDD73] transition-colors">{menu.name}</h4>
-                                <p className="text-gray-500 text-xs mt-1 line-clamp-2">{menu.retsept}</p>
-                              </div>
-                              <span className="text-[#FFDD73] font-black text-sm whitespace-nowrap bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                                {Number(menu.price).toLocaleString()} so'm
+                          {/* ── Rasm ── */}
+                          <div className="relative h-48 overflow-hidden">
+                            <img
+                              loading="lazy"
+                              src={getImageUrl(menu.image)}
+                              alt={menu.name}
+                              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                              onError={(e) => {
+                                e.target.src = NO_IMAGE_URL;
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            
+                            {/* ── Kategoriya (Menu.jsx dagi kabi) ── */}
+                            {menu.category && (
+                              <span className="absolute top-4 right-4 bg-black/70 border border-[#FFDD73]/30 px-4 py-1.5 rounded-xl text-[#FFDD73] text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">
+                                {menu.category}
                               </span>
+                            )}
+                          </div>
+                          
+                          {/* ── Content (Menu.jsx dagi 1:1 shrift) ── */}
+                          <div className="relative p-4 z-10">
+                            <div className="menu-leader">
+                              <h4 className="text-xl font-display font-bold text-white group-hover:text-[#FFDD73] transition-colors whitespace-nowrap">
+                                {menu.name}
+                              </h4>
+                              <span className="leader-fill"></span>
+                              <p className="text-gold-gradient font-display font-bold text-xl whitespace-nowrap">
+                                {Number(menu.price).toLocaleString()} so'm
+                              </p>
                             </div>
+                            <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
+
+                            {/* ── BUTTON (Menu.jsx dagi btn-gold 1:1) ── */}
                             {qty === 0 ? (
                               <button 
                                 onClick={() => addToCart(menu)} 
-                                className="mt-4 w-full py-3 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] font-bold text-sm transition-all hover:bg-[#FFDD73] hover:text-black hover:scale-105 hover:shadow-[0_0_25px_rgba(255,180,40,0.2)]"
+                                className="btn-gold w-full mt-5 !py-2.5 !px-6 !text-xs"
                               >
-                                + Qo'shish
+                                BUYURTMA
                               </button>
                             ) : (
                               <div className="mt-4 flex items-center justify-between gap-3">
@@ -419,7 +417,7 @@ const Order = () => {
             )}
           </div>
 
-          {/* CART */}
+          {/* ── CART ── */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               <div className="card-luxe p-6">
@@ -510,16 +508,11 @@ const Order = () => {
                   </div>
                 </div>
 
-                {/* STOL SELECT */}
                 {form.deliveryType === "dine-in" && (
                   <div>
-                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">
-                      🪑 Stol raqami *
-                    </label>
+                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">🪑 Stol raqami *</label>
                     {loadingTables ? (
-                      <div className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 text-gray-500 text-sm">
-                        ⏳ Stollar yuklanmoqda...
-                      </div>
+                      <div className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 text-gray-500 text-sm">⏳ Stollar yuklanmoqda...</div>
                     ) : (
                       <>
                         <select
@@ -532,30 +525,18 @@ const Order = () => {
                           <option value="" className="bg-black text-gray-400">🔍 Stol tanlang...</option>
                           {availableTables.length > 0 ? (
                             availableTables.map((table) => (
-                              <option 
-                                key={table._id} 
-                                value={table.number}
-                                className="bg-black text-white py-2"
-                              >
+                              <option key={table._id} value={table.number} className="bg-black text-white py-2">
                                 🪑 #{table.number} — {table.capacity} kishi {table.location ? `📍 ${table.location}` : ''}
                               </option>
                             ))
                           ) : (
-                            <option value="" disabled className="bg-black text-red-400">
-                              ⚠️ Hozircha bo'sh stol yo'q
-                            </option>
+                            <option value="" disabled className="bg-black text-red-400">⚠️ Hozircha bo'sh stol yo'q</option>
                           )}
                         </select>
-                        
                         {form.tableNumber && (
                           <div className="mt-2 flex items-center gap-2 p-2 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs">
                             <span>✅</span>
                             <span>Stol #{form.tableNumber} tanlandi</span>
-                            {form.tableLocation && (
-                              <span className="text-gray-400">
-                                📍 {form.tableLocation}
-                              </span>
-                            )}
                           </div>
                         )}
                       </>
@@ -567,12 +548,7 @@ const Order = () => {
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 block font-bold">Manzil *</label>
-                      <button 
-                        type="button" 
-                        onClick={detectLocation} 
-                        disabled={locationLoading} 
-                        className="text-[10px] font-bold text-[#FFDD73] hover:text-[#FFEBB0] transition-all disabled:opacity-50 whitespace-nowrap hover:scale-105"
-                      >
+                      <button type="button" onClick={detectLocation} disabled={locationLoading} className="text-[10px] font-bold text-[#FFDD73] hover:text-[#FFEBB0] transition-all disabled:opacity-50 whitespace-nowrap hover:scale-105">
                         {locationLoading ? "⏳ Aniqlanmoqda..." : "📍 Joylashuvimni aniqlash"}
                       </button>
                     </div>
@@ -580,12 +556,10 @@ const Order = () => {
                       name="address" 
                       value={form.address} 
                       onChange={(e) => setForm({ ...form, address: e.target.value })} 
-                      placeholder="Ko'cha, uy raqami... yoki tugma orqali aniqlang" 
+                      placeholder="Ko'cha, uy raqami..." 
                       required 
                       className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
                     />
-                    {locationError && <p className="text-[#FFDD73] text-[10px] mt-1">⚠️ {locationError}</p>}
-                    {location && !locationError && <p className="text-green-400 text-[10px] mt-1">✅ Aniq joylashuv olindi — kuryer xaritada ko'radi</p>}
                   </div>
                 )}
 
@@ -608,12 +582,7 @@ const Order = () => {
                     </p>
                   ) : (
                     <>
-                      <button 
-                        type="button" 
-                        onClick={connectTelegram} 
-                        disabled={telegramLinking} 
-                        className="w-full py-2.5 rounded-xl border border-[#FFC93C]/30 text-[#FFDD73] text-xs font-bold hover:bg-[#FFC93C]/10 transition-all disabled:opacity-50 hover:scale-[1.02]"
-                      >
+                      <button type="button" onClick={connectTelegram} disabled={telegramLinking} className="w-full py-2.5 rounded-xl border border-[#FFC93C]/30 text-[#FFDD73] text-xs font-bold hover:bg-[#FFC93C]/10 transition-all disabled:opacity-50 hover:scale-[1.02]">
                         {telegramLinking ? "⏳ Kutilmoqda... (botda Start bosing)" : "📲 Telegram orqali ulanish"}
                       </button>
                       <p className="text-gray-500 text-[10px] mt-2 text-center">Ulansangiz, zakaz holati haqida Telegram orqali xabar olasiz</p>
@@ -622,21 +591,14 @@ const Order = () => {
                   )}
                 </div>
 
-                <button 
-                  type="submit" 
-                  disabled={loading || cart.length === 0} 
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black uppercase tracking-[0.25em] text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,180,40,0.4)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group"
-                >
+                <button type="submit" disabled={loading || cart.length === 0} className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black uppercase tracking-[0.25em] text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,180,40,0.4)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group">
                   <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-500"></span>
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
                   <span className="relative z-10">{loading ? "⏳ Yuborilmoqda..." : "🛒 Zakaz Berish"}</span>
                 </button>
               </form>
 
-              <button 
-                onClick={() => navigate("/track")} 
-                className="w-full py-3.5 rounded-xl border border-[#FFC93C]/20 text-[#FFDD73] text-sm font-bold hover:bg-[#FFC93C]/10 hover:border-[#FFC93C]/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
+              <button onClick={() => navigate("/track")} className="w-full py-3.5 rounded-xl border border-[#FFC93C]/20 text-[#FFDD73] text-sm font-bold hover:bg-[#FFC93C]/10 hover:border-[#FFC93C]/40 transition-all hover:scale-[1.02] active:scale-[0.98]">
                 🚚 Zakaz holatini kuzatish
               </button>
             </div>

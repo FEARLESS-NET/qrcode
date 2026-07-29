@@ -34,12 +34,10 @@ export function NavbarDefault() {
 
   return (
     <div className="
+      premium-bar
       fixed top-0 left-0 w-full z-50 overflow-hidden
-      border-b border-[#FFC93C]/15
-      bg-gradient-to-r from-black/60 via-black/40 to-black/60
-      backdrop-blur-[40px] backdrop-saturate-200
-      shadow-[0_8px_50px_rgba(0,0,0,0.8)]
-    ">
+      shadow-[0_12px_60px_rgba(0,0,0,0.85)]
+     ">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-120px] left-[10%] w-[300px] h-[300px] bg-[#FFC93C]/15 rounded-full blur-[150px]"></div>
         <div className="absolute top-[-120px] right-[10%] w-[300px] h-[300px] bg-[#FF5A1F]/15 rounded-full blur-[150px]"></div>

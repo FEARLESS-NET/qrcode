@@ -104,20 +104,9 @@ export default function Login() {
         <div className="flex items-center gap-5">
 
           <div
-            className="
-              w-16 h-16
-              rounded-2xl
-              bg-gradient-to-br
-              from-[#FFDD73]
-              via-[#E08A3C]
-              to-[#FF5A1F]
-              flex items-center justify-center
-              text-4xl
-              shadow-[0_0_60px_rgba(255,180,40,0.4)]
-              transform hover:scale-110 transition-all duration-500
-            "
+            className="seal-frame w-16 h-16 text-4xl transform hover:scale-110 transition-all duration-500"
           >
-            <img className="rounded-2xl" src="/QOZONDA.jpg"/>
+            <img className="rounded-full w-full h-full object-cover" src="/QOZONDA.jpg"/>
           </div>
 
           <div className="flex flex-col">
@@ -205,23 +194,16 @@ export default function Login() {
 
                 <div
                   className="
+                    seal-frame
                     relative
                     w-28 h-28
-                    rounded-3xl
-                    bg-gradient-to-br
-                    from-[#FFDD73]
-                    via-[#E08A3C]
-                    to-[#FF5A1F]
-                    flex items-center justify-center
                     text-6xl
-                    shadow-[0_0_70px_rgba(255,180,40,0.5)]
                     transform hover:scale-110 hover:rotate-6 transition-all duration-500
                   "
                 >
-                   <img className="rounded-3xl" src="/QOZONDA.jpg"/>
+                   <img className="rounded-full w-full h-full object-cover" src="/QOZONDA.jpg"/>
 
-                  <div className="absolute inset-0 rounded-3xl border-2 border-white/30"></div>
-                  <div className="absolute -inset-4 rounded-3xl border border-[#FFC93C]/20 animate-ping opacity-30"></div>
+                  <div className="absolute -inset-4 rounded-full border border-[#FFC93C]/20 animate-ping opacity-30"></div>
 
                 </div>
 
@@ -235,13 +217,7 @@ export default function Login() {
                   font-display
                   font-bold
                   tracking-wide
-                  text-transparent
-                  bg-clip-text
-                  bg-gradient-to-r
-                  from-[#FFEBB0]
-                  via-[#FFDD73]
-                  to-[#FF7A3D]
-                  drop-shadow-[0_0_40px_rgba(255,180,40,0.2)]
+                  text-gold-gradient
                 "
               >
                 QOZONDA LOGIN
@@ -363,33 +339,8 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="
-                    relative overflow-hidden
-                    w-full
-                    mt-2
-                    py-5
-                    rounded-2xl
-                    bg-gradient-to-r
-                    from-[#FFDD73]
-                    via-[#E08A3C]
-                    to-[#FF5A1F]
-                    text-black
-                    font-display
-                    font-bold
-                    text-base
-                    uppercase
-                    tracking-[0.35em]
-                    transition-all duration-500
-                    hover:scale-[1.03]
-                    hover:shadow-[0_0_60px_rgba(255,180,40,0.5)]
-                    active:scale-[0.97]
-                    group
-                    disabled:opacity-50
-                    disabled:cursor-not-allowed
-                  "
+                  className="btn-gold w-full mt-2 !text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-500"></span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
                   {loading ? "⏳ Kutilmoqda..." : "Kirish"}
                 </button>
 

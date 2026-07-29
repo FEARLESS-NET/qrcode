@@ -5,7 +5,7 @@ const Track = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white px-4 sm:px-6 lg:px-10 py-24 sm:py-28">
       {/* Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <img
           loading="lazy"
           src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80&fm=webp"
@@ -136,4 +136,4 @@ const Track = () => {
   );
 };
 
-export default Track;
+export default Track; 

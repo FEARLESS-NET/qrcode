@@ -7,12 +7,12 @@ const Home = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white">
 
-      {/* BACKGROUND */}
+      {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <img
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover scale-110 opacity-40 animate-slowZoom"
-          src="https://images.unsplash.com/photo-1776993298422-3e8c397d0235?auto=format&fit=crop&w=1740&q=80"
+          src="https://images.unsplash.com/photo-1776993298422-3e8c397d0235?auto=format&fit=crop&w=1740&q=80&fm=webp"
           alt="QOZONDA restorani interyeri"
         />
         <div className="absolute inset-0 bg-[#130e0a]/70"></div>
@@ -25,7 +25,7 @@ const Home = () => {
           `,
           backgroundSize: "60px 60px",
         }}></div>
-        {/* Signature: embers drifting up, as if rising off a qozon */}
+        {/* Ember particles */}
         {[...Array(14)].map((_, i) => (
           <span
             key={i}
@@ -40,7 +40,7 @@ const Home = () => {
         ))}
       </div>
 
-      {/* HERO SECTION */}
+      {/* ── HERO ── */}
       <section className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-10 py-24 sm:py-28">
         <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           
@@ -75,6 +75,7 @@ const Home = () => {
                 className="group relative overflow-hidden px-8 sm:px-12 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(255,180,40,0.5)] active:scale-95"
               >
                 <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
                 Menyuni Ko‘rish
               </button>
               <button 
@@ -91,7 +92,7 @@ const Home = () => {
                 { val: "50K+", label: "Mijozlar" },
                 { val: "100+", label: "Milliy Taom" },
               ].map((item, i) => (
-                <div key={i} className="bg-white/[0.03] border border-white/5 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center hover:border-[#FFC93C]/20 transition-all duration-300">
+                <div key={i} className="bg-white/[0.03] border border-white/5 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center hover:border-[#FFC93C]/20 transition-all duration-300 hover:scale-[1.03]">
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] to-[#FF5A1F]">
                     {item.val}
                   </h3>
@@ -103,13 +104,13 @@ const Home = () => {
             </div>
           </div>
 
-          {/* RIGHT - IMAGE */}
+          {/* RIGHT */}
           <div className="relative flex justify-center mt-8 lg:mt-0">
             <div className="absolute inset-0 bg-[#FFC93C]/15 blur-[150px] rounded-full"></div>
             <div className="relative w-full max-w-[400px] sm:max-w-[450px] md:max-w-[500px] rounded-[30px] sm:rounded-[40px] overflow-hidden border border-[#FFC93C]/20 bg-white/[0.03] backdrop-blur-3xl shadow-[0_0_100px_rgba(255,180,40,0.06)] group">
               <img 
                 loading="lazy"
-                src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1200&q=80" 
+                src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1200&q=80&fm=webp" 
                 alt="QOZONDA baliq taomi" 
                 className="w-full h-[400px] sm:h-[500px] lg:h-[650px] object-cover transition-all duration-700 group-hover:scale-105" 
               />
@@ -128,7 +129,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FEATURES SECTION */}
+      {/* ── FEATURES ── */}
       <section className="relative z-10 py-16 sm:py-20 lg:py-28 border-t border-[#FFC93C]/15">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 sm:mb-16 lg:mb-20">
@@ -169,10 +170,10 @@ const Home = () => {
           {/* GALLERY */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-12 sm:mt-16 lg:mt-20">
             {[
-              { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80", label: "Milliy Osh" },
-              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80", label: "Olovda Baliq" },
-              { src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80", label: "Restoran Muhiti" },
-              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&sat=-30", label: "Sazan Taomi" },
+              { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Milliy Osh" },
+              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Olovda Baliq" },
+              { src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Restoran Muhiti" },
+              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp&sat=-30", label: "Sazan Taomi" },
             ].map((g, i) => (
               <div key={i} className="group relative h-40 sm:h-48 md:h-56 lg:h-64 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#FFC93C]/10">
                 <img 
