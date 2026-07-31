@@ -1,3 +1,4 @@
+// Admin.jsx
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("Menu");
   const [loading, setLoading] = useState(true);
 
+  // ===== AUTH =====
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth || auth !== "true") {
@@ -49,7 +51,7 @@ const Admin = () => {
     }
   }, [navigate]);
 
-  // MENU
+  // ===== MENU =====
   const [menus, setMenus] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ name: "", price: "", retsept: "", image: "", category: "" });
@@ -61,7 +63,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // STOLLAR
+  // ===== STOLLAR =====
   const [tables, setTables] = useState([]);
   const [tableStats, setTableStats] = useState({ total: 0, available: 0, booked: 0 });
   const [tableForm, setTableForm] = useState({ number: "", capacity: "", location: "" });
@@ -74,7 +76,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // BRONLAR
+  // ===== BRONLAR =====
   const [reservations, setReservations] = useState([]);
   const [deletingCompleted, setDeletingCompleted] = useState(false);
   const [deletingAllReservations, setDeletingAllReservations] = useState(false);
@@ -86,9 +88,8 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ZAKAZLAR
+  // ===== ZAKAZLAR =====
   const [orders, setOrders] = useState([]);
-  const [editingDelivery, setEditingDelivery] = useState(null);
   const [deletingCompletedOrders, setDeletingCompletedOrders] = useState(false);
   const [deletingAllOrders, setDeletingAllOrders] = useState(false);
 
@@ -99,6 +100,70 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
+  // ===== CHEKNI TO'G'RIDAN-TO'G'RI PRINT QILISH =====
+  // Hech qanday yangi oyna/tab ochilmaydi (shuning uchun popup-blocker yoki
+  // "Google orqali ochilish" muammosi umuman bo'lmaydi) — faqat yashirin iframe
+  // orqali chek yuklanadi va to'g'ridan-to'g'ri brauzerning o'z print dialogi chaqiriladi.
+  const handlePrintReceipt = async (orderId) => {
+    try {
+      const response = await axiosInstance.get(`/receipt/${orderId}/download`, {
+        responseType: 'blob'
+      });
+
+      const html = await response.data.text();
+
+      // Oldingi print iframe qolgan bo'lsa, avval tozalaymiz
+      const old = document.getElementById('receipt-print-frame');
+      if (old) old.remove();
+
+      // Ko'rinmas iframe yaratamiz — sahifadan chiqmaymiz, hech narsa yangi oynada ochilmaydi
+      const iframe = document.createElement('iframe');
+      iframe.id = 'receipt-print-frame';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      iframe.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(html);
+      doc.close();
+
+      const cleanup = () => {
+        const el = document.getElementById('receipt-print-frame');
+        if (el) el.remove();
+      };
+
+      const triggerPrint = () => {
+        try {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        } catch (e) {
+          console.error('❌ Print xatosi:', e);
+          alert('Chekni chop etishda xatolik yuz berdi.');
+          cleanup();
+          return;
+        }
+        // Print dialog yopilgandan keyin iframe avtomatik tozalanadi
+        setTimeout(cleanup, 1000);
+      };
+
+      if (doc.readyState === 'complete') {
+        triggerPrint();
+      } else {
+        iframe.onload = triggerPrint;
+      }
+    } catch (err) {
+      console.error('❌ Chek yuklash xatosi:', err);
+      alert('Chek yuklashda xatolik yuz berdi: ' + err.message);
+    }
+  };
+
+  // ===== BRONLARNI O'CHIRISH =====
   const handleDeleteCompletedReservations = async () => {
     const completed = reservations.filter(r => r.status === "confirmed" || r.status === "cancelled");
     if (completed.length === 0) {
@@ -138,6 +203,7 @@ const Admin = () => {
     }
   };
 
+  // ===== ZAKAZLARNI O'CHIRISH =====
   const handleDeleteCompletedOrders = async () => {
     const completed = orders.filter(o => o.status === "ready" || o.deliveryStatus === "delivered");
     if (completed.length === 0) {
@@ -177,29 +243,7 @@ const Admin = () => {
     }
   };
 
-  useEffect(() => {
-    getMenus();
-    getTables();
-    getReservations();
-    getOrders();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible' && document.hasFocus()) {
-        getReservations();
-        getOrders();
-        getTables();
-      }
-    }, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    navigate("/");
-  };
-
+  // ===== MENU CRUD =====
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -253,6 +297,7 @@ const Admin = () => {
 
   const handleEdit = (menu) => { setForm(menu); setEditingId(menu._id); };
 
+  // ===== STOLLAR CRUD =====
   const handleTableSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -276,6 +321,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
+  // ===== BRON STATUS =====
   const updateReservationStatus = async (id, status) => {
     try {
       await axiosInstance.put(`/reservations/${id}`, { status });
@@ -283,6 +329,7 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
+  // ===== ZAKAZ STATUS =====
   const updateOrderStatus = async (id, status) => {
     try {
       await axiosInstance.patch(`/orders/${id}/status`, { status });
@@ -299,12 +346,37 @@ const Admin = () => {
         deliveryTime: deliveryStatus === 'delivered' ? new Date().toLocaleString() : undefined
       });
       getOrders();
-      setEditingDelivery(null);
     } catch (err) { 
       alert('Xatolik: ' + (err.response?.data?.message)); 
     }
   };
 
+  // ===== DATA FETCH =====
+  useEffect(() => {
+    getMenus();
+    getTables();
+    getReservations();
+    getOrders();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible' && document.hasFocus()) {
+        getReservations();
+        getOrders();
+        getTables();
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ===== LOGOUT =====
+  const handleLogout = () => {
+    localStorage.removeItem("auth");
+    navigate("/");
+  };
+
+  // ===== HELPERS =====
   const statusColor = {
     pending: "text-[#FFDD73] border-[#FFC93C]/30 bg-[#FFC93C]/10",
     confirmed: "text-green-400 border-green-500/30 bg-green-500/10",
@@ -408,6 +480,7 @@ const Admin = () => {
       </div>
 
       <div className="relative z-10">
+        {/* HEADER */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-12 border-b border-[#FFC93C]/20 pb-8">
           <div>
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-3">
@@ -420,6 +493,7 @@ const Admin = () => {
           <button onClick={handleLogout} className="px-8 py-4 rounded-2xl border border-red-500/40 text-red-400 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]">🚪 Chiqish</button>
         </div>
 
+        {/* STATS */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-10">
           {[
             { label: "Menyu", value: menus.length, color: "yellow" },
@@ -435,12 +509,14 @@ const Admin = () => {
           ))}
         </div>
 
+        {/* TABS */}
         <div className="flex gap-2 mb-10 flex-wrap">
           {TABS.map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${activeTab === tab ? "bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black shadow-[0_0_40px_rgba(255,180,40,0.4)] animate-glowPulse" : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-[#FFC93C]/30 hover:text-white"}`}>{tab}</button>
           ))}
         </div>
 
+        {/* ===== MENU TAB ===== */}
         {activeTab === "Menu" && (
           <div>
             <form onSubmit={handleSubmit} className="card-luxe p-8 sm:p-10 mb-12">
@@ -485,12 +561,9 @@ const Admin = () => {
               </div>
             </form>
 
-            {/* ── KARTOCHKALAR (Menu.jsx dagi 1:1 shrift va button) ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {menus.map((menu) => (
                 <div key={menu._id} className="card-luxe group overflow-hidden hover:scale-[1.015] transition-transform">
-                  
-                  {/* ── Rasm ── */}
                   <div className="relative h-56 overflow-hidden">
                     <img
                       loading="lazy"
@@ -500,16 +573,12 @@ const Admin = () => {
                       onError={(e) => { e.target.src = NO_IMAGE_URL; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    
-                    {/* ── Kategoriya (Menu.jsx dagi kabi) ── */}
                     {menu.category && (
                       <span className="absolute top-4 right-4 bg-black/70 border border-[#FFDD73]/30 px-4 py-1.5 rounded-xl text-[#FFDD73] text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">
                         {menu.category}
                       </span>
                     )}
                   </div>
-
-                  {/* ── Content (Menu.jsx dagi 1:1 shrift) ── */}
                   <div className="p-5">
                     <div className="menu-leader">
                       <h3 className="font-display font-bold text-2xl text-white group-hover:text-[#FFDD73] transition-colors">
@@ -521,21 +590,9 @@ const Admin = () => {
                       </span>
                     </div>
                     <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
-
-                    {/* ── Tugmalar (Menu.jsx dagi btn-gold 1:1) ── */}
                     <div className="flex gap-3 mt-4">
-                      <button 
-                        onClick={() => handleEdit(menu)} 
-                        className="flex-1 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all"
-                      >
-                        Tahrirlash
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(menu._id)} 
-                        className="flex-1 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all"
-                      >
-                        O'chirish
-                      </button>
+                      <button onClick={() => handleEdit(menu)} className="flex-1 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all">Tahrirlash</button>
+                      <button onClick={() => handleDelete(menu._id)} className="flex-1 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all">O'chirish</button>
                     </div>
                   </div>
                 </div>
@@ -544,6 +601,7 @@ const Admin = () => {
           </div>
         )}
 
+        {/* ===== STOLLAR TAB ===== */}
         {activeTab === "Stollar" && (
           <div>
             <div className="grid grid-cols-3 gap-4 mb-10">
@@ -586,6 +644,7 @@ const Admin = () => {
           </div>
         )}
 
+        {/* ===== BRONLAR TAB ===== */}
         {activeTab === "Bronlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
@@ -628,6 +687,7 @@ const Admin = () => {
           </div>
         )}
 
+        {/* ===== ZAKAZLAR TAB ===== */}
         {activeTab === "Zakazlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
@@ -665,15 +725,37 @@ const Admin = () => {
                         {o.note && <p className="text-gray-500 text-xs">📝 {o.note}</p>}
                         {o.courierName && <p className="text-green-400 text-xs font-bold">👤 Kuryer: {o.courierName}</p>}
                       </div>
+
                       <div className="flex flex-col gap-2 items-start">
-                        {o.status === "pending" && (<button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>)}
-                        {o.status === "confirmed" && (<button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-6 py-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>)}
-                        {o.status === "preparing" && (<button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>)}
+                        {/* Status tugmalari */}
+                        {o.status === "pending" && (
+                          <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
+                        )}
+                        {o.status === "confirmed" && (
+                          <button onClick={() => updateOrderStatus(o._id, "preparing")} className="px-6 py-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-sm font-bold hover:bg-blue-500 hover:text-white transition-all whitespace-nowrap">👨‍🍳 Tayyorlanmoqda</button>
+                        )}
+                        {o.status === "preparing" && (
+                          <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 text-sm font-bold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
+                        )}
                         {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
                           <button onClick={() => { const courierName = prompt("Kuryer ismi:"); const courierPhone = prompt("Kuryer telefon raqami:"); if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone); }} className="px-6 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFC93C] hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
                         )}
-                        {o.deliveryStatus === "on_the_way" && (<button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>)}
-                        {o.status !== "cancelled" && o.status !== "ready" && (<button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>)}
+                        {o.deliveryStatus === "on_the_way" && (
+                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
+                        )}
+                        {o.status !== "cancelled" && o.status !== "ready" && (
+                          <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
+                        )}
+
+                        {/* 🧾 CHEK CHIQARISH TUGMASI – faqat READY holatda, yangi oyna yo'q, to'g'ridan-to'g'ri print dialogi */}
+                        {o.status === "ready" && (
+                          <button 
+                            onClick={() => handlePrintReceipt(o._id)}
+                            className="px-6 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all whitespace-nowrap flex items-center gap-2"
+                          >
+                            🧾 Chek chiqarish
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -683,8 +765,92 @@ const Admin = () => {
           </div>
         )}
 
+        {/* ===== HISOBOTLAR TAB ===== */}
         {activeTab === "Hisobotlar" && <Reports />}
       </div>
+
+      <style>{`
+        .ember-particle {
+          position: fixed;
+          bottom: -10px;
+          width: var(--size, 3px);
+          height: var(--size, 3px);
+          background: radial-gradient(circle, #FFDD73, #E08A3C);
+          border-radius: 50%;
+          pointer-events: none;
+          animation: floatUp linear infinite;
+          box-shadow: 0 0 10px rgba(255, 180, 40, 0.3);
+          z-index: 1;
+        }
+        @keyframes floatUp {
+          0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-110vh) translateX(var(--drift, 0px)) scale(0.3); opacity: 0; }
+        }
+        .card-luxe {
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 200, 60, 0.1);
+          border-radius: 24px;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-luxe:hover {
+          border-color: rgba(255, 200, 60, 0.3);
+          box-shadow: 0 0 40px rgba(255, 180, 40, 0.05);
+        }
+        .menu-leader {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+          position: relative;
+        }
+        .leader-fill {
+          flex: 1;
+          min-width: 12px;
+          border-bottom: 2px dotted rgba(255, 200, 60, 0.2);
+          height: 0;
+          margin: 0 4px;
+        }
+        .text-gold-gradient {
+          background: linear-gradient(135deg, #FFDD73, #FFA23D);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .animate-glowPulse {
+          animation: glowPulse 2s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+          0%, 100% { box-shadow: 0 0 20px rgba(255, 180, 40, 0.2); }
+          50% { box-shadow: 0 0 40px rgba(255, 180, 40, 0.4); }
+        }
+        .divider-ikat {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+        }
+        .divider-ikat::before,
+        .divider-ikat::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255, 200, 60, 0.3), transparent);
+        }
+        .ikat-node {
+          width: 8px;
+          height: 8px;
+          background: radial-gradient(circle, #FFDD73, #E08A3C);
+          border-radius: 50%;
+          display: inline-block;
+          box-shadow: 0 0 20px rgba(255, 200, 60, 0.3);
+          flex-shrink: 0;
+        }
+      `}</style>
     </div>
   );
 };
