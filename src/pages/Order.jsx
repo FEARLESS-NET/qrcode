@@ -1,3 +1,13 @@
+/**
+ * ORDER PAGE – ZAKAZ QILISH SAHIFASI
+ * Menyu (kategoriyalar) + savat (cart) – qo‘shish/ayirish.
+ * Forma: Ism, telefon, yetkazib berish turi (dine-in, takeaway, delivery).
+ * Dine-in da stol tanlash (real-time mavjudlik).
+ * Delivery da manzil va lokatsiyani avtomatik aniqlash.
+ * Telegram ulanish (token orqali).
+ * Zakaz yuborilganda PaymentModal ochiladi.
+ * Muvaffaqiyatli to‘lovdan so‘ng zakaz saqlanadi va hisobot yangilanadi.
+ */
 import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../api/axios";
 import PaymentModal from "../components/PaymentModal";
@@ -238,7 +248,6 @@ const Order = () => {
   return (
     <div className="relative min-h-screen overflow-hidden text-white px-4 sm:px-6 lg:px-10 py-28">
 
-      {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         <img
           loading="lazy"
@@ -287,10 +296,8 @@ const Order = () => {
         ))}
       </div>
 
-      {/* ── CONTENT ── */}
       <div className="relative z-10 max-w-7xl mx-auto">
         
-        {/* HEADER */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
             <div className="w-2.5 h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
@@ -314,7 +321,6 @@ const Order = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           
-          {/* ── MENU ── */}
           <div className="lg:col-span-2 space-y-10">
             {Object.keys(groupedMenus).length === 0 ? (
               <div className="text-center text-gray-500 py-20 bg-black/20 backdrop-blur-xl rounded-3xl border border-[#FFC93C]/10 p-12">
@@ -331,7 +337,6 @@ const Order = () => {
                     <div className="flex-1 h-[1px] bg-gradient-to-r from-[#FFC93C]/30 to-transparent"></div>
                   </div>
                   
-                  {/* ── KARTOCHKALAR (Menu.jsx dagi 1:1 shrift va button) ── */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {groupedMenus[cat].map((menu) => {
                       const qty = getQty(menu._id);
@@ -348,7 +353,6 @@ const Order = () => {
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                           
-                          {/* ── Rasm ── */}
                           <div className="relative h-48 overflow-hidden">
                             <img
                               loading="lazy"
@@ -361,7 +365,6 @@ const Order = () => {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             
-                            {/* ── Kategoriya (Menu.jsx dagi kabi) ── */}
                             {menu.category && (
                               <span className="absolute top-4 right-4 bg-black/70 border border-[#FFDD73]/30 px-4 py-1.5 rounded-xl text-[#FFDD73] text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">
                                 {menu.category}
@@ -369,7 +372,6 @@ const Order = () => {
                             )}
                           </div>
                           
-                          {/* ── Content (Menu.jsx dagi 1:1 shrift) ── */}
                           <div className="relative p-4 z-10">
                             <div className="menu-leader">
                               <h4 className="text-xl font-display font-bold text-white group-hover:text-[#FFDD73] transition-colors whitespace-nowrap">
@@ -382,7 +384,6 @@ const Order = () => {
                             </div>
                             <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
 
-                            {/* ── BUTTON (Menu.jsx dagi btn-gold 1:1) ── */}
                             {qty === 0 ? (
                               <button 
                                 onClick={() => addToCart(menu)} 
@@ -417,7 +418,6 @@ const Order = () => {
             )}
           </div>
 
-          {/* ── CART ── */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               <div className="card-luxe p-6">
@@ -461,7 +461,6 @@ const Order = () => {
                 </div>
               )}
 
-              {/* FORM */}
               <form onSubmit={handleSubmit} className="card-luxe p-6 space-y-5">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-lg">📋</span>
@@ -574,7 +573,6 @@ const Order = () => {
                   />
                 </div>
 
-                {/* Telegram */}
                 <div className="p-3 rounded-xl border border-[#FFC93C]/15 bg-[#FFC93C]/5 hover:border-[#FFC93C]/30 transition-all duration-300">
                   {telegramLinked ? (
                     <p className="text-green-400 text-xs font-bold text-center flex items-center justify-center gap-2">

@@ -1,3 +1,8 @@
+/**
+ * REPORTS – KUNLIK HISOBOTLAR (Admin panel)
+ * Kunlik hisobotlarni ko'rish, o'chirish, reset qilish (0 ga tushirish).
+ * Top items, status bo'yicha statistikalar.
+ */
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 

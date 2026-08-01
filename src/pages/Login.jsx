@@ -1,3 +1,8 @@
+/**
+ * LOGIN PAGE – ADMIN KIRISH
+ * Admin login sahifasi. Email va parol tekshiruvi.
+ * Muvaffaqiyatli bo‘lsa, localStorage.setItem('auth','true') va /admin ga yo‘naltirish.
+ */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,13 +17,11 @@ export default function Login() {
     password: "",
   });
 
-  // ✅ Login qilingan bo'lsa admin panelga o'tkazish
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (auth === "true") {
       navigate("/admin", { replace: true });
     }
-    // ✅ Formani tozalash (sahifa yuklanganda)
     setForm({ email: "", password: "" });
     setError("");
     setSuccess(false);
@@ -36,32 +39,20 @@ export default function Login() {
     setError("");
     setSuccess(false);
 
-    // 🔑 Login ma'lumotlari
     const ADMIN_EMAIL = "admin@gmail.com";
     const ADMIN_PASSWORD = "123456";
 
-    // 📝 Debug uchun
-    console.log("📝 Kiritilgan email:", form.email);
-    console.log("📝 Kiritilgan password:", form.password);
-
-    // ✅ BO'SHLIGINI TEKSHIRISH
     if (!form.email.trim() || !form.password.trim()) {
       setError("⚠️ Iltimos, email va parolni kiriting!");
       setLoading(false);
       return;
     }
 
-    // ✅ Asosiy tekshirish
     if (form.email === ADMIN_EMAIL && form.password === ADMIN_PASSWORD) {
-      // ✅ Muvaffaqiyatli login
       localStorage.setItem("auth", "true");
       setSuccess(true);
-      
-      // ✅ Formani tozalash
       setForm({ email: "", password: "" });
       setLoading(false);
-      
-      // ✅ Admin panelga o'tish
       setTimeout(() => {
         navigate("/admin", { replace: true });
       }, 500);
@@ -71,7 +62,6 @@ export default function Login() {
     }
   };
 
-  // 🔄 Formani tozalash
   const clearForm = () => {
     setForm({ email: "", password: "" });
     setError("");
@@ -81,7 +71,6 @@ export default function Login() {
   return (
     <div className="relative min-h-screen overflow-hidden flex flex-col text-white p-4 sm:p-10 font-display">
 
-      {/* 🌟 FULL RESTAURANT BACKGROUND IMAGE */}
       <div className="fixed inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80"
@@ -98,7 +87,6 @@ export default function Login() {
         }}></div>
       </div>
 
-      {/* HEADER */}
       <div className="relative z-10 w-full py-6 border-b border-[#FFC93C]/30 backdrop-blur-3xl flex justify-center px-4 bg-black/40 rounded-2xl">
 
         <div className="flex items-center gap-5">
@@ -139,14 +127,12 @@ export default function Login() {
 
       </div>
 
-      {/* LOGIN */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-10">
 
         <div className="w-full max-w-[460px]">
 
           <div className="relative group">
 
-            {/* Outer Glow */}
             <div
               className="
                 absolute -inset-[3px]
@@ -163,7 +149,6 @@ export default function Login() {
               "
             ></div>
 
-            {/* CARD */}
             <form
               onSubmit={handleSubmit}
               className="
@@ -180,16 +165,13 @@ export default function Login() {
               "
             >
 
-              {/* Card Inner Glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 pointer-events-none"></div>
 
-              {/* Decorative Corners */}
               <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-[#FFC93C]/20 rounded-tl-3xl"></div>
               <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-[#FFC93C]/20 rounded-tr-3xl"></div>
               <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-[#FFC93C]/20 rounded-bl-3xl"></div>
               <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-[#FFC93C]/20 rounded-br-3xl"></div>
 
-              {/* Icon */}
               <div className="flex justify-center mb-10">
 
                 <div
@@ -209,7 +191,6 @@ export default function Login() {
 
               </div>
 
-              {/* TITLE */}
               <h2
                 className="
                   text-center
@@ -227,7 +208,6 @@ export default function Login() {
                 XIMOYA TIZIMI BOLIMII
               </p>
 
-              {/* SUCCESS */}
               {success && (
                 <div
                   className="
@@ -248,7 +228,6 @@ export default function Login() {
                 </div>
               )}
 
-              {/* ERROR */}
               {error && (
                 <div
                   className="
@@ -269,7 +248,6 @@ export default function Login() {
                 </div>
               )}
 
-              {/* INPUTS */}
               <div className="space-y-7">
 
                 <div>

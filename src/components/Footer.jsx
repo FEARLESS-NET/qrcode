@@ -1,3 +1,8 @@
+/**
+ * FOOTER – GLOBAL PASTKI QISM
+ * Mualliflik huquqi, restoran havolalari (About, Menu, Reservation, Contact).
+ * Gradient chiziq va fon effektlari.
+ */
 import React from "react";
 
 export function SimpleFooter() {

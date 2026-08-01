@@ -1,25 +1,33 @@
+/**
+ * ============================================
+ * MAIN ENTRY POINT
+ * ============================================
+ * React ilovasini ishga tushiradi.
+ * - React Query (TanStack) caching sozlamalari
+ * - BrowserRouter (SPA routing)
+ * - Lazy loading (Suspense) orqali sahifalarni kechiktirib yuklash
+ * - Global loading fallback (LoadingFallback)
+ * ============================================
+ */
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// ✅ LAZY IMPORT - Sahifalar kechiktirilgan yuklanadi
 const App = lazy(() => import('./App.jsx'));
 
-// ✅ QueryClient yaratish - CACHE VAQTLARI OSHIRILDI
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 10 * 60 * 1000, // ✅ 5 → 10 daqiqa
-      gcTime: 20 * 60 * 1000,    // ✅ 10 → 20 daqiqa
+      staleTime: 10 * 60 * 1000,
+      gcTime: 20 * 60 * 1000,
       refetchOnWindowFocus: false,
       retry: 1,
     },
   },
 });
 
-// ✅ Loading komponenti
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
     <div className="text-center">

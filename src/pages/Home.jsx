@@ -1,3 +1,8 @@
+/**
+ * HOME PAGE – BOSH SAHIFA
+ * Restoran brendingi, hero qism, statistikalar, xususiyatlar va galereya.
+ * Foydalanuvchini menyu yoki bron qilishga yo‘naltiradi.
+ */
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +12,6 @@ const Home = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white">
 
-      {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <img
           loading="lazy"
@@ -25,7 +29,6 @@ const Home = () => {
           `,
           backgroundSize: "60px 60px",
         }}></div>
-        {/* Ember particles */}
         {[...Array(14)].map((_, i) => (
           <span
             key={i}
@@ -40,11 +43,9 @@ const Home = () => {
         ))}
       </div>
 
-      {/* ── HERO ── */}
       <section className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-10 py-24 sm:py-28">
         <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           
-          {/* LEFT */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6 sm:mb-8">
               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
@@ -104,7 +105,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* RIGHT */}
           <div className="relative flex justify-center mt-8 lg:mt-0">
             <div className="absolute inset-0 bg-[#FFC93C]/15 blur-[150px] rounded-full"></div>
             <div className="relative w-full max-w-[400px] sm:max-w-[450px] md:max-w-[500px] rounded-[30px] sm:rounded-[40px] overflow-hidden border border-[#FFC93C]/20 bg-white/[0.03] backdrop-blur-3xl shadow-[0_0_100px_rgba(255,180,40,0.06)] group">
@@ -129,7 +129,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
       <section className="relative z-10 py-16 sm:py-20 lg:py-28 border-t border-[#FFC93C]/15">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 sm:mb-16 lg:mb-20">
@@ -167,7 +166,6 @@ const Home = () => {
             ))}
           </div>
 
-          {/* GALLERY */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-12 sm:mt-16 lg:mt-20">
             {[
               { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Milliy Osh" },

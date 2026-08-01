@@ -1,4 +1,13 @@
-// Admin.jsx
+/**
+ * ADMIN PAGE – ADMIN PANEL
+ * Tablar: Menu, Stollar, Bronlar, Zakazlar, Hisobotlar.
+ * Menu: CRUD (rasm yuklash URL yoki fayl).
+ * Stollar: qo‘shish, o‘chirish, band/bo‘sh qilish.
+ * Bronlar: ko‘rish, tasdiqlash, bekor qilish, yakunlanganlarni o‘chirish.
+ * Zakazlar: holatini o‘zgartirish (pending→confirmed→preparing→ready), yetkazib berish holati (on_the_way→delivered), kuryer tayinlash, chek chop etish.
+ * Hisobotlar: kunlik statistikani ko‘rish, reset qilish, o‘chirish.
+ * Login autentifikatsiyasi (admin@gmail.com / 123456) – localStorage.
+ */
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +50,6 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("Menu");
   const [loading, setLoading] = useState(true);
 
-  // ===== AUTH =====
   useEffect(() => {
     const auth = localStorage.getItem("auth");
     if (!auth || auth !== "true") {
@@ -51,7 +59,6 @@ const Admin = () => {
     }
   }, [navigate]);
 
-  // ===== MENU =====
   const [menus, setMenus] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ name: "", price: "", retsept: "", image: "", category: "" });
@@ -63,7 +70,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== STOLLAR =====
   const [tables, setTables] = useState([]);
   const [tableStats, setTableStats] = useState({ total: 0, available: 0, booked: 0 });
   const [tableForm, setTableForm] = useState({ number: "", capacity: "", location: "" });
@@ -76,7 +82,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== BRONLAR =====
   const [reservations, setReservations] = useState([]);
   const [deletingCompleted, setDeletingCompleted] = useState(false);
   const [deletingAllReservations, setDeletingAllReservations] = useState(false);
@@ -88,7 +93,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== ZAKAZLAR =====
   const [orders, setOrders] = useState([]);
   const [deletingCompletedOrders, setDeletingCompletedOrders] = useState(false);
   const [deletingAllOrders, setDeletingAllOrders] = useState(false);
@@ -100,21 +104,17 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== CHEKNI TO'G'RIDAN-TO'G'RI PRINT QILISH (TUZATILDI) =====
   const handlePrintReceipt = async (orderId) => {
     try {
       const response = await axiosInstance.get(`/receipt/${orderId}/download`, {
         responseType: 'blob'
       });
 
-      // Blob kontentini matn (HTML) ko'rinishida o'qiymiz
       const html = await response.data.text();
 
-      // Agar oldingi chop etishdan iframe qolib ketgan bo'lsa, tozalaymiz
       const oldIframe = document.getElementById('receipt-print-frame');
       if (oldIframe) oldIframe.remove();
 
-      // Mutloq ko'rinmas yangi iframe yaratamiz
       const iframe = document.createElement('iframe');
       iframe.id = 'receipt-print-frame';
       iframe.style.position = 'fixed';
@@ -136,18 +136,13 @@ const Admin = () => {
         if (el) el.remove();
       };
 
-      // Bosib chiqarish muloqot oynasini chaqirish funksiyasi
       const triggerPrint = () => {
         try {
           iframe.contentWindow.focus();
-          
-          // 🌟 TUZATISH: Stillar va shriftlar yuklanishi uchun ozgina kechikish beramiz
           setTimeout(() => {
             iframe.contentWindow.print();
-            // Chop etish oynasi yopilgandan so'ng xotirani bo'shatish uchun iframeni o'chiramiz
             setTimeout(cleanup, 1000);
           }, 400);
-
         } catch (e) {
           console.error('❌ Print xatosi:', e);
           alert('Chekni chop etishda xatolik yuz berdi.');
@@ -155,7 +150,6 @@ const Admin = () => {
         }
       };
 
-      // Iframe ichidagi DOM tayyor bo'lishini tekshiramiz
       if (doc.readyState === 'complete') {
         triggerPrint();
       } else {
@@ -167,7 +161,6 @@ const Admin = () => {
     }
   };
 
-  // ===== BRONLARNI O'CHIRISH =====
   const handleDeleteCompletedReservations = async () => {
     const completed = reservations.filter(r => r.status === "confirmed" || r.status === "cancelled");
     if (completed.length === 0) {
@@ -207,7 +200,6 @@ const Admin = () => {
     }
   };
 
-  // ===== ZAKAZLARNI O'CHIRISH =====
   const handleDeleteCompletedOrders = async () => {
     const completed = orders.filter(o => o.status === "ready" || o.deliveryStatus === "delivered");
     if (completed.length === 0) {
@@ -247,7 +239,6 @@ const Admin = () => {
     }
   };
 
-  // ===== MENU CRUD =====
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -301,7 +292,6 @@ const Admin = () => {
 
   const handleEdit = (menu) => { setForm(menu); setEditingId(menu._id); };
 
-  // ===== STOLLAR CRUD =====
   const handleTableSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -325,7 +315,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== BRON STATUS =====
   const updateReservationStatus = async (id, status) => {
     try {
       await axiosInstance.put(`/reservations/${id}`, { status });
@@ -333,7 +322,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== ZAKAZ STATUS =====
   const updateOrderStatus = async (id, status) => {
     try {
       await axiosInstance.patch(`/orders/${id}/status`, { status });
@@ -355,7 +343,6 @@ const Admin = () => {
     }
   };
 
-  // ===== DATA FETCH =====
   useEffect(() => {
     getMenus();
     getTables();
@@ -374,13 +361,11 @@ const Admin = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // ===== LOGOUT =====
   const handleLogout = () => {
     localStorage.removeItem("auth");
     navigate("/");
   };
 
-  // ===== HELPERS =====
   const statusColor = {
     pending: "text-[#FFDD73] border-[#FFC93C]/30 bg-[#FFC93C]/10",
     confirmed: "text-green-400 border-green-500/30 bg-green-500/10",
@@ -448,7 +433,6 @@ const Admin = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white px-4 sm:px-6 lg:px-10 py-12">
 
-      {/* ── BACKGROUND ── */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <img 
           loading="lazy"
@@ -484,7 +468,6 @@ const Admin = () => {
       </div>
 
       <div className="relative z-10">
-        {/* HEADER */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-12 border-b border-[#FFC93C]/20 pb-8">
           <div>
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-3">
@@ -497,7 +480,6 @@ const Admin = () => {
           <button onClick={handleLogout} className="px-8 py-4 rounded-2xl border border-red-500/40 text-red-400 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]">🚪 Chiqish</button>
         </div>
 
-        {/* STATS */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-10">
           {[
             { label: "Menyu", value: menus.length, color: "yellow" },
@@ -513,14 +495,12 @@ const Admin = () => {
           ))}
         </div>
 
-        {/* TABS */}
         <div className="flex gap-2 mb-10 flex-wrap">
           {TABS.map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} className={`px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all ${activeTab === tab ? "bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black shadow-[0_0_40px_rgba(255,180,40,0.4)] animate-glowPulse" : "border border-white/10 bg-white/[0.03] text-gray-400 hover:border-[#FFC93C]/30 hover:text-white"}`}>{tab}</button>
           ))}
         </div>
 
-        {/* ===== MENU TAB ===== */}
         {activeTab === "Menu" && (
           <div>
             <form onSubmit={handleSubmit} className="card-luxe p-8 sm:p-10 mb-12">
@@ -605,7 +585,6 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ===== STOLLAR TAB ===== */}
         {activeTab === "Stollar" && (
           <div>
             <div className="grid grid-cols-3 gap-4 mb-10">
@@ -648,7 +627,6 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ===== BRONLAR TAB ===== */}
         {activeTab === "Bronlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
@@ -691,7 +669,6 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ===== ZAKAZLAR TAB ===== */}
         {activeTab === "Zakazlar" && (
           <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
@@ -750,7 +727,6 @@ const Admin = () => {
                           <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
                         )}
 
-                        {/* 🧾 CHEK CHIQARISH TUGMASI (TUZATILGAN USULDA) */}
                         {o.status === "ready" && (
                           <button 
                             onClick={() => handlePrintReceipt(o._id)}
@@ -768,7 +744,6 @@ const Admin = () => {
           </div>
         )}
 
-        {/* ===== HISOBOTLAR TAB ===== */}
         {activeTab === "Hisobotlar" && <Reports />}
       </div>
 

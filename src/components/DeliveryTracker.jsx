@@ -1,3 +1,9 @@
+/**
+ * DELIVERY TRACKER – ZAKAZ BOSQICHLARI
+ * OrderTracker dan tanlangan zakazni vizual bosqichlar bilan ko'rsatadi.
+ * Yetkazib berish turiga qarab step'lar farqlanadi (dine-in/takeaway/delivery).
+ * Stol raqami, manzil, kuryer ma'lumotlari, taomlar ro‘yxati.
+ */
 import React from 'react';
 
 const DeliveryTracker = ({ order }) => {
@@ -52,7 +58,6 @@ const DeliveryTracker = ({ order }) => {
     'cancelled': '❌ Bekor qilingan',
   };
 
-  // ✅ Stol joylashuvi map
   const locationMap = {
     'main_hall': '🏛 Asosiy zal',
     'terrace': '🌿 Terassa',
@@ -90,7 +95,6 @@ const DeliveryTracker = ({ order }) => {
         </div>
       </div>
 
-      {/* ✅ STOL JOYLASHUVI - YANGI QO'SHILDI */}
       {order.deliveryType === 'dine-in' && (
         <div className="mb-4 p-3 bg-[#FFC93C]/10 border border-[#FFC93C]/20 rounded-xl">
           <div className="flex flex-wrap items-center gap-2 sm:gap-4">

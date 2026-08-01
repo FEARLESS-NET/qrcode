@@ -1,4 +1,7 @@
-/** @type {import('tailwindcss').Config} */
+/**
+ * Tailwind CSS sozlamalari.
+ * Ranglar, shriftlar, animatsiyalar.
+ */
 export default {
   content: [
     "./index.html",

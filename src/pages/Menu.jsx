@@ -1,14 +1,18 @@
+/**
+ * MENU PAGE – MENYU SAHIFASI
+ * Kategoriyalar bo‘yicha taomlar ro‘yxati. Har bir taom uchun rasm, nom, narx, retsept.
+ * “Buyurtma” tugmasi Order sahifasiga o‘tkazadi.
+ * Rasmlarni optimallashtirish (WebP, placeholder).
+ */
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from "../api/axios";
 
-// ✅ Avtomatik aniqlash: localhost yoki production
 const BASE_URL = import.meta.env.DEV 
   ? 'http://localhost:3005' 
   : import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 
-// ✅ YANGI: via.placeholder.com o'chib qolgani uchun olib tashlandi (tashqi so'rov yubormaydi)
 const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
 
 const getMenus = async () => {
@@ -22,14 +26,12 @@ const Menu = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['menus'],
     queryFn: getMenus,
-    staleTime: 10 * 60 * 1000, // ✅ 5 → 10 daqiqa (FAQAT QO'SHILDI)
+    staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1,
   });
 
   const menus = data?.menus || [];
-
-  console.log("📦 Menular:", menus); // ✅ QOLDIRILDI
 
   const groupedMenus = useMemo(() => {
     return menus.reduce((acc, menu) => {
@@ -40,25 +42,14 @@ const Menu = () => {
     }, {});
   }, [menus]);
 
-  // ✅ WebP QO'SHILDI - Rasmlar 40% tezroq yuklanadi! (FAQAT QO'SHILDI)
   const getImageUrl = (imagePath) => {
-    console.log("📸 1. DB dan kelgan rasm manzili:", imagePath); // ✅ QOLDIRILDI
-    
-    if (!imagePath) {
-      console.log("📸 2. Rasm manzili YO'Q -> placeholder"); // ✅ QOLDIRILDI
-      return NO_IMAGE_URL;
-    }
-    
+    if (!imagePath) return NO_IMAGE_URL;
     if (imagePath.startsWith("http")) {
-      // ✅ TUZATILDI: fm=webp faqat Unsplash havolalariga qo'shiladi.
-      // Boshqa saytlardan (Pinterest, Google, boshqa CDN) qo'yilgan silkalar
-      // bu parametrni tushunmay, rasmni butunlay bermay qo'yishi mumkin edi.
       if (imagePath.includes('images.unsplash.com')) {
         return imagePath.includes('?') ? `${imagePath}&fm=webp` : `${imagePath}?fm=webp`;
       }
       return imagePath;
     }
-    
     const url = `${BASE_URL}${imagePath}`;
     return url;
   };
@@ -95,8 +86,8 @@ const Menu = () => {
 
       <div className="fixed inset-0 z-0 overflow-hidden">
         <img
-          loading="lazy"  // ✅ QO'SHILDI
-          src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80&fm=webp"  // ✅ WebP QO'SHILDI
+          loading="lazy"
+          src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1920&q=80&fm=webp"
           alt="Restaurant background"
           className="w-full h-full object-cover"
         />
@@ -108,7 +99,6 @@ const Menu = () => {
             repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px)
           `
         }}></div>
-        {/* Signature: embers drifting up, as if rising off a qozon — layered for depth */}
         {[...Array(18)].map((_, i) => (
           <span
             key={`far-${i}`}
@@ -143,8 +133,8 @@ const Menu = () => {
 
         <div className="relative h-80 sm:h-96 rounded-[40px] overflow-hidden border border-[#FFC93C]/20 mb-16 shadow-[0_0_80px_rgba(255,180,40,0.05)]">
           <img
-            loading="lazy"  // ✅ QO'SHILDI
-            src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80&fm=webp"  // ✅ WebP QO'SHILDI
+            loading="lazy"
+            src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80&fm=webp"
             alt="QOZONDA | MILLIY TAOMLARI"
             className="absolute inset-0 w-full h-full object-cover scale-110 animate-slowZoom"
           />
@@ -205,12 +195,11 @@ const Menu = () => {
                   <div key={menu._id} className="card-luxe group overflow-hidden transition-transform hover:scale-[1.02]">
                     <div className="corner-plaque relative h-56 overflow-hidden">
                       <img
-                        loading="lazy"  // ✅ QO'SHILDI
+                        loading="lazy"
                         src={getImageUrl(menu.image)}
                         alt={menu.name}
                         className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
                         onError={(e) => {
-                          console.log("❌ Rasm yuklanmadi:", e.target.src); // ✅ QOLDIRILDI
                           e.target.src = NO_IMAGE_URL;
                         }}
                       />

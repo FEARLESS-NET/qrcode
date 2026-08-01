@@ -1,3 +1,9 @@
+/**
+ * ORDER TRACKER – ZAKAZ KUZATISH
+ * Foydalanuvchi telefon va ism orqali zakazlarni qidiradi.
+ * Topilgan zakazlar ro‘yxati, har birini tanlab DeliveryTracker da ko‘rish.
+ * O‘chirish (localStorage da saqlanadi) va qayta tiklash funksiyalari.
+ */
 import React, { useState, useEffect } from 'react';
 import { axiosInstance } from '../api/axios';
 import DeliveryTracker from './DeliveryTracker';

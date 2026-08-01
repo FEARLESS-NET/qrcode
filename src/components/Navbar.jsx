@@ -1,3 +1,8 @@
+/**
+ * NAVBAR – GLOBAL NAVIGATION
+ * Fixed tepa panel. Logo, menyu linklari (Home, Menu, Order, Reservation, Track, Admin).
+ * Responsive – kichik ekranlarda toggle menyu. Login tugmasi admin panelga yo'naltiradi.
+ */
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 

@@ -1,3 +1,8 @@
+/**
+ * PAYMENT MODAL – TO'LOV OYNASI
+ * To‘lov usulini tanlash (Click, Payme, UzumBank, Naqd).
+ * To‘lov linkini ochish yoki naqd holatida zakazni tasdiqlash.
+ */
 import React, { useState } from 'react';
 import { axiosInstance } from '../api/axios';
 

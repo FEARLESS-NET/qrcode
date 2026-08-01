@@ -1,10 +1,12 @@
-// App.jsx
+/**
+ * Asosiy marshrutlar (Routing).
+ * Navbar va Footer global, sahifalar lazy yuklanadi.
+ */
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NavbarDefault } from './components/Navbar';
 import { SimpleFooter } from './components/Footer';
 
-// ✅ Sahifalar - LAZY QILINDI
 const Home = lazy(() => import('./pages/Home'));
 const Menu = lazy(() => import('./pages/Menu'));
 const Order = lazy(() => import('./pages/Order'));
@@ -13,7 +15,6 @@ const Track = lazy(() => import('./pages/Track'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Login = lazy(() => import('./pages/Login'));
 
-// ✅ QO'SHILDI - Suspense uchun fallback
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
     <div className="text-center">
@@ -40,7 +41,6 @@ function App() {
     <div className="flex flex-col min-h-screen bg-black">
       <NavbarDefault />
       <main className="flex-grow pt-20">
-        {/* ✅ QO'SHILDI - Suspense lazy sahifalarni kutish uchun */}
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />

@@ -1,20 +1,18 @@
+/**
+ * Global stillar, premium dizayn tizimi.
+ * Ranglar, shriftlar, glassmorphism, kartalar, tugmalar, animatsiyalar, ember zarralari.
+ */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ══════════════════════════════════════════════
-   QOZONDA — ULTRA-PREMIUM DIZAYN TIZIMI
-   Palette: Cast-iron qozon olovi (ember, copper, saffron)
-   Fonts: Cormorant Garamond (Elegantlik) & Manrope (Zamonaviy UI)
-   ══════════════════════════════════════════════ */
 :root {
   --ink: #130e0a;
   --ink-soft: #1c1510;
   --smoke: #241b14;
   --smoke-soft: #2c2119;
-
   --ember: #FF5A1F;
   --ember-soft: #FF7A3D;
   --copper: #E08A3C;
@@ -23,7 +21,6 @@
   --saffron-soft: #FFDD73;
   --cream: #efe3ce;
   --cream-dim: #b8ac97;
-
   --gold: var(--saffron);
   --gold-dark: var(--copper);
   --gold-deep: #8a5321;
@@ -32,11 +29,8 @@
   --dark-card: var(--smoke);
   --glass-bg: rgba(28, 21, 16, 0.72);
   --border-gold: rgba(232, 168, 56, 0.14);
-
   --font-display: 'Cormorant Garamond', 'Georgia', serif;
   --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
-
-  /* Premium Yangilanish Qatlami */
   --foil: linear-gradient(120deg, rgba(255,221,115,.55), rgba(224,138,60,.15) 35%, rgba(255,90,31,.35) 65%, rgba(255,221,115,.5));
   --shadow-deep: 0 30px 70px -25px rgba(0,0,0,.85), 0 8px 24px -8px rgba(0,0,0,.6);
   --shadow-lift: 0 45px 90px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(255,201,60,.06) inset;
@@ -52,7 +46,6 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Nozik kinematik fon qatlami */
 body::before {
   content: '';
   position: fixed;
@@ -69,7 +62,6 @@ body::before {
   border-radius: 6px;
 }
 
-/* Typography & Visual Effects */
 h1, h2, h3, .font-display {
   font-family: var(--font-display);
   font-weight: 600;
@@ -87,7 +79,6 @@ h1, h2, h3, .font-display {
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-/* ── Animatsiyalar ────────────────────────────────────────── */
 @keyframes breathe { 0%,100% { opacity:.4; transform:scale(1);} 50% { opacity:.1; transform:scale(1.03);} }
 @keyframes slowZoom { 0% { transform:scale(1.02);} 100% { transform:scale(1.12);} }
 @keyframes fadeUp { from { opacity:0; transform:translateY(35px);} to { opacity:1; transform:translateY(0);} }
@@ -103,7 +94,6 @@ h1, h2, h3, .font-display {
 @keyframes cardHover { 0% { transform:translateY(0) scale(1);} 100% { transform:translateY(-6px) scale(1.02);} }
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(10px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
-
 @keyframes floatUp {
   0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
   10% { opacity: 1; }
@@ -115,7 +105,6 @@ h1, h2, h3, .font-display {
   100% { left: 200%; }
 }
 
-/* Animatsiya Klasslari */
 .animate-breathe { animation: breathe 6s ease-in-out infinite; }
 .animate-slowZoom { animation: slowZoom 30s ease-in-out infinite alternate; }
 .animate-fadeUp { animation: fadeUp .8s ease forwards; }
@@ -129,7 +118,6 @@ h1, h2, h3, .font-display {
 .animate-rotateSlow { animation: rotateSlow 16s linear infinite; }
 .animate-goldPulse { animation: goldPulse 3s ease-in-out infinite; }
 .animate-shake { animation: shake 0.5s ease-in-out; }
-
 .animate-shimmerGold {
   background: linear-gradient(90deg, var(--saffron-soft), var(--ember-soft), #fff, var(--copper), var(--saffron-soft));
   background-size: 250% auto;
@@ -143,7 +131,6 @@ h1, h2, h3, .font-display {
 }
 .animate-cardHover:hover { animation: cardHover .3s ease forwards; }
 
-/* Delays */
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
@@ -151,7 +138,6 @@ h1, h2, h3, .font-display {
 .delay-700 { animation-delay: 700ms; }
 .delay-1000 { animation-delay: 1000ms; }
 
-/* ── Glassmorphism qatlamlari ────────────────────────────── */
 .glass-gold, .glass-cyan, .glass-dark, .glass-white {
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
@@ -175,7 +161,6 @@ h1, h2, h3, .font-display {
   border: 1px solid rgba(239,227,206,.05);
 }
 
-/* ── Premium Lyuks Kartalar ─────────────────────────────── */
 .card-luxe {
   position: relative;
   background: linear-gradient(165deg, rgba(48,36,27,.92), rgba(15,11,8,.96));
@@ -206,7 +191,6 @@ h1, h2, h3, .font-display {
 .card-3d { transition: transform .5s cubic-bezier(.4,0,.2,1), box-shadow .5s ease; transform-style: preserve-3d; perspective: 900px; }
 .card-3d:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 
-/* ── Nozik Oltin Chiziqli Divider (Ikat) ───────────────── */
 .divider-ikat {
   display: flex; align-items: center; justify-content: center;
   gap: 14px; width: 100%; max-width: 260px; margin: 0 auto;
@@ -222,7 +206,6 @@ h1, h2, h3, .font-display {
   flex-shrink: 0; border-radius: 2px;
 }
 
-/* ── Premium Tugmalar (Buttons) ────────────────────────── */
 .btn-gold {
   background: linear-gradient(150deg, var(--saffron-soft) 0%, var(--saffron) 45%, var(--ember) 100%);
   color: var(--ink);
@@ -265,11 +248,9 @@ h1, h2, h3, .font-display {
   transform: scale(1.03); box-shadow: 0 4px 35px rgba(255,201,60,.1);
 }
 
-/* Neon effektlar */
 .neon-gold { border: 1px solid rgba(255,201,60,.14); box-shadow: 0 0 30px rgba(255,201,60,.04), inset 0 0 30px rgba(255,201,60,.02); }
 .neon-cyan { border: 1px solid rgba(20,184,166,.1); box-shadow: 0 0 30px rgba(20,184,166,.02), inset 0 0 30px rgba(20,184,166,.01); }
 
-/* ── Gradients ───────────────────────────────────────────── */
 .text-gold-gradient, .text-warm-gradient {
   background: linear-gradient(150deg, #fff3d6 0%, var(--saffron-soft) 28%, var(--saffron) 55%, var(--ember) 80%, var(--copper) 100%);
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
@@ -280,7 +261,6 @@ h1, h2, h3, .font-display {
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-/* ── Badges & Statuses ───────────────────────────────────── */
 .badge-gold {
   display: inline-flex; align-items: center; gap: 6px; padding: 4px 16px; border-radius: 9999px;
   font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
@@ -294,7 +274,6 @@ h1, h2, h3, .font-display {
 .badge-status-preparing  { color:#60a5fa; border-color:rgba(96,165,250,.12); background:rgba(96,165,250,.03); }
 .badge-status-ready      { color:#2dd4bf; border-color:rgba(45,212,191,.12); background:rgba(45,212,191,.03); }
 
-/* ── Input elementlari ──────────────────────────────────── */
 .input-gold {
   width: 100%;
   background: linear-gradient(180deg, rgba(12,9,6,.85), rgba(19,14,10,.7));
@@ -309,7 +288,6 @@ h1, h2, h3, .font-display {
 }
 .input-gold::placeholder { color: rgba(239,227,206,.18); }
 
-/* ── Premium Restoran Menyusi Detallari ─────────────────── */
 .menu-leader { display: flex; align-items: baseline; gap: .5em; }
 .menu-leader .leader-fill {
   flex: 1; border-bottom: 2px dotted rgba(255,201,60,.28);
@@ -349,7 +327,6 @@ h1, h2, h3, .font-display {
   display: flex; align-items: center; justify-content: center; background: rgba(255,201,60,.05);
 }
 
-/* Cho'g' / Uchuvchi Zarralar (Ember Particles) */
 .ember-particle {
   position: fixed; bottom: -10px;
   width: var(--size, 3px); height: var(--size, 3px);
@@ -359,7 +336,6 @@ h1, h2, h3, .font-display {
   box-shadow: 0 0 10px rgba(255, 180, 40, 0.3); z-index: 1;
 }
 
-/* ── Premium Navigatsiya Satri (Navbar) ──────────────────── */
 .navbar-fixed {
   position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
   background: rgba(19, 14, 10, 0.86);
@@ -397,14 +373,12 @@ h1, h2, h3, .font-display {
 .navbar-fixed .nav-logo:hover { transform: scale(1.02); text-shadow: 0 0 40px rgba(255, 201, 60, 0.3); }
 .navbar-fixed .nav-logo span { color: var(--cream); }
 
-/* Mobile Navbar Toggle */
 .navbar-fixed .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: transparent; border: none; }
 .navbar-fixed .menu-toggle span { display: block; width: 26px; height: 2px; background: var(--cream); border-radius: 2px; transition: all 0.3s ease; }
 .navbar-fixed .menu-toggle:hover span { background: var(--saffron); }
 .navbar-fixed .mobile-menu { display: none; flex-direction: column; align-items: center; gap: 14px; padding: 20px 0 10px; border-top: 1px solid rgba(255, 201, 60, 0.06); margin-top: 12px; }
 .navbar-fixed .mobile-menu.open { display: flex; }
 
-/* ── Yangi Qo'shimcha Premium Effektlar (Eksklyuziv) ─────── */
 .premium-shine {
   position: relative; overflow: hidden;
 }
@@ -432,7 +406,6 @@ h1, h2, h3, .font-display {
   pointer-events: none; animation: breathe 8s ease-in-out infinite;
 }
 
-/* ── Scrollbar refinement ──────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark-bg); }
 ::-webkit-scrollbar-thumb {
@@ -442,7 +415,6 @@ h1, h2, h3, .font-display {
 }
 ::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, var(--saffron), var(--ember)); }
 
-/* ── Responzivlik va Chop etish (Print) ────────────────────── */
 @media (max-width: 768px) {
   .navbar-fixed { padding: 10px 16px; }
   .navbar-fixed .nav-links { display: none; }

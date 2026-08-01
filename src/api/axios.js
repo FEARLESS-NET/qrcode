@@ -1,6 +1,9 @@
+/**
+ * Axios sozlamalari.
+ * Base URL (localhost / production), interceptorlar (request/response log, xatoliklarni qayta ishlash).
+ */
 import axios from 'axios';
 
-// ✅ Local va Production ni avtomatik aniqlash
 const BASE_URL = import.meta.env.DEV 
   ? 'http://localhost:3005/api/v1' 
   : import.meta.env.VITE_API_URL || 'https://backend-4-9otm.onrender.com/api/v1';
@@ -8,7 +11,7 @@ const BASE_URL = import.meta.env.DEV
 export const axiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: { 'Content-Type': 'application/json' },
-    timeout: 8000, // ✅ 30000 → 8000 (tezroq)
+    timeout: 8000,
 });
 
 axiosInstance.interceptors.request.use(

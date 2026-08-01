@@ -1,3 +1,10 @@
+/**
+ * RESERVATION PAGE – STOL BRON QILISH
+ * Stollar statistikasi (jami, bo‘sh, band).
+ * Stol tanlash (interaktiv tugmalar).
+ * Forma: Ism, telefon, sana, vaqt, mehmonlar soni, izoh, Telegram ulanish.
+ * Yuborilganda admin Telegram xabar oladi, mijoz tasdiqlanganda xabar oladi.
+ */
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 
@@ -126,7 +133,6 @@ const Reservation = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden text-white px-4 sm:px-6 lg:px-10 py-28 bg-[#130e0a]">
-      {/* Background */}
       <div className="fixed inset-0 z-0">
         <img
           loading="lazy"
@@ -145,7 +151,6 @@ const Reservation = () => {
         <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#E08A3C]/15 blur-[200px] animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#FFDD73]/15 blur-[200px] animate-pulse delay-700" />
         
-        {/* Ember particles */}
         {[...Array(16)].map((_, i) => (
           <span
             key={`far-${i}`}
@@ -177,7 +182,6 @@ const Reservation = () => {
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
             <div className="w-2.5 h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
@@ -203,7 +207,6 @@ const Reservation = () => {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-12">
           {[
             { label: "Jami Stollar", value: stats.total, color: "text-white", icon: "🪑" },
@@ -221,7 +224,6 @@ const Reservation = () => {
           ))}
         </div>
 
-        {/* Table Selection */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-5 border-b border-[#FFC93C]/15 pb-4">
             <span className="text-2xl">🪑</span>
@@ -278,21 +280,18 @@ const Reservation = () => {
           </div>
         </div>
 
-        {/* Success Message */}
         {success && (
           <div className="mb-6 p-5 rounded-2xl bg-green-500/15 border border-green-500/30 text-green-400 font-bold text-center text-lg backdrop-blur-xl animate-fadeInUp">
             ✅ Broningiz qabul qilindi! Tez orada siz bilan bog'lanamiz.
           </div>
         )}
 
-        {/* Error Message */}
         {error && (
           <div className="mb-6 p-5 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-400 font-bold text-center backdrop-blur-xl animate-shake">
             ⚠️ {error}
           </div>
         )}
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit}
           className="bg-white/[0.03] border border-[#FFC93C]/15 backdrop-blur-3xl rounded-[32px] p-8 sm:p-12 hover:border-[#FFC93C]/30 transition-all duration-500 shadow-[0_0_60px_rgba(255,180,40,0.05)]"
@@ -391,7 +390,6 @@ const Reservation = () => {
             </div>
           </div>
 
-          {/* Telegram */}
           <div className="mt-6 p-4 rounded-xl border border-[#FFC93C]/15 bg-[#FFC93C]/5 hover:border-[#FFC93C]/30 transition-all duration-300">
             {telegramLinked ? (
               <p className="text-green-400 text-xs font-bold text-center flex items-center justify-center gap-2">

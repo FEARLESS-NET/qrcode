@@ -1,10 +1,14 @@
+/**
+ * TRACK PAGE – ZAKAZ KUZATISH
+ * OrderTracker komponentini o‘z ichiga oladi.
+ * Foydalanuvchi telefon va ism orqali o‘z zakazlarini qidiradi va DeliveryTracker orqali bosqichlarni ko‘radi.
+ */
 import React from 'react';
 import OrderTracker from '../components/OrderTracker';
 
 const Track = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#130e0a] text-white px-4 sm:px-6 lg:px-10 py-24 sm:py-28">
-      {/* Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img
           loading="lazy"
@@ -23,7 +27,6 @@ const Track = () => {
           `
         }} />
         
-        {/* Ember particles */}
         {[...Array(16)].map((_, i) => (
           <span
             key={`far-${i}`}
@@ -54,7 +57,6 @@ const Track = () => {
         ))}
       </div>
 
-      {/* Header */}
       <div className="relative z-10 max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
@@ -136,4 +138,4 @@ const Track = () => {
   );
 };
 
-export default Track; 
+export default Track;
