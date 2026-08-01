@@ -1,17 +1,27 @@
 // App.jsx
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NavbarDefault } from './components/Navbar';
 import { SimpleFooter } from './components/Footer';
 
-// Sahifalar
-import Home from './pages/Home';
-import Menu from './pages/Menu';
-import Order from './pages/Order';
-import Reservation from './pages/Reservation';
-import Track from './pages/Track';
-import Admin from './pages/Admin';
-import Login from './pages/Login';
+// ✅ Sahifalar - LAZY QILINDI
+const Home = lazy(() => import('./pages/Home'));
+const Menu = lazy(() => import('./pages/Menu'));
+const Order = lazy(() => import('./pages/Order'));
+const Reservation = lazy(() => import('./pages/Reservation'));
+const Track = lazy(() => import('./pages/Track'));
+const Admin = lazy(() => import('./pages/Admin'));
+const Login = lazy(() => import('./pages/Login'));
+
+// ✅ QO'SHILDI - Suspense uchun fallback
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p className="text-yellow-400 mt-4 font-bold">Yuklanmoqda...</p>
+    </div>
+  </div>
+);
 
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -30,16 +40,19 @@ function App() {
     <div className="flex flex-col min-h-screen bg-black">
       <NavbarDefault />
       <main className="flex-grow pt-20">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/reservation" element={<Reservation />} />
-          <Route path="/track" element={<Track />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        {/* ✅ QO'SHILDI - Suspense lazy sahifalarni kutish uchun */}
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/reservation" element={<Reservation />} />
+            <Route path="/track" element={<Track />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       <SimpleFooter />
     </div>
