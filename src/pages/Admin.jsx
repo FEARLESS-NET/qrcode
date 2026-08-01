@@ -100,23 +100,21 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  // ===== CHEKNI TO'G'RIDAN-TO'G'RI PRINT QILISH =====
-  // Hech qanday yangi oyna/tab ochilmaydi (shuning uchun popup-blocker yoki
-  // "Google orqali ochilish" muammosi umuman bo'lmaydi) — faqat yashirin iframe
-  // orqali chek yuklanadi va to'g'ridan-to'g'ri brauzerning o'z print dialogi chaqiriladi.
+  // ===== CHEKNI TO'G'RIDAN-TO'G'RI PRINT QILISH (TUZATILDI) =====
   const handlePrintReceipt = async (orderId) => {
     try {
       const response = await axiosInstance.get(`/receipt/${orderId}/download`, {
         responseType: 'blob'
       });
 
+      // Blob kontentini matn (HTML) ko'rinishida o'qiymiz
       const html = await response.data.text();
 
-      // Oldingi print iframe qolgan bo'lsa, avval tozalaymiz
-      const old = document.getElementById('receipt-print-frame');
-      if (old) old.remove();
+      // Agar oldingi chop etishdan iframe qolib ketgan bo'lsa, tozalaymiz
+      const oldIframe = document.getElementById('receipt-print-frame');
+      if (oldIframe) oldIframe.remove();
 
-      // Ko'rinmas iframe yaratamiz — sahifadan chiqmaymiz, hech narsa yangi oynada ochilmaydi
+      // Mutloq ko'rinmas yangi iframe yaratamiz
       const iframe = document.createElement('iframe');
       iframe.id = 'receipt-print-frame';
       iframe.style.position = 'fixed';
@@ -138,20 +136,26 @@ const Admin = () => {
         if (el) el.remove();
       };
 
+      // Bosib chiqarish muloqot oynasini chaqirish funksiyasi
       const triggerPrint = () => {
         try {
           iframe.contentWindow.focus();
-          iframe.contentWindow.print();
+          
+          // 🌟 TUZATISH: Stillar va shriftlar yuklanishi uchun ozgina kechikish beramiz
+          setTimeout(() => {
+            iframe.contentWindow.print();
+            // Chop etish oynasi yopilgandan so'ng xotirani bo'shatish uchun iframeni o'chiramiz
+            setTimeout(cleanup, 1000);
+          }, 400);
+
         } catch (e) {
           console.error('❌ Print xatosi:', e);
           alert('Chekni chop etishda xatolik yuz berdi.');
           cleanup();
-          return;
         }
-        // Print dialog yopilgandan keyin iframe avtomatik tozalanadi
-        setTimeout(cleanup, 1000);
       };
 
+      // Iframe ichidagi DOM tayyor bo'lishini tekshiramiz
       if (doc.readyState === 'complete') {
         triggerPrint();
       } else {
@@ -727,7 +731,6 @@ const Admin = () => {
                       </div>
 
                       <div className="flex flex-col gap-2 items-start">
-                        {/* Status tugmalari */}
                         {o.status === "pending" && (
                           <button onClick={() => updateOrderStatus(o._id, "confirmed")} className="px-6 py-2.5 rounded-xl bg-green-500/15 border border-green-500/30 text-green-400 text-sm font-bold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Qabul</button>
                         )}
@@ -747,11 +750,11 @@ const Admin = () => {
                           <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>
                         )}
 
-                        {/* 🧾 CHEK CHIQARISH TUGMASI – faqat READY holatda, yangi oyna yo'q, to'g'ridan-to'g'ri print dialogi */}
+                        {/* 🧾 CHEK CHIQARISH TUGMASI (TUZATILGAN USULDA) */}
                         {o.status === "ready" && (
                           <button 
                             onClick={() => handlePrintReceipt(o._id)}
-                            className="px-6 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all whitespace-nowrap flex items-center gap-2"
+                            className="px-6 py-2.5 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] text-sm font-bold hover:bg-[#FFDD73] hover:text-black transition-all whitespace-nowrap flex items-center gap-2 animate-pulse"
                           >
                             🧾 Chek chiqarish
                           </button>
