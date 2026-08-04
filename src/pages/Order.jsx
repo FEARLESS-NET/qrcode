@@ -486,7 +486,6 @@ const Order = () => {
                     value={form.phone} 
                     onChange={(e) => setForm({ ...form, phone: e.target.value })} 
                     placeholder="+998 90 000 00 00" 
-                    required 
                     className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
                   />
                 </div>
