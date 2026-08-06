@@ -215,6 +215,7 @@ const Order = () => {
       let locationData = location || { type: "Point", coordinates: [0, 0] };
       const orderData = {
         ...form,
+        phone: form.deliveryType === "dine-in" ? (form.phone?.trim() || "restoran-mijozi") : form.phone,
         items: cart,
         totalPrice,
         tableNumber: form.deliveryType === "dine-in" ? parseInt(form.tableNumber) : null,
@@ -479,16 +480,20 @@ const Order = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Telefon</label>
-                  <input 
-                    name="phone" 
-                    value={form.phone} 
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })} 
-                    placeholder="+998 90 000 00 00" 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
-                  />
-                </div>
+                {form.deliveryType !== "dine-in" && (
+                  <div>
+                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Telefon</label>
+                    <input 
+                      name="phone" 
+                      value={form.phone} 
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })} 
+                      placeholder="+998 90 000 00 00" 
+                      required 
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
+                    />
+                    <p className="text-[10px] text-gray-600 mt-1.5">📱 Zakazni keyinroq kuzatish uchun kerak bo'ladi</p>
+                  </div>
+                )}
 
                 <div>
                   <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-2 block font-bold">Tur</label>
