@@ -6,7 +6,7 @@
  * Bronlar: ko‘rish, tasdiqlash, bekor qilish, yakunlanganlarni o‘chirish.
  * Zakazlar: holatini o‘zgartirish (pending→confirmed→preparing→ready), yetkazib berish holati (on_the_way→delivered), kuryer tayinlash, chek chop etish.
  * Hisobotlar: kunlik statistikani ko‘rish, reset qilish, o‘chirish.
- * Login autentifikatsiyasi (admin@gmail.com / 123456) – localStorage.
+ * JWT autentifikatsiya (token localStorage da saqlanadi).
  */
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
@@ -50,14 +50,16 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("Menu");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const auth = localStorage.getItem("auth");
-    if (!auth || auth !== "true") {
-      navigate("/login", { replace: true });
-    } else {
-      setLoading(false);
-    }
-  }, [navigate]);
+  // ✅ JWT token tekshiruvi
+useEffect(() => {
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    navigate("/admin", { replace: true });
+  } else {
+    // Vaqtinchalik /auth/verify ni chaqirmasdan admin panelni ochamiz
+    setLoading(false);
+  }
+}, [navigate]);
 
   const [menus, setMenus] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -355,8 +357,6 @@ const Admin = () => {
   }, []);
 
   useEffect(() => {
-    // Barcha bo'limlar (Menu, Stollar, Bronlar, Zakazlar) 5 soniyada bir marta
-    // avtomatik yangilanadi — qo'lda Ctrl+R bosish shart emas.
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
         refreshAll();
@@ -380,9 +380,11 @@ const Admin = () => {
     };
   }, []);
 
+  // ✅ Chiqish – token va user ma'lumotlarini o'chiramiz
   const handleLogout = () => {
-    localStorage.removeItem("auth");
-    navigate("/");
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+    navigate("/login");
   };
 
   const statusColor = {
