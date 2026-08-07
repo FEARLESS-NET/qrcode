@@ -352,13 +352,26 @@ const Admin = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (document.visibilityState === 'visible' && document.hasFocus()) {
+      if (document.visibilityState === 'visible') {
         getReservations();
         getOrders();
         getTables();
       }
-    }, 30000);
-    return () => clearInterval(interval);
+    }, 15000);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        getReservations();
+        getOrders();
+        getTables();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const handleLogout = () => {
