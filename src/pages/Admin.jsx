@@ -343,34 +343,40 @@ const Admin = () => {
     }
   };
 
-  useEffect(() => {
+  const refreshAll = () => {
     getMenus();
     getTables();
     getReservations();
     getOrders();
+  };
+
+  useEffect(() => {
+    refreshAll();
   }, []);
 
   useEffect(() => {
+    // Barcha bo'limlar (Menu, Stollar, Bronlar, Zakazlar) 5 soniyada bir marta
+    // avtomatik yangilanadi — qo'lda Ctrl+R bosish shart emas.
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
-        getReservations();
-        getOrders();
-        getTables();
+        refreshAll();
       }
-    }, 15000);
+    }, 5000);
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        getReservations();
-        getOrders();
-        getTables();
+        refreshAll();
       }
     };
+    const handleFocus = () => refreshAll();
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
 
     return () => {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
