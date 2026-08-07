@@ -203,7 +203,7 @@ const Menu = () => {
                           e.target.src = NO_IMAGE_URL;
                         }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                       {menu.category && (
                         <span className="absolute top-4 right-4 bg-black/70 border border-[#FFDD73]/30 px-4 py-1.5 rounded-xl text-[#FFDD73] text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">
                           {menu.category}
@@ -216,7 +216,7 @@ const Menu = () => {
                         <span className="leader-fill"></span>
                         <p className="text-gold-gradient font-display font-bold text-xl whitespace-nowrap">{Number(menu.price).toLocaleString()} so'm</p>
                       </div>
-                      <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
+                      <p className="text-gray-300 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
                       <button
                         onClick={() => navigate("/order")}
                         className="btn-gold w-full mt-5 !py-2.5 !px-6 !text-xs"
