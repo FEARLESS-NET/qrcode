@@ -4,34 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --ink: #130e0a;
-  --ink-soft: #1c1510;
-  --smoke: #241b14;
-  --smoke-soft: #2c2119;
-  --ember: #FF5A1F;
-  --ember-soft: #FF7A3D;
-  --copper: #E08A3C;
-  --copper-soft: #FFA23D;
-  --saffron: #FFC93C;
-  --saffron-soft: #FFDD73;
-  --cream: #efe3ce;
-  --cream-dim: #b8ac97;
-  --gold: #FFC93C;
-  --gold-dark: #E08A3C;
-  --gold-deep: #8a5321;
-  --gold-soft: #FFDD73;
-  --dark-bg: #130e0a;
-  --dark-card: #241b14;
-  --glass-bg: rgba(28, 21, 16, 0.72);
-  --border-gold: rgba(232, 168, 56, 0.14);
-  --font-display: 'Cormorant Garamond', 'Georgia', serif;
-  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
-  --foil: linear-gradient(120deg, rgba(255,221,115,.55), rgba(224,138,60,.15) 35%, rgba(255,90,31,.35) 65%, rgba(255,221,115,.5));
-  --shadow-deep: 0 30px 70px -25px rgba(0,0,0,.85), 0 8px 24px -8px rgba(0,0,0,.6);
-  --shadow-lift: 0 45px 90px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(255,201,60,.06) inset;
-}
-
 *,
 html,
 body {
@@ -46,36 +18,78 @@ body {
   box-sizing: border-box;
 }
 
+html {
+  background: #130e0a !important;
+}
+
 body {
-  font-family: var(--font-body);
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   background: #130e0a !important;
   color: #efe3ce !important;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-/* Barcha fon ranglarini aniq belgilash */
+/* ============================================
+   BARCHA FON RANGLARI ANIQ QIYMATLAR BILAN
+   ============================================ */
+
+/* Asosiy backgroundlar */
 .bg-\[130e0a\] { background: #130e0a !important; }
 .bg-\[\#130e0a\] { background: #130e0a !important; }
+.bg-\[\#130e0a\]\/80 { background: rgba(19, 14, 10, 0.8) !important; }
+.bg-\[\#130e0a\]\/70 { background: rgba(19, 14, 10, 0.7) !important; }
+
 .bg-black\/50 { background: rgba(0, 0, 0, 0.5) !important; }
 .bg-black\/60 { background: rgba(0, 0, 0, 0.6) !important; }
+.bg-black\/70 { background: rgba(0, 0, 0, 0.7) !important; }
+.bg-black\/80 { background: rgba(0, 0, 0, 0.8) !important; }
 .bg-black\/20 { background: rgba(0, 0, 0, 0.2) !important; }
 .bg-black\/30 { background: rgba(0, 0, 0, 0.3) !important; }
+.bg-black\/40 { background: rgba(0, 0, 0, 0.4) !important; }
+.bg-black\/90 { background: rgba(0, 0, 0, 0.9) !important; }
+
 .bg-white\/\[0\.03\] { background: rgba(255, 255, 255, 0.03) !important; }
+.bg-white\/5 { background: rgba(255, 255, 255, 0.05) !important; }
+.bg-white\/10 { background: rgba(255, 255, 255, 0.1) !important; }
+.bg-white\/\[0\.02\] { background: rgba(255, 255, 255, 0.02) !important; }
+
 .bg-\[\#FFC93C\]\/10 { background: rgba(255, 201, 60, 0.1) !important; }
 .bg-\[\#FFC93C\]\/15 { background: rgba(255, 201, 60, 0.15) !important; }
 .bg-\[\#FFC93C\]\/5 { background: rgba(255, 201, 60, 0.05) !important; }
-.bg-black\/40 { background: rgba(0, 0, 0, 0.4) !important; }
-.bg-black\/80 { background: rgba(0, 0, 0, 0.8) !important; }
-.bg-white\/5 { background: rgba(255, 255, 255, 0.05) !important; }
-.bg-white\/\[0\.02\] { background: rgba(255, 255, 255, 0.02) !important; }
+.bg-\[\#FFC93C\]\/20 { background: rgba(255, 201, 60, 0.2) !important; }
+.bg-\[\#FFC93C\]\/30 { background: rgba(255, 201, 60, 0.3) !important; }
 
-/* Barcha matn ranglarini aniq belgilash */
+.bg-\[\#E08A3C\]\/10 { background: rgba(224, 138, 60, 0.1) !important; }
+.bg-\[\#E08A3C\]\/15 { background: rgba(224, 138, 60, 0.15) !important; }
+.bg-\[\#E08A3C\]\/20 { background: rgba(224, 138, 60, 0.2) !important; }
+
+.bg-\[\#FF5A1F\]\/10 { background: rgba(255, 90, 31, 0.1) !important; }
+.bg-\[\#FF5A1F\]\/15 { background: rgba(255, 90, 31, 0.15) !important; }
+.bg-\[\#FF5A1F\]\/20 { background: rgba(255, 90, 31, 0.2) !important; }
+
+.bg-green-500\/10 { background: rgba(34, 197, 94, 0.1) !important; }
+.bg-green-500\/15 { background: rgba(34, 197, 94, 0.15) !important; }
+.bg-red-500\/10 { background: rgba(239, 68, 68, 0.1) !important; }
+.bg-red-500\/15 { background: rgba(239, 68, 68, 0.15) !important; }
+.bg-cyan-500\/10 { background: rgba(6, 182, 212, 0.1) !important; }
+.bg-blue-500\/10 { background: rgba(59, 130, 246, 0.1) !important; }
+
+/* ============================================
+   BARCHA MATN RANGLARI ANIQ QIYMATLAR BILAN
+   ============================================ */
+
 .text-white { color: #ffffff !important; }
+.text-black { color: #000000 !important; }
+
+.text-gray-300 { color: #d1d5db !important; }
 .text-gray-400 { color: #9ca3af !important; }
 .text-gray-500 { color: #6b7280 !important; }
 .text-gray-600 { color: #4b5563 !important; }
 .text-gray-700 { color: #374151 !important; }
+
 .text-\[\#FFDD73\] { color: #FFDD73 !important; }
 .text-\[\#FFC93C\] { color: #FFC93C !important; }
 .text-\[\#FF5A1F\] { color: #FF5A1F !important; }
@@ -84,13 +98,43 @@ body {
 .text-\[\#FFEBB0\] { color: #FFEBB0 !important; }
 .text-\[\#FFA23D\] { color: #FFA23D !important; }
 .text-\[\#b8ac97\] { color: #b8ac97 !important; }
+.text-\[\#efe3ce\] { color: #efe3ce !important; }
 
-/* Border ranglarini aniq belgilash */
+.text-green-400 { color: #4ade80 !important; }
+.text-red-400 { color: #f87171 !important; }
+.text-blue-400 { color: #60a5fa !important; }
+.text-cyan-400 { color: #22d3ee !important; }
+.text-purple-400 { color: #c084fc !important; }
+.text-orange-400 { color: #fb923c !important; }
+
+/* ============================================
+   BARCHA BORDER RANGLARI ANIQ QIYMATLAR BILAN
+   ============================================ */
+
 .border-white\/10 { border-color: rgba(255, 255, 255, 0.1) !important; }
 .border-white\/5 { border-color: rgba(255, 255, 255, 0.05) !important; }
+.border-white\/20 { border-color: rgba(255, 255, 255, 0.2) !important; }
+.border-white\/30 { border-color: rgba(255, 255, 255, 0.3) !important; }
+
 .border-\[\#FFC93C\]\/20 { border-color: rgba(255, 201, 60, 0.2) !important; }
 .border-\[\#FFC93C\]\/15 { border-color: rgba(255, 201, 60, 0.15) !important; }
 .border-\[\#FFC93C\]\/30 { border-color: rgba(255, 201, 60, 0.3) !important; }
+.border-\[\#FFC93C\]\/40 { border-color: rgba(255, 201, 60, 0.4) !important; }
+.border-\[\#FFC93C\]\/50 { border-color: rgba(255, 201, 60, 0.5) !important; }
+
+.border-\[\#FFDD73\]\/60 { border-color: rgba(255, 221, 115, 0.6) !important; }
+
+.border-green-500\/20 { border-color: rgba(34, 197, 94, 0.2) !important; }
+.border-green-500\/30 { border-color: rgba(34, 197, 94, 0.3) !important; }
+.border-red-500\/20 { border-color: rgba(239, 68, 68, 0.2) !important; }
+.border-red-500\/30 { border-color: rgba(239, 68, 68, 0.3) !important; }
+.border-red-500\/40 { border-color: rgba(239, 68, 68, 0.4) !important; }
+.border-blue-500\/30 { border-color: rgba(59, 130, 246, 0.3) !important; }
+.border-cyan-500\/30 { border-color: rgba(6, 182, 212, 0.3) !important; }
+
+/* ============================================
+   BOSHQA STILLAR (O'ZGARMAGAN)
+   ============================================ */
 
 body::before {
   content: '';
@@ -112,13 +156,13 @@ h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-display);
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-shadow: 0 1px 0 rgba(255, 255, 255, .03), 0 20px 40px rgba(0, 0, 0, .35);
 }
 .font-display-italic {
-  font-family: var(--font-display);
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
   font-style: italic;
   font-weight: 500;
 }
@@ -355,7 +399,7 @@ h3,
   animation: shake 0.5s ease-in-out;
 }
 .animate-shimmerGold {
-  background: linear-gradient(90deg, var(--saffron-soft), var(--ember-soft), #fff, var(--copper), var(--saffron-soft));
+  background: linear-gradient(90deg, #FFDD73, #FF7A3D, #fff, #E08A3C, #FFDD73);
   background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -402,7 +446,7 @@ h3,
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border-radius: 26px;
-  box-shadow: var(--shadow-deep);
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, .85), 0 8px 24px -8px rgba(0, 0, 0, .6);
 }
 .glass-gold {
   background: linear-gradient(160deg, rgba(255, 201, 60, .06), rgba(255, 90, 31, .025));
@@ -426,7 +470,7 @@ h3,
   background: linear-gradient(165deg, rgba(48, 36, 27, .92), rgba(15, 11, 8, .96));
   border: 1px solid rgba(255, 201, 60, .14);
   border-radius: 28px;
-  box-shadow: var(--shadow-deep), inset 0 1px 0 rgba(255, 221, 115, .08);
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, .85), 0 8px 24px -8px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 221, 115, .08);
   transition: border-color .5s ease, transform .5s cubic-bezier(.4, 0, .2, 1), box-shadow .5s ease;
   backdrop-filter: blur(20px);
 }
@@ -436,7 +480,7 @@ h3,
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: var(--foil);
+  background: linear-gradient(120deg, rgba(255, 221, 115, .55), rgba(224, 138, 60, .15) 35%, rgba(255, 90, 31, .35) 65%, rgba(255, 221, 115, .5));
   opacity: 0;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -447,7 +491,7 @@ h3,
 .card-luxe:hover {
   border-color: rgba(255, 201, 60, .4);
   transform: translateY(-6px);
-  box-shadow: var(--shadow-lift), 0 0 70px -20px rgba(255, 201, 60, .18);
+  box-shadow: 0 45px 90px -30px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 201, 60, .06) inset, 0 0 70px -20px rgba(255, 201, 60, .18);
 }
 .card-luxe:hover::before {
   opacity: 1;
@@ -477,7 +521,7 @@ h3,
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--copper) 50%, transparent);
+  background: linear-gradient(90deg, transparent, #E08A3C 50%, transparent);
   opacity: .5;
 }
 .divider-ikat .ikat-node {
@@ -706,7 +750,7 @@ h3,
 
 .qozon-watermark {
   position: absolute;
-  font-family: var(--font-display);
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
   font-style: italic;
   font-weight: 600;
   color: transparent;
@@ -720,7 +764,7 @@ h3,
   display: inline-flex;
   align-items: center;
   gap: .6em;
-  font-family: var(--font-body);
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   font-weight: 800;
   font-size: 10.5px;
   letter-spacing: .35em;
@@ -735,7 +779,7 @@ h3,
 }
 
 .category-mark {
-  font-family: var(--font-display);
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
   font-style: italic;
   font-size: 15px;
   color: #FFA23D;
@@ -817,7 +861,7 @@ h3,
   width: 100%;
 }
 .navbar-fixed .nav-logo {
-  font-family: var(--font-display);
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
   font-size: 1.75rem;
   font-weight: 700;
   color: #FFC93C;
