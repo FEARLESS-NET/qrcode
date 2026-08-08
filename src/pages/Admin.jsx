@@ -54,9 +54,8 @@ const Admin = () => {
 useEffect(() => {
   const token = localStorage.getItem("adminToken");
   if (!token) {
-    navigate("/admin", { replace: true });
+    navigate("/login", { replace: true }); // ✅ TO'G'RI! Login ga yo'naltirish
   } else {
-    // Vaqtinchalik /auth/verify ni chaqirmasdan admin panelni ochamiz
     setLoading(false);
   }
 }, [navigate]);
