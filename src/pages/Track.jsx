@@ -5,7 +5,6 @@
  */
 import React from 'react';
 import OrderTracker from '../components/OrderTracker';
-import { Rocket, Sparkles, Search } from 'lucide-react';
 
 const Track = () => {
   return (
@@ -62,17 +61,14 @@ const Track = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
             <div className="w-2.5 h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
-            <span className="text-[#FFDD73] uppercase tracking-[0.4em] text-[11px] font-black flex items-center gap-2">
-              <Rocket size={14} className="text-[#FFDD73]" />
-              Real-time Tracking
+            <span className="text-[#FFDD73] uppercase tracking-[0.4em] text-[11px] font-black">
+              🚀 Real-time Tracking
             </span>
           </div>
-          <h1 className="text-5xl sm:text-7xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] drop-shadow-[0_0_50px_rgba(255,180,40,0.15)] flex items-center justify-center gap-4">
-            <Search size={48} className="text-[#FFDD73]" />
+          <h1 className="text-5xl sm:text-7xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] drop-shadow-[0_0_50px_rgba(255,180,40,0.15)]">
             Zakazni Kuzatish
           </h1>
-          <p className="mt-4 text-gray-400 text-lg font-light tracking-wider flex items-center justify-center gap-2">
-            <Sparkles size={18} className="text-[#FFDD73]" />
+          <p className="mt-4 text-gray-400 text-lg font-light tracking-wider">
             Zakazingizning holatini real vaqtda kuzatib boring
           </p>
             
