@@ -36,6 +36,16 @@
   --shadow-lift: 0 45px 90px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(255,201,60,.06) inset;
 }
 
+/* 🔒 Telefonda dark mode ranglarni o'zgartirmaslik uchun */
+* {
+  color-scheme: light only !important;
+}
+
+html, body {
+  color-scheme: light only !important;
+  forced-color-adjust: none !important;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -44,6 +54,9 @@ body {
   color: var(--cream);
   overflow-x: hidden;
   scroll-behavior: smooth;
+  /* 🔒 Telefon dark mode da ranglar o'zgarmasligi uchun */
+  -webkit-tap-highlight-color: transparent;
+  color-scheme: light only !important;
 }
 
 body::before {
@@ -415,11 +428,116 @@ h1, h2, h3, .font-display {
 }
 ::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, var(--saffron), var(--ember)); }
 
+/* 🔒 Telefon qurilmalarida dark mode ta'sirini o'chirish */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Desktopdagi ranglarni majburlab saqlab qolamiz */
+    --ink: #130e0a !important;
+    --ink-soft: #1c1510 !important;
+    --smoke: #241b14 !important;
+    --smoke-soft: #2c2119 !important;
+    --dark-bg: var(--ink) !important;
+    --dark-card: var(--smoke) !important;
+    --glass-bg: rgba(28, 21, 16, 0.72) !important;
+  }
+  
+  html, body {
+    color-scheme: light only !important;
+    background: #130e0a !important;
+  }
+  
+  body {
+    background: #130e0a !important;
+    color: #efe3ce !important;
+  }
+  
+  /* Barcha glass va card elementlarining ranglarini majburlash */
+  .glass-gold {
+    background: linear-gradient(160deg, rgba(255,201,60,.06), rgba(255,90,31,.025)) !important;
+    border: 1px solid rgba(255,201,60,.14) !important;
+  }
+  .glass-cyan {
+    background: rgba(20, 184, 166, 0.03) !important;
+    border: 1px solid rgba(20, 184, 166, 0.06) !important;
+  }
+  .glass-dark {
+    background: linear-gradient(165deg, rgba(28,21,16,.82), rgba(12,9,6,.88)) !important;
+    border: 1px solid rgba(255,201,60,.08) !important;
+  }
+  .glass-white {
+    background: rgba(239,227,206,.02) !important;
+    border: 1px solid rgba(239,227,206,.05) !important;
+  }
+  
+  .card-luxe {
+    background: linear-gradient(165deg, rgba(48,36,27,.92), rgba(15,11,8,.96)) !important;
+    border: 1px solid rgba(255,201,60,.14) !important;
+  }
+  
+  .navbar-fixed {
+    background: rgba(19, 14, 10, 0.86) !important;
+  }
+  .navbar-fixed.scrolled {
+    background: rgba(12, 9, 6, 0.95) !important;
+  }
+  
+  .input-gold {
+    background: linear-gradient(180deg, rgba(12,9,6,.85), rgba(19,14,10,.7)) !important;
+    border: 1px solid rgba(255,201,60,.12) !important;
+    color: #efe3ce !important;
+  }
+  
+  /* Barcha matn ranglari */
+  .text-gold-gradient, .text-warm-gradient {
+    background: linear-gradient(150deg, #fff3d6 0%, #FFDD73 28%, #FFC93C 55%, #FF5A1F 80%, #E08A3C 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+  
+  /* Ranglar majburlash */
+  .text-white { color: #ffffff !important; }
+  .text-gray-400 { color: #9ca3af !important; }
+  .text-gray-500 { color: #6b7280 !important; }
+  .text-gray-600 { color: #4b5563 !important; }
+  .text-gray-700 { color: #374151 !important; }
+  .text-[#FFDD73] { color: #FFDD73 !important; }
+  .text-[#FFC93C] { color: #FFC93C !important; }
+  .text-[#FF5A1F] { color: #FF5A1F !important; }
+  .text-[#E08A3C] { color: #E08A3C !important; }
+  .text-[#FF7A3D] { color: #FF7A3D !important; }
+  .text-[#FFEBB0] { color: #FFEBB0 !important; }
+  .text-[#FFA23D] { color: #FFA23D !important; }
+  
+  /* Border ranglari */
+  .border-white\/10 { border-color: rgba(255,255,255,0.1) !important; }
+  .border-white\/5 { border-color: rgba(255,255,255,0.05) !important; }
+  .border-\[#FFC93C\]\/20 { border-color: rgba(255,201,60,0.2) !important; }
+  .border-\[#FFC93C\]\/15 { border-color: rgba(255,201,60,0.15) !important; }
+  .border-\[#FFC93C\]\/30 { border-color: rgba(255,201,60,0.3) !important; }
+  
+  /* Background ranglari */
+  .bg-\[#130e0a\] { background: #130e0a !important; }
+  .bg-black\/50 { background: rgba(0,0,0,0.5) !important; }
+  .bg-black\/60 { background: rgba(0,0,0,0.6) !important; }
+  .bg-black\/20 { background: rgba(0,0,0,0.2) !important; }
+  .bg-black\/30 { background: rgba(0,0,0,0.3) !important; }
+  .bg-white\/\[0.03\] { background: rgba(255,255,255,0.03) !important; }
+  .bg-\[#FFC93C\]\/10 { background: rgba(255,201,60,0.1) !important; }
+  .bg-\[#FFC93C\]\/15 { background: rgba(255,201,60,0.15) !important; }
+  .bg-\[#FFC93C\]\/5 { background: rgba(255,201,60,0.05) !important; }
+}
+
 @media (max-width: 768px) {
   .navbar-fixed { padding: 10px 16px; }
   .navbar-fixed .nav-links { display: none; }
   .navbar-fixed .menu-toggle { display: flex; }
   .navbar-fixed .nav-link { font-size: 0.65rem; letter-spacing: 0.12em; }
+  
+  /* 🔒 Mobile qurilmalarda dark mode ta'siri */
+  html, body {
+    color-scheme: light only !important;
+  }
 }
 @media (max-width: 640px) {
   .glass-gold, .glass-cyan, .glass-dark, .glass-white, .card-luxe { border-radius: 22px; backdrop-filter: blur(14px); }
