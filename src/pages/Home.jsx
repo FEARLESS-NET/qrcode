@@ -5,6 +5,38 @@
  */
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Utensils,
+  Sparkles,
+  Crown,
+  Soup,
+  ClipboardList,
+  Armchair,
+  Target,
+  Users,
+  Fish,
+  ChefHat,
+  UsersRound,
+  Star,
+  Flame,
+  // Tomato o'rniga boshqa iconkalar
+  CircleDot,
+  HelpCircle,
+  Wheat,
+  Building2,
+  Clock,
+  Award,
+  Calendar,
+  MapPin,
+  Coffee,
+  Pizza,
+  Salad,
+  Martini,
+  Cake,
+  Beef,
+  Egg,
+  ChefHat as ChefHatIcon
+} from "lucide-react";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -49,19 +81,23 @@ const Home = () => {
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6 sm:mb-8">
               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
-              <span className="text-[#FFDD73] uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[9px] sm:text-[11px] font-black">
+              <span className="text-[#FFDD73] uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[9px] sm:text-[11px] font-black flex items-center gap-2">
+                <Utensils size={14} className="text-[#FFDD73]" />
                 MILLIY TAOMLAR
               </span>
             </div>
 
             <h1 className="font-display leading-[0.95] tracking-tight">
-              <span className="block text-white text-2xl sm:text-3xl md:text-4xl font-display-italic normal-case text-gray-300">
+              <span className="block text-white text-2xl sm:text-3xl md:text-4xl font-display-italic normal-case text-gray-300 flex items-center gap-2">
+                <Sparkles size={28} className="text-[#FFDD73]" />
                 Xush kelibsiz
               </span>
-              <span className="block mt-2 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase">
+              <span className="block mt-2 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase flex items-center gap-3">
+                <Crown size={48} className="text-[#FFDD73]" />
                 Qozonda
               </span>
-              <span className="block text-white mt-1 sm:mt-2 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display-italic normal-case tracking-normal text-gray-300">
+              <span className="block text-white mt-1 sm:mt-2 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display-italic normal-case tracking-normal text-gray-300 flex items-center gap-2">
+                <Soup size={32} className="text-[#FFC93C]" />
                 dasturxoniga
               </span>
             </h1>
@@ -73,27 +109,30 @@ const Home = () => {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 mt-6 sm:mt-10 justify-center lg:justify-start">
               <button 
                 onClick={() => navigate("/menu")} 
-                className="group relative overflow-hidden px-8 sm:px-12 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(255,180,40,0.5)] active:scale-95"
+                className="group relative overflow-hidden px-8 sm:px-12 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(255,180,40,0.5)] active:scale-95 flex items-center gap-2"
               >
                 <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+                <ClipboardList size={18} />
                 Menyuni Ko‘rish
               </button>
               <button 
                 onClick={() => navigate("/reservation")} 
-                className="px-8 sm:px-12 py-4 sm:py-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl text-white font-bold text-xs sm:text-sm uppercase tracking-[0.15em] sm:tracking-[0.25em] transition-all duration-300 hover:bg-white/10 hover:border-[#FFC93C]/30 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,180,40,0.05)]"
+                className="px-8 sm:px-12 py-4 sm:py-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl text-white font-bold text-xs sm:text-sm uppercase tracking-[0.15em] sm:tracking-[0.25em] transition-all duration-300 hover:bg-white/10 hover:border-[#FFC93C]/30 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,180,40,0.05)] flex items-center gap-2"
               >
+                <Armchair size={18} />
                 Stol Bron Qilish
               </button>
             </div>
 
             <div className="grid grid-cols-3 gap-3 sm:gap-5 mt-10 sm:mt-16">
               {[
-                { val: "12+", label: "Yillik Tajriba" },
-                { val: "50K+", label: "Mijozlar" },
-                { val: "100+", label: "Milliy Taom" },
+                { icon: Target, val: "12+", label: "Yillik Tajriba" },
+                { icon: Users, val: "50K+", label: "Mijozlar" },
+                { icon: Soup, val: "100+", label: "Milliy Taom" },
               ].map((item, i) => (
                 <div key={i} className="bg-white/[0.03] border border-white/5 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center hover:border-[#FFC93C]/20 transition-all duration-300 hover:scale-[1.03]">
+                  <item.icon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto text-[#FFDD73] mb-1 sm:mb-2" />
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] to-[#FF5A1F]">
                     {item.val}
                   </h3>
@@ -116,11 +155,16 @@ const Home = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
               <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 bg-black/50 border border-[#FFC93C]/20 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6">
-                <span className="text-[#FFDD73] uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[8px] sm:text-[10px] font-black">
+                <span className="text-[#FFDD73] uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[8px] sm:text-[10px] font-black flex items-center gap-1">
+                  <Star size={12} className="text-[#FFDD73]" />
                   Signature Taom
                 </span>
-                <h3 className="text-lg sm:text-2xl font-black mt-1 sm:mt-3">Olovda Pishirilgan Baliq</h3>
-                <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2 leading-relaxed">
+                <h3 className="text-lg sm:text-2xl font-black mt-1 sm:mt-3 flex items-center gap-2">
+                  <Flame size={22} className="text-[#FF5A1F]" />
+                  Olovda Pishirilgan Baliq
+                </h3>
+                <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2 leading-relaxed flex items-start gap-1">
+                  <CircleDot size={14} className="text-red-400 mt-0.5 flex-shrink-0" />
                   Achchiq pomidor sousi bilan, Qozondaning eng sevimli milliy taomi.
                 </p>
               </div>
@@ -132,12 +176,17 @@ const Home = () => {
       <section className="relative z-10 py-16 sm:py-20 lg:py-28 border-t border-[#FFC93C]/15">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-            <span className="text-[#FFC93C] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[10px] sm:text-xs font-black">
+            <span className="text-[#FFC93C] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[10px] sm:text-xs font-black flex items-center justify-center gap-2">
+              <HelpCircle size={14} className="text-[#FFC93C]" />
               Nega QOZONDA
             </span>
-            <h2 className="font-display mt-3 sm:mt-5 text-4xl sm:text-5xl lg:text-6xl font-bold uppercase leading-tight">
-              Yangi massaliqlardan <br className="block sm:hidden" />
-              <span className="text-[#FFC93C]">Dasturxonga</span>
+            <h2 className="font-display mt-3 sm:mt-5 text-4xl sm:text-5xl lg:text-6xl font-bold uppercase leading-tight flex flex-wrap items-center justify-center gap-3">
+              <Wheat size={40} className="text-[#FFDD73]" />
+              Yangi massaliqlardan
+              <span className="text-[#FFC93C] flex items-center gap-2">
+                <Soup size={40} className="text-[#FFC93C]" />
+                Dasturxonga
+              </span>
             </h2>
             <div className="divider-ikat mt-6 sm:mt-8">
               <span className="ikat-node"></span>
@@ -146,9 +195,9 @@ const Home = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[
-              { icon: "🐟", title: "Tabiiy Baliq", text: "Har kuni yangi sazan va boshqa daryo baliqlaridan tayyorlangan taomlar." },
-              { icon: "🥘", title: "Xorazm Oshxonasi", text: "Avlodlardan o'tib kelgan milliy retseptlar asosida pishiriladi." },
-              { icon: "👨‍👩‍👧‍👦", title: "Oilaviy Muhit", text: "Daryo bo'yidagi qulay terrasa va samimiy oilaviy atmosfera." },
+              { icon: Fish, title: "Tabiiy Baliq", text: "Har kuni yangi sazan va boshqa daryo baliqlaridan tayyorlangan taomlar." },
+              { icon: ChefHat, title: "Xorazm Oshxonasi", text: "Avlodlardan o'tib kelgan milliy retseptlar asosida pishiriladi." },
+              { icon: UsersRound, title: "Oilaviy Muhit", text: "Daryo bo'yidagi qulay terrasa va samimiy oilaviy atmosfera." },
             ].map((item, i) => (
               <div 
                 key={i} 
@@ -156,8 +205,8 @@ const Home = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 opacity-0 group-hover:opacity-100 transition"></div>
                 <div className="relative z-10">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#FFDD73] to-[#FF5A1F] flex items-center justify-center text-4xl sm:text-5xl shadow-[0_0_45px_rgba(255,180,40,0.3)]">
-                    {item.icon}
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#FFDD73] to-[#FF5A1F] flex items-center justify-center shadow-[0_0_45px_rgba(255,180,40,0.3)]">
+                    <item.icon className="w-8 h-8 sm:w-10 sm:h-10 text-black" />
                   </div>
                   <h3 className="font-display text-2xl sm:text-3xl font-bold mt-6 sm:mt-8">{item.title}</h3>
                   <p className="text-gray-400 text-sm sm:text-base mt-3 sm:mt-4 leading-relaxed">{item.text}</p>
@@ -168,10 +217,10 @@ const Home = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-12 sm:mt-16 lg:mt-20">
             {[
-              { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Milliy Osh" },
-              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Olovda Baliq" },
-              { src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Restoran Muhiti" },
-              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp&sat=-30", label: "Sazan Taomi" },
+              { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Milliy Osh", icon: Soup },
+              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Olovda Baliq", icon: Flame },
+              { src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Restoran Muhiti", icon: Building2 },
+              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp&sat=-30", label: "Sazan Taomi", icon: Fish },
             ].map((g, i) => (
               <div key={i} className="group relative h-40 sm:h-48 md:h-56 lg:h-64 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#FFC93C]/10">
                 <img 
@@ -181,9 +230,12 @@ const Home = () => {
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-                <span className="absolute bottom-3 sm:bottom-4 left-3 sm:left-5 text-white text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.25em] font-bold">
-                  {g.label}
-                </span>
+                <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-5 flex items-center gap-2">
+                  <g.icon className="w-3 h-3 sm:w-4 sm:h-4 text-[#FFDD73]" />
+                  <span className="text-white text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.25em] font-bold">
+                    {g.label}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
