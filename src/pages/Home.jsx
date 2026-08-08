@@ -50,24 +50,24 @@ const Home = () => {
             <div className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6 sm:mb-8">
               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
               <span className="text-[#FFDD73] uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[9px] sm:text-[11px] font-black">
-                🍽️ MILLIY TAOMLAR
+                MILLIY TAOMLAR
               </span>
             </div>
 
             <h1 className="font-display leading-[0.95] tracking-tight">
               <span className="block text-white text-2xl sm:text-3xl md:text-4xl font-display-italic normal-case text-gray-300">
-                ✨ Xush kelibsiz
+                Xush kelibsiz
               </span>
               <span className="block mt-2 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase">
-                🏺 Qozonda
+                Qozonda
               </span>
               <span className="block text-white mt-1 sm:mt-2 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display-italic normal-case tracking-normal text-gray-300">
-                🍲 dasturxoniga
+                dasturxoniga
               </span>
             </h1>
 
             <p className="mt-4 sm:mt-8 text-sm sm:text-base lg:text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto lg:mx-0 px-2 sm:px-0">
-              🥩 Qozonda milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
+              Qozonda milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 mt-6 sm:mt-10 justify-center lg:justify-start">
@@ -77,21 +77,21 @@ const Home = () => {
               >
                 <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-                📋 Menyuni Ko‘rish
+                Menyuni Ko‘rish
               </button>
               <button 
                 onClick={() => navigate("/reservation")} 
                 className="px-8 sm:px-12 py-4 sm:py-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl text-white font-bold text-xs sm:text-sm uppercase tracking-[0.15em] sm:tracking-[0.25em] transition-all duration-300 hover:bg-white/10 hover:border-[#FFC93C]/30 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,180,40,0.05)]"
               >
-                🪑 Stol Bron Qilish
+                Stol Bron Qilish
               </button>
             </div>
 
             <div className="grid grid-cols-3 gap-3 sm:gap-5 mt-10 sm:mt-16">
               {[
-                { val: "🎯 12+", label: "Yillik Tajriba" },
-                { val: "👥 50K+", label: "Mijozlar" },
-                { val: "🍜 100+", label: "Milliy Taom" },
+                { val: "12+", label: "Yillik Tajriba" },
+                { val: "50K+", label: "Mijozlar" },
+                { val: "100+", label: "Milliy Taom" },
               ].map((item, i) => (
                 <div key={i} className="bg-white/[0.03] border border-white/5 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-5 text-center hover:border-[#FFC93C]/20 transition-all duration-300 hover:scale-[1.03]">
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] to-[#FF5A1F]">
@@ -117,11 +117,11 @@ const Home = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
               <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 bg-black/50 border border-[#FFC93C]/20 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6">
                 <span className="text-[#FFDD73] uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[8px] sm:text-[10px] font-black">
-                  ⭐ Signature Taom
+                  Signature Taom
                 </span>
-                <h3 className="text-lg sm:text-2xl font-black mt-1 sm:mt-3">🔥 Olovda Pishirilgan Baliq</h3>
+                <h3 className="text-lg sm:text-2xl font-black mt-1 sm:mt-3">Olovda Pishirilgan Baliq</h3>
                 <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2 leading-relaxed">
-                  🍅 Achchiq pomidor sousi bilan, Qozondaning eng sevimli milliy taomi.
+                  Achchiq pomidor sousi bilan, Qozondaning eng sevimli milliy taomi.
                 </p>
               </div>
             </div>
@@ -133,11 +133,11 @@ const Home = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 sm:mb-16 lg:mb-20">
             <span className="text-[#FFC93C] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[10px] sm:text-xs font-black">
-              ❓ Nega QOZONDA
+              Nega QOZONDA
             </span>
             <h2 className="font-display mt-3 sm:mt-5 text-4xl sm:text-5xl lg:text-6xl font-bold uppercase leading-tight">
-              🌾 Yangi massaliqlardan <br className="block sm:hidden" />
-              <span className="text-[#FFC93C]">🍲 Dasturxonga</span>
+              Yangi massaliqlardan <br className="block sm:hidden" />
+              <span className="text-[#FFC93C]">Dasturxonga</span>
             </h2>
             <div className="divider-ikat mt-6 sm:mt-8">
               <span className="ikat-node"></span>
@@ -168,10 +168,10 @@ const Home = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-12 sm:mt-16 lg:mt-20">
             {[
-              { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80&fm=webp", label: "🍚 Milliy Osh" },
-              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp", label: "🐟 Olovda Baliq" },
-              { src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80&fm=webp", label: "🏛️ Restoran Muhiti" },
-              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp&sat=-30", label: "🐟 Sazan Taomi" },
+              { src: "https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Milliy Osh" },
+              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Olovda Baliq" },
+              { src: "https://images.unsplash.com/photo-1768697358705-c1b60333da35?auto=format&fit=crop&w=600&q=80&fm=webp", label: "Restoran Muhiti" },
+              { src: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80&fm=webp&sat=-30", label: "Sazan Taomi" },
             ].map((g, i) => (
               <div key={i} className="group relative h-40 sm:h-48 md:h-56 lg:h-64 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#FFC93C]/10">
                 <img 
