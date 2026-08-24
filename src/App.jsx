@@ -59,24 +59,6 @@ const LoadingFallback = () => (
         </div>
       </div>
 
-      {/* Animated loading indicator */}
-      <div className="flex items-center justify-center gap-2 mb-6">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="w-3 h-3 rounded-full bg-[#FFC93C] animate-bounce"
-            style={{
-              animationDelay: `${i * 0.15}s`,
-              boxShadow: '0 0 20px rgba(255, 201, 60, 0.5)'
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Loading text with animation */}
-      <p className="text-gray-400 text-sm tracking-[0.3em] uppercase animate-pulse">
-        <span className="inline-block animate-pulse">⏳</span> Yuklanmoqda
-      </p>
     </div>
 
     {/* Bottom accent */}
