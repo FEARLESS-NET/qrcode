@@ -358,6 +358,14 @@ h3,
     left: 200%;
   }
 }
+@keyframes gradientShine {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
 
 .animate-breathe {
   animation: breathe 6s ease-in-out infinite;
@@ -405,6 +413,14 @@ h3,
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: goldShimmer 6s linear infinite;
+}
+.animate-gradient-shine {
+  background: linear-gradient(90deg, #FFEBB0, #FFA23D, #FF5A1F, #E08A3C, #FFEBB0);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShine 4s linear infinite;
 }
 .animate-scanLine::after {
   content: '';
