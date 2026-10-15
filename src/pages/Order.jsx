@@ -1,12 +1,13 @@
 /**
  * ORDER PAGE – ZAKAZ QILISH SAHIFASI
- * Menyu (kategoriyalar) + savat (cart) – qo‘shish/ayirish.
+ * Chapda: savat (cart) + zakaz formasi. O'ngda: menyu (kategoriyalar) – qo'shish/ayirish.
  * Forma: Ism, telefon, yetkazib berish turi (dine-in, takeaway, delivery).
  * Dine-in da stol tanlash (real-time mavjudlik).
  * Delivery da manzil va lokatsiyani avtomatik aniqlash.
  * Telegram ulanish (token orqali).
  * Zakaz yuborilganda PaymentModal ochiladi.
- * Muvaffaqiyatli to‘lovdan so‘ng zakaz saqlanadi va hisobot yangilanadi.
+ * Muvaffaqiyatli to'lovdan so'ng zakaz saqlanadi va hisobot yangilanadi.
+ * Telefonda avval menyu, keyin zakaz formasi chiqadi.
  */
 import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../api/axios";
@@ -15,6 +16,15 @@ import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
+
+/* Qayta ishlatiladigan stillar (oltin + qora) */
+const panelCls =
+  "rounded-2xl bg-gradient-to-b from-[#1c1503] to-black border border-[#FFD700]/40 shadow-[0_0_25px_rgba(255,215,0,0.15)]";
+const labelCls =
+  "text-[11px] uppercase tracking-[0.3em] text-[#FFE27A] mb-1.5 block font-extrabold";
+const inputCls =
+  "w-full bg-black/70 border border-[#FFD700]/30 rounded-xl px-4 py-3 outline-none text-white text-sm font-medium placeholder:text-gray-400 focus:border-[#FFD700] focus:shadow-[0_0_25px_rgba(255,215,0,0.3)] transition-all duration-300 hover:border-[#FFD700]/60";
+const goldGrad = "bg-gradient-to-r from-[#FFF3B0] via-[#FFD700] to-[#B8860B]";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -247,8 +257,9 @@ const Order = () => {
   const availableTables = tables.filter(table => table.isAvailable);
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white px-4 sm:px-6 lg:px-10 py-28">
+    <div className="relative min-h-screen overflow-hidden text-white px-3 sm:px-6 lg:px-10 py-24 sm:py-28">
 
+      {/* FON */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         <img
           loading="lazy"
@@ -256,17 +267,11 @@ const Order = () => {
           alt="Restaurant background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/70 to-black/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#FFC93C]/5 via-transparent to-[#E08A3C]/5"></div>
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: `
-            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px),
-            repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(255,180,40,0.03) 50px, rgba(255,180,40,0.03) 51px)
-          `
-        }}></div>
-        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#E08A3C]/15 blur-[200px] animate-pulse" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#FFDD73]/15 blur-[200px] animate-pulse delay-700" />
-        
+        <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/75 to-black/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FFD700]/10 via-transparent to-[#B8860B]/10"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#FFD700]/15 blur-[200px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#B8860B]/20 blur-[200px] animate-pulse delay-700" />
+
         {[...Array(18)].map((_, i) => (
           <span
             key={`far-${i}`}
@@ -298,112 +303,338 @@ const Order = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FFC93C]/20 bg-[#FFC93C]/10 backdrop-blur-xl mb-6">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#FFDD73] animate-pulse"></div>
-            <span className="text-[#FFDD73] uppercase tracking-[0.4em] text-[11px] font-black">
+
+        {/* SARLAVHA */}
+        <div className="text-center mb-10 sm:mb-14">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-[#FFD700]/50 bg-[#FFD700]/10 backdrop-blur-xl mb-5">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#FFD700] shadow-[0_0_10px_#FFD700] animate-pulse"></div>
+            <span className="text-[#FFE27A] uppercase tracking-[0.4em] text-[11px] font-black">
               Online Xizmat
             </span>
           </div>
-          <h1 className="font-display text-5xl sm:text-7xl font-bold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFA23D] to-[#FF5A1F] drop-shadow-[0_0_50px_rgba(255,180,40,0.15)]">
+          <h1 className="font-display text-4xl sm:text-7xl font-extrabold uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFF3B0] via-[#FFD700] to-[#E0A100] drop-shadow-[0_0_40px_rgba(255,215,0,0.35)]">
             Online Zakaz
           </h1>
-          <div className="divider-ikat mt-5">
+          <div className="divider-ikat mt-4">
             <span className="ikat-node"></span>
           </div>
-          <p className="mt-4 text-gray-400 text-lg font-light tracking-wider">Taomlarni tanlang va buyurtma bering</p>
-          <div className="flex justify-center gap-4 mt-6">
-            <button onClick={() => navigate("/track")} className="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm font-bold hover:border-[#FFC93C]/30 hover:text-white transition-all hover:shadow-[0_0_20px_rgba(255,180,40,0.05)]">🚚 Zakaz holati</button>
+          <p className="mt-3 text-white text-base sm:text-lg font-medium tracking-wider [text-shadow:0_2px_6px_rgba(0,0,0,0.9)]">
+            Taomlarni tanlang va buyurtma bering
+          </p>
+          <div className="flex justify-center gap-4 mt-5">
+            <button
+              onClick={() => navigate("/track")}
+              className="px-7 py-2.5 rounded-xl bg-black/60 border border-[#FFD700]/50 text-[#FFD700] text-sm font-bold hover:bg-[#FFD700] hover:text-black transition-all hover:shadow-[0_0_25px_rgba(255,215,0,0.5)]"
+            >
+              🚚 Zakaz holati
+            </button>
           </div>
-          {locationError && <p className="text-[#FFDD73] text-xs mt-3">⚠️ {locationError}</p>}
-          {location && !locationError && <p className="text-green-400 text-xs mt-3">✅ Lokatsiya aniqlandi</p>}
+          {locationError && <p className="text-[#FFE27A] text-xs mt-3 font-semibold">⚠️ {locationError}</p>}
+          {location && !locationError && <p className="text-green-400 text-xs mt-3 font-semibold">✅ Lokatsiya aniqlandi</p>}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          
-          <div className="lg:col-span-2 space-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+
+          {/* ===== CHAP: SAVAT + FORMA ===== */}
+          <div className="order-2 lg:order-1 lg:col-span-1">
+            <div className="lg:sticky lg:top-24 space-y-5">
+
+              {/* SAVAT */}
+              <div className={`${panelCls} p-5`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-display text-[#FFD700] font-extrabold uppercase tracking-widest text-base">🛒 Savat</h3>
+                  {cart.length > 0 && (
+                    <span className="text-xs px-3 py-1 rounded-full bg-[#FFD700]/20 text-[#FFE27A] border border-[#FFD700]/50 font-bold">
+                      {cart.length} xil
+                    </span>
+                  )}
+                </div>
+                {cart.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-200 text-sm font-medium">Hali hech narsa tanlanmagan</p>
+                    <p className="text-gray-400 text-xs mt-2">Menyudan taomlarni tanlang</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {cart.map((item) => (
+                      <div key={item.menuItem} className="flex justify-between items-center text-sm py-2 border-b border-[#FFD700]/20">
+                        <span className="text-white font-medium">
+                          {item.name} <span className="text-[#FFE27A] font-bold">x{item.quantity}</span>
+                        </span>
+                        <span className="text-[#FFD700] font-extrabold">{(item.price * item.quantity).toLocaleString()}</span>
+                      </div>
+                    ))}
+                    <div className="pt-3 flex justify-between items-center font-black text-lg">
+                      <span className="text-gray-200">Jami:</span>
+                      <span className="text-[#FFD700] text-xl [text-shadow:0_0_14px_rgba(255,215,0,0.5)]">
+                        {totalPrice.toLocaleString()} so'm
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {success && (
+                <div className="p-4 rounded-2xl bg-green-500/20 border border-green-400/60 text-green-300 font-bold text-center animate-fadeInUp backdrop-blur-xl">
+                  ✅ Zakazingiz qabul qilindi! Tez orada bog'lanamiz.
+                </div>
+              )}
+              {error && (
+                <div className="p-4 rounded-2xl bg-red-500/20 border border-red-400/60 text-red-300 text-sm font-bold text-center backdrop-blur-xl animate-shake">
+                  ⚠️ {error}
+                </div>
+              )}
+
+              {/* FORMA */}
+              <form onSubmit={handleSubmit} className={`${panelCls} p-5 space-y-4`}>
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-lg">📋</span>
+                  <h3 className="font-display text-[#FFD700] font-extrabold uppercase tracking-widest text-base">Ma'lumotlar</h3>
+                </div>
+
+                <div>
+                  <label className={labelCls}>Ism</label>
+                  <input
+                    name="customerName"
+                    value={form.customerName}
+                    onChange={(e) => setForm({ ...form, customerName: e.target.value })}
+                    placeholder="Sardor Alimov"
+                    required
+                    className={inputCls}
+                  />
+                </div>
+
+                {form.deliveryType !== "dine-in" && (
+                  <div>
+                    <label className={labelCls}>Telefon</label>
+                    <input
+                      name="phone"
+                      value={form.phone}
+                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                      placeholder="+998 90 000 00 00"
+                      required
+                      className={inputCls}
+                    />
+                    <p className="text-[11px] text-gray-300 mt-1.5">📱 Zakazni keyinroq kuzatish uchun kerak bo'ladi</p>
+                  </div>
+                )}
+
+                <div>
+                  <label className={labelCls}>Tur</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[{ val: "dine-in", label: "🍽 Restoran" }, { val: "takeaway", label: "🥡 Olib ketish" }, { val: "delivery", label: "🚚 Yetkazish" }].map((opt) => (
+                      <button
+                        key={opt.val}
+                        type="button"
+                        onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "", tableLocation: "" })}
+                        className={`py-2.5 rounded-xl text-xs font-extrabold border transition-all duration-300 ${
+                          form.deliveryType === opt.val
+                            ? `${goldGrad} border-[#FFD700] text-black shadow-[0_0_20px_rgba(255,215,0,0.5)]`
+                            : "border-[#FFD700]/30 bg-black/60 text-[#F5E6B8] hover:border-[#FFD700] hover:text-[#FFD700]"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {form.deliveryType === "dine-in" && (
+                  <div>
+                    <label className={labelCls}>🪑 Stol raqami *</label>
+                    {loadingTables ? (
+                      <div className={`${inputCls} text-gray-300`}>⏳ Stollar yuklanmoqda...</div>
+                    ) : (
+                      <>
+                        <select
+                          name="tableNumber"
+                          value={form.tableNumber}
+                          onChange={handleTableChange}
+                          required
+                          className={`${inputCls} appearance-none cursor-pointer`}
+                        >
+                          <option value="" className="bg-black text-gray-300">🔍 Stol tanlang...</option>
+                          {availableTables.length > 0 ? (
+                            availableTables.map((table) => (
+                              <option key={table._id} value={table.number} className="bg-black text-white py-2">
+                                🪑 #{table.number} — {table.capacity} kishi {table.location ? `📍 ${table.location}` : ''}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled className="bg-black text-red-400">⚠️ Hozircha bo'sh stol yo'q</option>
+                          )}
+                        </select>
+                        {form.tableNumber && (
+                          <div className="mt-2 flex items-center gap-2 p-2 rounded-lg bg-green-500/15 border border-green-400/40 text-green-300 text-xs font-semibold">
+                            <span>✅</span>
+                            <span>Stol #{form.tableNumber} tanlandi</span>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {form.deliveryType === "delivery" && (
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className={`${labelCls} !mb-0`}>Manzil *</label>
+                      <button
+                        type="button"
+                        onClick={detectLocation}
+                        disabled={locationLoading}
+                        className="text-[11px] font-extrabold text-[#FFD700] hover:text-white transition-all disabled:opacity-50 whitespace-nowrap hover:scale-105"
+                      >
+                        {locationLoading ? "⏳ Aniqlanmoqda..." : "📍 Joylashuvimni aniqlash"}
+                      </button>
+                    </div>
+                    <input
+                      name="address"
+                      value={form.address}
+                      onChange={(e) => setForm({ ...form, address: e.target.value })}
+                      placeholder="Ko'cha, uy raqami..."
+                      required
+                      className={inputCls}
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className={labelCls}>Izoh</label>
+                  <input
+                    name="note"
+                    value={form.note}
+                    onChange={(e) => setForm({ ...form, note: e.target.value })}
+                    placeholder="Qo'shimcha izoh..."
+                    className={inputCls}
+                  />
+                </div>
+
+                {/* TELEGRAM */}
+                <div className="p-3 rounded-xl border border-[#FFD700]/30 bg-[#FFD700]/5 hover:border-[#FFD700]/60 transition-all duration-300">
+                  {telegramLinked ? (
+                    <p className="text-green-300 text-xs font-bold text-center flex items-center justify-center gap-2">
+                      <span className="text-lg">✅</span> Telegram ulangan — zakaz holati haqida shu yerga xabar olasiz
+                    </p>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={connectTelegram}
+                        disabled={telegramLinking}
+                        className="w-full py-2.5 rounded-xl border border-[#FFD700]/50 text-[#FFD700] text-xs font-extrabold hover:bg-[#FFD700] hover:text-black transition-all disabled:opacity-50 hover:scale-[1.02]"
+                      >
+                        {telegramLinking ? "⏳ Kutilmoqda... (botda Start bosing)" : "📲 Telegram orqali ulanish"}
+                      </button>
+                      <p className="text-gray-200 text-[11px] mt-2 text-center">Ulansangiz, zakaz holati haqida Telegram orqali xabar olasiz</p>
+                      {telegramError && <p className="text-red-300 text-[11px] mt-1 text-center font-semibold">{telegramError}</p>}
+                    </>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading || cart.length === 0}
+                  className={`w-full py-4 rounded-2xl ${goldGrad} text-black font-black uppercase tracking-[0.25em] text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,215,0,0.6)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group`}
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+                  <span className="relative z-10">{loading ? "⏳ Yuborilmoqda..." : "🛒 Zakaz Berish"}</span>
+                </button>
+              </form>
+
+              <button
+                onClick={() => navigate("/track")}
+                className="w-full py-3 rounded-xl border border-[#FFD700]/50 bg-black/60 text-[#FFD700] text-sm font-bold hover:bg-[#FFD700] hover:text-black transition-all hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] active:scale-[0.98]"
+              >
+                🚚 Zakaz holatini kuzatish
+              </button>
+            </div>
+          </div>
+
+          {/* ===== O'NG: TAOMLAR ===== */}
+          <div className="order-1 lg:order-2 lg:col-span-2 space-y-8">
             {Object.keys(groupedMenus).length === 0 ? (
-              <div className="text-center text-gray-500 py-20 bg-black/20 backdrop-blur-xl rounded-3xl border border-[#FFC93C]/10 p-12">
-                <div className="w-16 h-16 border-4 border-[#FFC93C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-xl font-bold text-[#FFDD73]">Menu yuklanmoqda...</p>
-                <p className="text-sm mt-2 text-gray-500">Iltimos, biroz kuting</p>
+              <div className="text-center text-gray-200 py-16 bg-black/60 backdrop-blur-xl rounded-3xl border border-[#FFD700]/30 p-10">
+                <div className="w-14 h-14 border-4 border-[#FFD700] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-xl font-bold text-[#FFD700]">Menu yuklanmoqda...</p>
+                <p className="text-sm mt-2 text-gray-300">Iltimos, biroz kuting</p>
               </div>
             ) : (
               Object.keys(groupedMenus).map((cat) => (
                 <div key={cat}>
-                  <div className="flex items-center gap-4 mb-5 border-b border-[#FFC93C]/15 pb-4">
+                  <div className="flex items-center gap-3 mb-4 border-b border-[#FFD700]/40 pb-3">
                     <span className="text-2xl">🍽</span>
-                    <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">{cat}</h3>
-                    <div className="flex-1 h-[1px] bg-gradient-to-r from-[#FFC93C]/30 to-transparent"></div>
+                    <h3 className="font-display text-xl sm:text-2xl font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FFF3B0] via-[#FFD700] to-[#E0A100]">
+                      {cat}
+                    </h3>
+                    <div className="flex-1 h-[1px] bg-gradient-to-r from-[#FFD700]/50 to-transparent"></div>
                   </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     {groupedMenus[cat].map((menu) => {
                       const qty = getQty(menu._id);
                       return (
-                        <div 
-                          key={menu._id} 
+                        <div
+                          key={menu._id}
                           className={`
-                            group relative overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-xl
-                            ${qty > 0 
-                              ? "border-[#FFDD73]/60 bg-[#FFC93C]/10 shadow-[0_0_40px_rgba(255,180,40,0.15)] animate-glowPulse" 
-                              : "border-white/10 bg-white/[0.03] hover:border-[#FFC93C]/30 hover:bg-[#FFC93C]/5 hover:shadow-[0_0_30px_rgba(255,180,40,0.08)]"
+                            group flex flex-col overflow-hidden rounded-2xl border transition-all duration-300
+                            bg-gradient-to-b from-[#1c1503] to-black
+                            ${qty > 0
+                              ? "border-[#FFD700] shadow-[0_0_30px_rgba(255,215,0,0.5)]"
+                              : "border-[#FFD700]/40 shadow-[0_0_14px_rgba(255,215,0,0.12)] hover:border-[#FFD700] hover:shadow-[0_0_26px_rgba(255,215,0,0.4)] hover:scale-[1.03]"
                             }
                           `}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#FFC93C]/10 via-transparent to-[#FF5A1F]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                          
-                          <div className="relative h-48 overflow-hidden">
+                          <div className="relative h-32 sm:h-36 overflow-hidden">
                             <img
                               loading="lazy"
                               src={getImageUrl(menu.image)}
                               alt={menu.name}
-                              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
                               onError={(e) => {
                                 e.target.src = NO_IMAGE_URL;
                               }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                            
-                            {menu.category && (
-                              <span className="absolute top-4 right-4 bg-black/70 border border-[#FFDD73]/30 px-4 py-1.5 rounded-xl text-[#FFDD73] text-[10px] uppercase tracking-widest font-bold backdrop-blur-xl">
-                                {menu.category}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                            <span className={`absolute bottom-1.5 left-1.5 px-2.5 py-1 rounded-lg ${goldGrad} text-black text-xs sm:text-sm font-black shadow-[0_0_12px_rgba(255,215,0,0.6)]`}>
+                              {Number(menu.price).toLocaleString()} so'm
+                            </span>
+                            {qty > 0 && (
+                              <span className="absolute top-1.5 right-1.5 min-w-[26px] h-[26px] px-1.5 rounded-full bg-[#FFD700] text-black text-xs font-black flex items-center justify-center shadow-[0_0_12px_rgba(255,215,0,0.8)]">
+                                {qty}
                               </span>
                             )}
                           </div>
-                          
-                          <div className="relative p-4 z-10">
-                            <div className="menu-leader">
-                              <h4 className="text-xl font-display font-bold text-white group-hover:text-[#FFDD73] transition-colors whitespace-nowrap">
-                                {menu.name}
-                              </h4>
-                              <span className="leader-fill"></span>
-                              <p className="text-gold-gradient font-display font-bold text-xl whitespace-nowrap">
-                                {Number(menu.price).toLocaleString()} so'm
-                              </p>
-                            </div>
-                            <p className="text-gray-400 text-sm mt-2 line-clamp-2 font-light">{menu.retsept}</p>
+
+                          <div className="flex flex-col flex-1 p-3">
+                            <h4 className="text-base sm:text-lg font-display font-extrabold text-[#FFE27A] group-hover:text-white transition-colors line-clamp-1 [text-shadow:0_1px_2px_rgba(0,0,0,0.9)]">
+                              {menu.name}
+                            </h4>
+                            <p className="text-white/90 text-xs sm:text-sm mt-1 line-clamp-2 font-normal leading-snug flex-1 [text-shadow:0_1px_2px_rgba(0,0,0,0.8)]">
+                              {menu.retsept}
+                            </p>
 
                             {qty === 0 ? (
-                              <button 
-                                onClick={() => addToCart(menu)} 
-                                className="btn-gold w-full mt-5 !py-2.5 !px-6 !text-xs"
+                              <button
+                                onClick={() => addToCart(menu)}
+                                className={`mt-3 w-full py-2 rounded-lg ${goldGrad} text-black text-xs sm:text-sm font-black uppercase tracking-widest transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.7)] active:scale-95`}
                               >
-                                BUYURTMA
+                                Buyurtma
                               </button>
                             ) : (
-                              <div className="mt-4 flex items-center justify-between gap-3">
-                                <button 
-                                  onClick={() => removeFromCart(menu._id)} 
-                                  className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 font-black text-lg hover:bg-red-500 hover:text-white transition-all hover:scale-110"
+                              <div className="mt-3 flex items-center justify-between gap-2">
+                                <button
+                                  onClick={() => removeFromCart(menu._id)}
+                                  className="w-9 h-9 rounded-lg bg-red-500/25 border border-red-400/60 text-red-300 font-black text-lg hover:bg-red-500 hover:text-white transition-all hover:scale-110"
                                 >
                                   −
                                 </button>
-                                <span className="text-white font-black text-xl bg-black/30 px-6 py-1 rounded-full backdrop-blur-sm">{qty}</span>
-                                <button 
-                                  onClick={() => addToCart(menu)} 
-                                  className="w-10 h-10 rounded-xl bg-[#FFC93C]/15 border border-[#FFC93C]/30 text-[#FFDD73] font-black text-lg hover:bg-[#FFDD73] hover:text-black transition-all hover:scale-110"
+                                <span className="text-white font-black text-lg bg-black/60 border border-[#FFD700]/40 px-4 py-0.5 rounded-full">
+                                  {qty}
+                                </span>
+                                <button
+                                  onClick={() => addToCart(menu)}
+                                  className={`w-9 h-9 rounded-lg ${goldGrad} text-black font-black text-lg hover:shadow-[0_0_18px_rgba(255,215,0,0.7)] transition-all hover:scale-110`}
                                 >
                                   +
                                 </button>
@@ -417,193 +648,6 @@ const Order = () => {
                 </div>
               ))
             )}
-          </div>
-
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              <div className="card-luxe p-6">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">🛒 Savat</h3>
-                  {cart.length > 0 && (
-                    <span className="text-xs px-3 py-1 rounded-full bg-[#FFC93C]/20 text-[#FFDD73] border border-[#FFC93C]/30 font-bold">
-                      {cart.length} xil
-                    </span>
-                  )}
-                </div>
-                {cart.length === 0 ? (
-                  <div className="text-center py-10">
-                    <p className="text-gray-600 text-sm">Hali hech narsa tanlanmagan</p>
-                    <p className="text-gray-700 text-xs mt-2">Menyudan taomlarni tanlang</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {cart.map((item) => (
-                      <div key={item.menuItem} className="flex justify-between items-center text-sm py-2 border-b border-white/5">
-                        <span className="text-gray-300">{item.name} <span className="text-gray-600">x{item.quantity}</span></span>
-                        <span className="text-[#FFDD73] font-bold">{(item.price * item.quantity).toLocaleString()}</span>
-                      </div>
-                    ))}
-                    <div className="pt-3 flex justify-between font-black text-lg">
-                      <span className="text-gray-400">Jami:</span>
-                      <span className="text-[#FFDD73] text-xl">{totalPrice.toLocaleString()} so'm</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {success && (
-                <div className="p-5 rounded-2xl bg-green-500/15 border border-green-500/30 text-green-400 font-bold text-center animate-fadeInUp backdrop-blur-xl">
-                  ✅ Zakazingiz qabul qilindi! Tez orada bog'lanamiz.
-                </div>
-              )}
-              {error && (
-                <div className="p-4 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-400 text-sm font-bold text-center backdrop-blur-xl animate-shake">
-                  ⚠️ {error}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="card-luxe p-6 space-y-5">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-lg">📋</span>
-                  <h3 className="font-display text-[#FFDD73] font-bold uppercase tracking-widest text-base">Ma'lumotlar</h3>
-                </div>
-
-                <div>
-                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Ism</label>
-                  <input 
-                    name="customerName" 
-                    value={form.customerName} 
-                    onChange={(e) => setForm({ ...form, customerName: e.target.value })} 
-                    placeholder="Sardor Alimov" 
-                    required 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
-                  />
-                </div>
-
-                {form.deliveryType !== "dine-in" && (
-                  <div>
-                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Telefon</label>
-                    <input 
-                      name="phone" 
-                      value={form.phone} 
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })} 
-                      placeholder="+998 90 000 00 00" 
-                      required 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
-                    />
-                    <p className="text-[10px] text-gray-600 mt-1.5">📱 Zakazni keyinroq kuzatish uchun kerak bo'ladi</p>
-                  </div>
-                )}
-
-                <div>
-                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-2 block font-bold">Tur</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[{ val: "dine-in", label: "🍽 Restoran" }, { val: "takeaway", label: "🥡 Olib ketish" }, { val: "delivery", label: "🚚 Yetkazish" }].map((opt) => (
-                      <button 
-                        key={opt.val} 
-                        type="button" 
-                        onClick={() => setForm({ ...form, deliveryType: opt.val, address: "", tableNumber: "", tableLocation: "" })} 
-                        className={`py-2.5 rounded-xl text-xs font-bold border transition-all duration-300 ${form.deliveryType === opt.val ? "border-[#FFDD73] bg-[#FFC93C]/15 text-[#FFDD73] shadow-[0_0_20px_rgba(255,180,40,0.05)]" : "border-white/10 bg-white/[0.03] text-gray-500 hover:border-[#FFC93C]/30 hover:text-white"}`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {form.deliveryType === "dine-in" && (
-                  <div>
-                    <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">🪑 Stol raqami *</label>
-                    {loadingTables ? (
-                      <div className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 text-gray-500 text-sm">⏳ Stollar yuklanmoqda...</div>
-                    ) : (
-                      <>
-                        <select
-                          name="tableNumber"
-                          value={form.tableNumber}
-                          onChange={handleTableChange}
-                          required
-                          className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm transition-all duration-300 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] hover:border-[#FFC93C]/40 appearance-none cursor-pointer"
-                        >
-                          <option value="" className="bg-black text-gray-400">🔍 Stol tanlang...</option>
-                          {availableTables.length > 0 ? (
-                            availableTables.map((table) => (
-                              <option key={table._id} value={table.number} className="bg-black text-white py-2">
-                                🪑 #{table.number} — {table.capacity} kishi {table.location ? `📍 ${table.location}` : ''}
-                              </option>
-                            ))
-                          ) : (
-                            <option value="" disabled className="bg-black text-red-400">⚠️ Hozircha bo'sh stol yo'q</option>
-                          )}
-                        </select>
-                        {form.tableNumber && (
-                          <div className="mt-2 flex items-center gap-2 p-2 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs">
-                            <span>✅</span>
-                            <span>Stol #{form.tableNumber} tanlandi</span>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {form.deliveryType === "delivery" && (
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 block font-bold">Manzil *</label>
-                      <button type="button" onClick={detectLocation} disabled={locationLoading} className="text-[10px] font-bold text-[#FFDD73] hover:text-[#FFEBB0] transition-all disabled:opacity-50 whitespace-nowrap hover:scale-105">
-                        {locationLoading ? "⏳ Aniqlanmoqda..." : "📍 Joylashuvimni aniqlash"}
-                      </button>
-                    </div>
-                    <input 
-                      name="address" 
-                      value={form.address} 
-                      onChange={(e) => setForm({ ...form, address: e.target.value })} 
-                      placeholder="Ko'cha, uy raqami..." 
-                      required 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-1.5 block font-bold">Izoh</label>
-                  <input 
-                    name="note" 
-                    value={form.note} 
-                    onChange={(e) => setForm({ ...form, note: e.target.value })} 
-                    placeholder="Qo'shimcha izoh..." 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-3.5 outline-none text-white text-sm placeholder:text-gray-700 focus:border-[#FFDD73] focus:shadow-[0_0_25px_rgba(255,180,40,0.1)] transition-all duration-300 hover:border-[#FFC93C]/40" 
-                  />
-                </div>
-
-                <div className="p-3 rounded-xl border border-[#FFC93C]/15 bg-[#FFC93C]/5 hover:border-[#FFC93C]/30 transition-all duration-300">
-                  {telegramLinked ? (
-                    <p className="text-green-400 text-xs font-bold text-center flex items-center justify-center gap-2">
-                      <span className="text-lg">✅</span> Telegram ulangan — zakaz holati haqida shu yerga xabar olasiz
-                    </p>
-                  ) : (
-                    <>
-                      <button type="button" onClick={connectTelegram} disabled={telegramLinking} className="w-full py-2.5 rounded-xl border border-[#FFC93C]/30 text-[#FFDD73] text-xs font-bold hover:bg-[#FFC93C]/10 transition-all disabled:opacity-50 hover:scale-[1.02]">
-                        {telegramLinking ? "⏳ Kutilmoqda... (botda Start bosing)" : "📲 Telegram orqali ulanish"}
-                      </button>
-                      <p className="text-gray-500 text-[10px] mt-2 text-center">Ulansangiz, zakaz holati haqida Telegram orqali xabar olasiz</p>
-                      {telegramError && <p className="text-red-400 text-[10px] mt-1 text-center">{telegramError}</p>}
-                    </>
-                  )}
-                </div>
-
-                <button type="submit" disabled={loading || cart.length === 0} className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FFDD73] via-[#E08A3C] to-[#FF5A1F] text-black font-black uppercase tracking-[0.25em] text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_45px_rgba(255,180,40,0.4)] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden group">
-                  <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 transition duration-500"></span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-                  <span className="relative z-10">{loading ? "⏳ Yuborilmoqda..." : "🛒 Zakaz Berish"}</span>
-                </button>
-              </form>
-
-              <button onClick={() => navigate("/track")} className="w-full py-3.5 rounded-xl border border-[#FFC93C]/20 text-[#FFDD73] text-sm font-bold hover:bg-[#FFC93C]/10 hover:border-[#FFC93C]/40 transition-all hover:scale-[1.02] active:scale-[0.98]">
-                🚚 Zakaz holatini kuzatish
-              </button>
-            </div>
           </div>
         </div>
       </div>
