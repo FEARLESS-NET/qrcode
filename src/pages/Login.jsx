@@ -84,11 +84,11 @@ export default function Login() {
       <div className="relative z-10 w-full py-6 border-b border-[#FFC93C]/30 backdrop-blur-3xl flex justify-center px-4 bg-black/40 rounded-2xl">
         <div className="flex items-center gap-5">
           <div className="seal-frame w-16 h-16 text-4xl transform hover:scale-110 transition-all duration-500">
-            <img className="rounded-full w-full h-full object-cover" src="/QOZONDA.jpg"/>
+            <img className="rounded-full w-full h-full object-cover" src="/OLIMJON.jpg"/>
           </div>
           <div className="flex flex-col">
             <span className="text-2xl sm:text-3xl font-display font-bold tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-[#FFEBB0] via-[#FFDD73] to-[#FF7A3D] drop-shadow-[0_0_40px_rgba(255,180,40,0.3)]">
-              QOZONDA
+              OLIMJON G'
             </span>
             <span className="text-[10px] tracking-[0.5em] text-[#FFC93C]/60 uppercase font-light">
               PREMIUM RESTAURANT
@@ -111,13 +111,13 @@ export default function Login() {
 
               <div className="flex justify-center mb-10">
                 <div className="seal-frame relative w-28 h-28 text-6xl transform hover:scale-110 hover:rotate-6 transition-all duration-500">
-                  <img className="rounded-full w-full h-full object-cover" src="/QOZONDA.jpg"/>
+                  <img className="rounded-full w-full h-full object-cover" src="/OLIMJON.jpg"/>
                   <div className="absolute -inset-4 rounded-full border border-[#FFC93C]/20 animate-ping opacity-30"></div>
                 </div>
               </div>
 
               <h2 className="text-center text-5xl sm:text-6xl font-display font-bold tracking-wide text-gold-gradient">
-                QOZONDA LOGIN
+                OLIMJON G' LOGIN
               </h2>
               <p className="text-center text-sm text-[#FFC93C]/60 mt-4 mb-10 tracking-[0.3em] uppercase font-light">
                 XIMOYA TIZIMI BOLIMII
@@ -183,7 +183,7 @@ export default function Login() {
             </form>
           </div>
           <p className="text-center text-gray-700/60 text-[10px] mt-12 uppercase tracking-[0.5em] font-light">
-            © 2026 QOZONDA | MILLIY TAOMLAR
+            © 2026 OLIMJON G' | MILLIY TAOMLAR
           </p>
         </div>
       </div>

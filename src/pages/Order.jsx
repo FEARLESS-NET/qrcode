@@ -12,7 +12,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { axiosInstance } from "../api/axios";
 import PaymentModal from "../components/PaymentModal";
-import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://backend-4-9otm.onrender.com';
 const NO_IMAGE_URL = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' fill='%23888' font-family='sans-serif' font-size='20' text-anchor='middle' dominant-baseline='middle'%3ERasm yo'q%3C/text%3E%3C/svg%3E";
@@ -27,7 +26,6 @@ const inputCls =
 const goldGrad = "bg-gradient-to-r from-[#FFF3B0] via-[#FFD700] to-[#B8860B]";
 
 const Order = () => {
-  const navigate = useNavigate();
   const [menus, setMenus] = useState([]);
   const [tables, setTables] = useState([]);
   const [loadingTables, setLoadingTables] = useState(true);
@@ -232,7 +230,6 @@ const Order = () => {
         tableLocation: form.tableLocation || null,
         location: locationData,
         paymentStatus: 'pending',
-        deliveryStatus: 'pending',
         telegramId: localStorage.getItem('telegramId') || null,
       };
       const res = await axiosInstance.post("/orders", orderData);
@@ -321,14 +318,6 @@ const Order = () => {
           <p className="mt-3 text-white text-base sm:text-lg font-medium tracking-wider [text-shadow:0_2px_6px_rgba(0,0,0,0.9)]">
             Taomlarni tanlang va buyurtma bering
           </p>
-          <div className="flex justify-center gap-4 mt-5">
-            <button
-              onClick={() => navigate("/track")}
-              className="px-7 py-2.5 rounded-xl bg-black/60 border border-[#FFD700]/50 text-[#FFD700] text-sm font-bold hover:bg-[#FFD700] hover:text-black transition-all hover:shadow-[0_0_25px_rgba(255,215,0,0.5)]"
-            >
-              🚚 Zakaz holati
-            </button>
-          </div>
           {locationError && <p className="text-[#FFE27A] text-xs mt-3 font-semibold">⚠️ {locationError}</p>}
           {location && !locationError && <p className="text-green-400 text-xs mt-3 font-semibold">✅ Lokatsiya aniqlandi</p>}
         </div>
@@ -415,7 +404,7 @@ const Order = () => {
                       required
                       className={inputCls}
                     />
-                    <p className="text-[11px] text-gray-300 mt-1.5">📱 Zakazni keyinroq kuzatish uchun kerak bo'ladi</p>
+                    <p className="text-[11px] text-gray-300 mt-1.5">📱 Yetkazish uchun aloqa telefon raqami</p>
                   </div>
                 )}
 
@@ -541,13 +530,6 @@ const Order = () => {
                   <span className="relative z-10">{loading ? "⏳ Yuborilmoqda..." : "🛒 Zakaz Berish"}</span>
                 </button>
               </form>
-
-              <button
-                onClick={() => navigate("/track")}
-                className="w-full py-3 rounded-xl border border-[#FFD700]/50 bg-black/60 text-[#FFD700] text-sm font-bold hover:bg-[#FFD700] hover:text-black transition-all hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(255,215,0,0.4)] active:scale-[0.98]"
-              >
-                🚚 Zakaz holatini kuzatish
-              </button>
             </div>
           </div>
 

@@ -24,7 +24,7 @@ const Home = () => {
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover scale-110 opacity-40 animate-slowZoom"
           src="https://images.unsplash.com/photo-1776993298422-3e8c397d0235?auto=format&fit=crop&w=1740&q=80&fm=webp"
-          alt="Olimjon G' restorani interyeri"
+          alt="OLIMJON G' restorani interyeri"
         />
         <div className="absolute inset-0 bg-black/75"></div>
         <div className="absolute top-[-15%] left-[-15%] w-[600px] h-[600px] bg-[#FFD700]/20 rounded-full blur-[180px] animate-pulse"></div>
@@ -67,7 +67,7 @@ const Home = () => {
                 Xush kelibsiz
               </span>
               <span className={`block mt-2 ${goldText} text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold uppercase drop-shadow-[0_0_35px_rgba(255,215,0,0.35)]`}>
-                Olimjon G'
+                OLIMJON G'
               </span>
               <span className="block text-white mt-1 sm:mt-2 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display-italic normal-case tracking-normal [text-shadow:0_2px_6px_rgba(0,0,0,0.9)]">
                 dasturxoniga
@@ -75,7 +75,7 @@ const Home = () => {
             </h1>
 
             <p className="mt-4 sm:mt-8 text-base sm:text-lg lg:text-xl text-white/90 font-medium leading-relaxed max-w-2xl mx-auto lg:mx-0 px-2 sm:px-0 [text-shadow:0_2px_6px_rgba(0,0,0,0.9)]">
-              Olimjon G' milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
+              OLIMJON G' milliy oshxonasining mazali retseptlari — barchasi oilangiz bilan unutilmas oqshom uchun.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 mt-6 sm:mt-10 justify-center lg:justify-start">
@@ -123,7 +123,7 @@ const Home = () => {
               <img
                 loading="lazy"
                 src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1200&q=80&fm=webp"
-                alt="Olimjon G' milliy oshi"
+                alt="OLIMJON G' milliy oshi"
                 className="w-full h-[400px] sm:h-[500px] lg:h-[650px] object-cover transition-all duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
@@ -133,7 +133,7 @@ const Home = () => {
                 </span>
                 <h3 className={`text-xl sm:text-2xl font-black mt-1 sm:mt-3 ${goldText}`}>To'y Oshi (Palov)</h3>
                 <p className="text-white/90 text-xs sm:text-sm mt-1 sm:mt-2 leading-relaxed font-medium">
-                  Qozonda dimlangan, go'sht va sariq sabzi bilan — Olimjon G'ning eng sevimli milliy taomi.
+                  OLIMJON G' da dimlangan, go'sht va sariq sabzi bilan — eng sevimli milliy taom.
                 </p>
               </div>
             </div>
@@ -146,7 +146,7 @@ const Home = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center mb-12 sm:mb-16 lg:mb-20">
             <span className="text-[#FFD700] uppercase tracking-[0.3em] sm:tracking-[0.5em] text-[10px] sm:text-xs font-black">
-              Nega Olimjon G'
+              Nega OLIMJON G'
             </span>
             <h2 className="font-display mt-3 sm:mt-5 text-4xl sm:text-5xl lg:text-6xl font-extrabold uppercase leading-tight [text-shadow:0_2px_8px_rgba(0,0,0,0.9)]">
               Yangi mahsulotlardan <br className="block sm:hidden" />

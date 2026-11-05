@@ -1,6 +1,6 @@
 /**
  * NAVBAR – GLOBAL NAVIGATION (Oltin + Qora)
- * Fixed tepa panel. Logo, menyu linklari (Home, Menu, Zakaz, Bron, Kuzatish, Admin).
+ * Fixed tepa panel. Logo, menyu linklari (Home, Menu, Zakaz, Bron, Admin).
  * Responsive – kichik ekranlarda toggle menyu. Login tugmasi login sahifaga yo'naltiradi.
  */
 import React, { useEffect, useState } from "react";
@@ -35,8 +35,9 @@ export function NavbarDefault() {
     { name: "Menu", link: "/menu" },
     { name: "Zakaz", link: "/order" },
     { name: "Bron", link: "/reservation" },
-    { name: "Kuzatish", link: "/track" },
-    { name: "Admin", link: "/admin" },
+    
+  
+    
   ];
 
   return (
@@ -98,13 +99,13 @@ export function NavbarDefault() {
             <div className="w-14 h-14 rounded-2xl p-[2px] bg-gradient-to-br from-[#FFF3B0] via-[#FFD700] to-[#B8860B] shadow-[0_0_30px_rgba(255,215,0,0.5)]">
               <img
                 className="rounded-2xl w-full h-full object-cover bg-black"
-                src="/QOZONDA.jpg"
-                alt="Olimjon G' logo"
+                src="/OLIMJON.jpg"
+                alt="OLIMJON G' logo"
               />
             </div>
             <div className="flex flex-col">
               <span className="gold-text font-display text-2xl font-extrabold uppercase tracking-[0.18em]">
-                Olimjon G'
+                OLIMJON G'
               </span>
               <span className="text-[8px] text-[#FFD700]/70 uppercase tracking-[0.4em] font-bold">
                 MILLIY TAOMLAR
@@ -121,28 +122,8 @@ export function NavbarDefault() {
             ))}
           </div>
 
-          {/* LOGIN */}
-          <div className="hidden lg:flex">
-            <Link to="/login">
-              <button
-                className="
-                  group relative overflow-hidden
-                  px-8 py-3 rounded-2xl
-                  border border-[#FFD700]/60 bg-black/60 backdrop-blur-xl
-                  text-[#FFD700] uppercase tracking-[0.25em] text-sm font-black
-                  transition-all duration-300
-                  hover:border-[#FFD700] hover:scale-105
-                  shadow-[0_0_20px_rgba(255,215,0,0.25)]
-                  hover:shadow-[0_0_45px_rgba(255,215,0,0.65)]
-                "
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FFF3B0] via-[#FFD700] to-[#B8860B] opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                <span className="relative z-10 group-hover:text-black transition">
-                  Login
-                </span>
-              </button>
-            </Link>
-          </div>
+         
+          
 
           {/* MOBILE TOGGLE */}
           <button

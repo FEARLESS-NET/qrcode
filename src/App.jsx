@@ -11,12 +11,11 @@ const Home = lazy(() => import('./pages/Home'));
 const Menu = lazy(() => import('./pages/Menu'));
 const Order = lazy(() => import('./pages/Order'));
 const Reservation = lazy(() => import('./pages/Reservation'));
-const Track = lazy(() => import('./pages/Track'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Login = lazy(() => import('./pages/Login'));
 
 const LoadingFallback = () => {
-  const letters = "QOZONDA".split("");
+  const letters = "OLIMJON G'".split("");
   const [loaded, setLoaded] = useState(false);
   
   useEffect(() => {
@@ -162,7 +161,6 @@ function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/order" element={<Order />} />
             <Route path="/reservation" element={<Reservation />} />
-            <Route path="/track" element={<Track />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />

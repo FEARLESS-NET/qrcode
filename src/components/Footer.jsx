@@ -76,7 +76,7 @@ export function SimpleFooter() {
           "
         >
           © {new Date().getFullYear()}{" "}
-          <span className="footer-gold-text font-extrabold">Olimjon G'</span>. Barcha huquqlar
+          <span className="footer-gold-text font-extrabold">OLIMJON G'</span>. Barcha huquqlar
           himoyalangan.
         </p>
 

@@ -4,7 +4,7 @@
  * Menu: CRUD (rasm yuklash URL yoki fayl). Retsept o'rniga gramm va porsiya kiritiladi.
  * Stollar: qo'shish, o'chirish, band/bo'sh qilish.
  * Bronlar: ko'rish, tasdiqlash, bekor qilish, yakunlanganlarni o'chirish.
- * Zakazlar: holatini o'zgartirish (pending→confirmed→preparing→ready), yetkazib berish holati (on_the_way→delivered), kuryer tayinlash, chek chop etish.
+ * Zakazlar: holatini o'zgartirish (pending→confirmed→preparing→ready), chek chop etish.
  * Hisobotlar: kunlik statistikani ko'rish, reset qilish, o'chirish.
  * JWT autentifikatsiya (token localStorage da saqlanadi).
  */
@@ -215,12 +215,12 @@ const Admin = () => {
   };
 
   const handleDeleteCompletedOrders = async () => {
-    const completed = orders.filter(o => o.status === "ready" || o.deliveryStatus === "delivered");
+    const completed = orders.filter(o => o.status === "ready");
     if (completed.length === 0) {
       alert("O'chirish uchun yakunlangan zakazlar mavjud emas!");
       return;
     }
-    if (!window.confirm(`⚠️ YAKUNLANGAN ZAKAZLARNI O'CHIRISH!\n\n📌 ${completed.length} ta zakaz o'chiriladi\n📌 Status: ready / delivered\n📌 Bu amalni qaytarib bo'lmaydi!\n\nDavom etasizmi?`)) return;
+    if (!window.confirm(`⚠️ YAKUNLANGAN ZAKAZLARNI O'CHIRISH!\n\n📌 ${completed.length} ta zakaz o'chiriladi\n📌 Status: ready\n📌 Bu amalni qaytarib bo'lmaydi!\n\nDavom etasizmi?`)) return;
 
     setDeletingCompletedOrders(true);
     try {
@@ -352,20 +352,6 @@ const Admin = () => {
     } catch (err) { console.error(err); }
   };
 
-  const updateDeliveryStatus = async (id, deliveryStatus, courierName = '', courierPhone = '') => {
-    try {
-      await axiosInstance.patch(`/orders/${id}/delivery`, {
-        deliveryStatus,
-        courierName,
-        courierPhone,
-        deliveryTime: deliveryStatus === 'delivered' ? new Date().toLocaleString() : undefined
-      });
-      getOrders();
-    } catch (err) {
-      alert('Xatolik: ' + (err.response?.data?.message));
-    }
-  };
-
   const refreshAll = () => {
     getMenus();
     getTables();
@@ -422,13 +408,6 @@ const Admin = () => {
     cancelled: "❌ Bekor",
     preparing: "👨‍🍳 Tayyorlanmoqda",
     ready: "🎉 Tayyor",
-  };
-
-  const deliveryStatusLabels = {
-    'pending': '⏳ Kutilmoqda',
-    'preparing': '👨‍🍳 Tayyorlanmoqda',
-    'on_the_way': '🚚 Yo\'lda',
-    'delivered': '✅ Yetkazildi',
   };
 
   const diningAreaMap = {
@@ -530,13 +509,12 @@ const Admin = () => {
           <button onClick={handleLogout} className="px-8 py-4 rounded-2xl border border-red-400/60 bg-black/60 text-red-300 font-bold transition-all hover:bg-red-500 hover:text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]">🚪 Chiqish</button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-10">
           {[
             { label: "Menyu", value: menus.length, color: "yellow" },
             { label: "Jami Stollar", value: tableStats.total, color: "blue" },
             { label: "Bronlar", value: reservations.filter(r => r.status === "pending").length, color: "yellow", suffix: " yangi" },
             { label: "Zakazlar", value: orders.filter(o => o.status === "pending").length, color: "purple", suffix: " yangi" },
-            { label: "Yo'lda", value: orders.filter(o => o.deliveryStatus === "on_the_way").length, color: "orange", suffix: " ta" },
           ].map((s, i) => (
             <div key={i} className="card-luxe p-5 text-center hover:scale-[1.03] transition-transform">
               <p className={`font-display text-3xl sm:text-4xl font-extrabold ${colorMap[s.color]}`}>{s.value}{s.suffix || ""}</p>
@@ -746,7 +724,6 @@ const Admin = () => {
                           <h3 className="font-display font-extrabold text-2xl text-[#FFE27A]">{o.customerName}</h3>
                           <span className={`text-xs px-3 py-1 rounded-full border font-bold ${statusColor[o.status]}`}>{statusLabel[o.status]}</span>
                           <span className="text-xs px-3 py-1 rounded-full border border-[#FFD700]/50 text-[#FFE27A] bg-[#FFD700]/10 font-bold">{deliveryTypeMap[o.deliveryType] || o.deliveryType}</span>
-                          {o.deliveryStatus && o.deliveryStatus !== 'pending' && (<span className="text-xs px-3 py-1 rounded-full border border-[#FFD700]/60 text-[#FFE27A] bg-[#FFD700]/15 font-bold">{deliveryStatusLabels[o.deliveryStatus] || o.deliveryStatus}</span>)}
                         </div>
                         <p className="text-white/90 text-sm font-medium">📞 {o.phone}</p>
                         {o.deliveryType === "dine-in" && o.tableNumber && (
@@ -759,7 +736,6 @@ const Admin = () => {
                         </div>
                         <p className="text-[#FFD700] font-black mt-2">💰 Jami: {o.totalPrice?.toLocaleString()} so'm</p>
                         {o.note && <p className="text-gray-200 text-xs">📝 {o.note}</p>}
-                        {o.courierName && <p className="text-green-300 text-xs font-bold">👤 Kuryer: {o.courierName}</p>}
                       </div>
 
                       <div className="flex flex-col gap-2 items-start">
@@ -771,12 +747,6 @@ const Admin = () => {
                         )}
                         {o.status === "preparing" && (
                           <button onClick={() => updateOrderStatus(o._id, "ready")} className="px-6 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-400/60 text-cyan-300 text-sm font-extrabold hover:bg-cyan-400 hover:text-black transition-all whitespace-nowrap">🎉 Tayyor</button>
-                        )}
-                        {o.status === "ready" && o.deliveryType === "delivery" && o.deliveryStatus === "pending" && (
-                          <button onClick={() => { const courierName = prompt("Kuryer ismi:"); const courierPhone = prompt("Kuryer telefon raqami:"); if (courierName) updateDeliveryStatus(o._id, "on_the_way", courierName, courierPhone); }} className="px-6 py-2.5 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/60 text-[#FFD700] text-sm font-extrabold hover:bg-[#FFD700] hover:text-black transition-all whitespace-nowrap">🚚 Yo'lga chiqarish</button>
-                        )}
-                        {o.deliveryStatus === "on_the_way" && (
-                          <button onClick={() => updateDeliveryStatus(o._id, "delivered")} className="px-6 py-2.5 rounded-xl bg-green-500/20 border border-green-400/60 text-green-300 text-sm font-extrabold hover:bg-green-500 hover:text-black transition-all whitespace-nowrap">✅ Yetkazildi</button>
                         )}
                         {o.status !== "cancelled" && o.status !== "ready" && (
                           <button onClick={() => updateOrderStatus(o._id, "cancelled")} className="px-6 py-2.5 rounded-xl bg-red-500/20 border border-red-400/60 text-red-300 text-sm font-extrabold hover:bg-red-500 hover:text-white transition-all whitespace-nowrap">❌ Bekor</button>

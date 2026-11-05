@@ -131,13 +131,13 @@ const Menu = () => {
           <img
             loading="lazy"
             src="https://images.unsplash.com/photo-1671048116810-6f885b2b35a5?auto=format&fit=crop&w=1600&q=80&fm=webp"
-            alt="Olimjon G' | MILLIY TAOMLARI"
+            alt="OLIMJON G' | MILLIY TAOMLARI"
             className="absolute inset-0 w-full h-full object-cover scale-110 animate-slowZoom"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/30"></div>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
             <span className="text-[#FFD700] uppercase tracking-[0.4em] text-[10px] sm:text-xs font-bold mb-3">
-              🌙 Olimjon G' · Premium
+              🌙 OLIMJON G' · Premium
             </span>
             <h2 className="text-4xl sm:text-7xl font-display font-bold text-white drop-shadow-[0_0_40px_rgba(255,215,0,0.4)]">
               ASOSIY{" "}
