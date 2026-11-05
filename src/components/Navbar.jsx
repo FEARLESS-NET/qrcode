@@ -156,19 +156,7 @@ export function NavbarDefault() {
                 </Link>
               ))}
 
-              <Link to="/login" onClick={() => setOpenNav(false)} className="mt-3">
-                <button
-                  className="
-                    w-full py-4 rounded-2xl
-                    bg-gradient-to-r from-[#FFF3B0] via-[#FFD700] to-[#B8860B]
-                    text-black font-black uppercase tracking-[0.25em]
-                    transition-all duration-300 hover:scale-[1.02] active:scale-95
-                    shadow-[0_0_35px_rgba(255,215,0,0.5)]
-                  "
-                >
-                  Login
-                </button>
-              </Link>
+              
             </div>
           </div>
         )}
